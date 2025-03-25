@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WASD Square Movement</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+        #gameCanvas {
+            display: block;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        // Get canvas and context
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size to window size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Square properties
+        const square = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            size: 50,
+            speed: 5,
+            color: '#3498db'
+        };
+
+        // Track which keys are pressed
+        const keys = {
+            t: false,
+            f: false,
+            g: false,
+            h: false
+        };
+
+        // Key event listeners
+        window.addEventListener('keydown', (e) => {
+            switch(e.key.toLowerCase()) {
+                case 't': keys.t = true; break;
+                case 'f': keys.f = true; break;
+                case 'g': keys.g = true; break;
+                case 'h': keys.h = true; break;
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            switch(e.key.toLowerCase()) {
+                case 't': keys.t = false; break;
+                case 'f': keys.f = false; break;
+                case 'g': keys.g = false; break;
+                case 'h': keys.h = false; break;
+            }
+        });
+
+        // Game loop
+        function gameLoop() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update square position based on keys pressed
+            if (keys.t) square.y -= square.speed;
+            if (keys.f) square.x -= square.speed;
+            if (keys.g) square.y += square.speed;
+            if (keys.h) square.x += square.speed;
+            
+            // Keep square within canvas bounds
+            square.x = Math.max(0, Math.min(canvas.width - square.size, square.x));
+            square.y = Math.max(0, Math.min(canvas.height - square.size, square.y));
+            
+            // Draw square
+            ctx.fillStyle = square.color;
+            ctx.fillRect(square.x, square.y, square.size, square.size);
+            
+            // Draw instructions
+            ctx.fillStyle = '#000';
+            ctx.font = '20px Arial';
+            ctx.fillText('Use WASD keys to move the square', 20, 30);
+            
+            // Continue the game loop
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start the game
+        gameLoop();
+    </script>
+</body>
+</html>

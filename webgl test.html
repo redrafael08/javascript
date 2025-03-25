@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pointer Lock Demo</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; background: #222; }
+        #instructions {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-family: Arial;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="instructions">Click to lock mouse controls</div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const instructions = document.getElementById('instructions');
+        
+        // Set canvas size
+        canvas.width = 800;
+        canvas.height = 600;
+        
+        // Player object
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            angle: 0,
+            size: 30,
+            color: '#3498db',
+            speed: 3
+        };
+        
+        // Mouse movement tracking
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        // Pointer lock setup
+        canvas.addEventListener('click', () => {
+            canvas.requestPointerLock = canvas.requestPointerLock || 
+                                     canvas.mozRequestPointerLock || 
+                                     canvas.webkitRequestPointerLock;
+            canvas.requestPointerLock();
+        });
+        
+        // Track mouse movement (when pointer is locked)
+        document.addEventListener('mousemove', (e) => {
+            if (document.pointerLockElement === canvas) {
+                player.angle += e.movementX * 0.005;
+                // For vertical look (uncomment if needed)
+                // player.lookAngle = Math.max(-Math.PI/2, Math.min(Math.PI/2, player.lookAngle - e.movementY * 0.005));
+            }
+        });
+        
+        // Track escape from pointer lock
+        document.addEventListener('pointerlockchange', lockChangeAlert, false);
+        document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
+        document.addEventListener('webkitpointerlockchange', lockChangeAlert, false);
+        
+        function lockChangeAlert() {
+            if (document.pointerLockElement === canvas ||
+                document.mozPointerLockElement === canvas ||
+                document.webkitPointerLockElement === canvas) {
+                instructions.textContent = 'Mouse locked. Move mouse to look around.';
+            } else {
+                instructions.textContent = 'Click to lock mouse controls';
+            }
+        }
+        
+        // Game loop
+        function gameLoop() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw player
+            ctx.fillStyle = player.color;
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw direction indicator
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(player.x, player.y);
+            ctx.lineTo(
+                player.x + Math.cos(player.angle) * player.size * 1.5,
+                player.y + Math.sin(player.angle) * player.size * 1.5
+            );
+            ctx.stroke();
+            
+            requestAnimationFrame(gameLoop);
+        }
+        
+        gameLoop();
+    </script>
+</body>
+</html>
