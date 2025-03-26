@@ -207,6 +207,25 @@
             m[10] = c*m[10]-s*mv8;
          }
 
+         function lookAt(cameraPos, center, up = [0, 1, 0]) {
+            const front = [
+               center[0] - cameraPos[0],
+               center[1] - cameraPos[1],
+               center[2] - cameraPos[2]
+            ];
+
+            const frontNorm = normalize(front);
+            const right = normalize(crossProduct(up, frontNorm));           
+            const upNorm = normalize(crossProduct(frontNorm, right));
+
+            return [
+               [right[0], upNorm[0], -frontNorm[0], 0],
+               [right[1], upNorm[1], -frontNorm[1], 0],
+               [right[2], upNorm[2], -frontNorm[2], 0],
+               [-dotProduct(right, cameraPos), -dotProduct(upNorm, cameraPos), dotProduct(frontNorm, cameraPos), 1]
+            ];
+         }
+
          function lookAtWithAngles(cameraPos, xAngle, yAngle, up = [0, 1, 0]) {
             // Calculate front vector from angles
             const front = [
