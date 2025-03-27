@@ -13,20 +13,34 @@
                                      canvas.mozRequestPointerLock || 
                                      canvas.webkitRequestPointerLock;
             canvas.requestPointerLock();
-        });
+         });
 
-        document.addEventListener('mousemove', (e) => {
-            if (document.pointerLockElement === canvas) {
-               mouseX = e.movementX;
-               mouseY = e.movementY;
-               rotateX(modelMatrix, mouseX*0.01)
-               rotateY(modelMatrix, mouseY*0.01)
-              // xAngle += mouseX*0.1;
-              // yAngle += mouseY*0.1;
+         document.addEventListener('mousemove', (e) => {
+               if (document.pointerLockElement === canvas) {
+                  mouseX = e.movementX;
+                  mouseY = e.movementY;
+                  xAngle -= mouseY*0.001;
+                  yAngle += mouseX*0.001;
+               }
+         });
+
+         var keys = {
+            "w":false,
+            "a":false,
+            "s":false,
+            "d":false
+         };
+         document.addEventListener('keydown', (e) => {
+            if (e.key in keys) {
+               keys[e.key] = true;
             }
-        });
+         });
 
-
+         document.addEventListener('keyup', (e) => {
+            if (e.key in keys) {
+               keys[e.key] = false;
+            }
+         });
 
 
          var vertices = [
@@ -207,48 +221,17 @@
             m[10] = c*m[10]-s*mv8;
          }
 
-         function lookAt(cameraPos, center, up = [0, 1, 0]) {
-            const front = [
-               center[0] - cameraPos[0],
-               center[1] - cameraPos[1],
-               center[2] - cameraPos[2]
-            ];
-
+         function lookAt(eye, front) {
+            const up = [0, 1, 0];
             const frontNorm = normalize(front);
             const right = normalize(crossProduct(up, frontNorm));           
             const upNorm = normalize(crossProduct(frontNorm, right));
 
             return [
-               [right[0], upNorm[0], -frontNorm[0], 0],
-               [right[1], upNorm[1], -frontNorm[1], 0],
-               [right[2], upNorm[2], -frontNorm[2], 0],
-               [-dotProduct(right, cameraPos), -dotProduct(upNorm, cameraPos), dotProduct(frontNorm, cameraPos), 1]
-            ];
-         }
-
-         function lookAtWithAngles(cameraPos, xAngle, yAngle, up = [0, 1, 0]) {
-            // Calculate front vector from angles
-            const front = [
-               Math.cos(yAngle) * Math.cos(xAngle),
-               Math.sin(xAngle),
-               Math.sin(yAngle) * Math.cos(xAngle)
-            ];
-            
-            // Normalize front vector
-            const frontNorm = normalize(front);
-            
-            // Calculate right vector
-            const right = normalize(crossProduct(up, frontNorm));
-            
-            // Recalculate up vector to ensure orthogonality
-            const upNorm = normalize(crossProduct(frontNorm, right));
-            
-            // Create view matrix
-            return [
-               [right[0], upNorm[0], -frontNorm[0], 0],
-               [right[1], upNorm[1], -frontNorm[1], 0],
-               [right[2], upNorm[2], -frontNorm[2], 0],
-               [-dotProduct(right, cameraPos), -dotProduct(upNorm, cameraPos), dotProduct(frontNorm, cameraPos), 1]
+               right[0], upNorm[0], -frontNorm[0], 0,
+               right[1], upNorm[1], -frontNorm[1], 0,
+               right[2], upNorm[2], -frontNorm[2], 0,
+               -dotProduct(right, eye), -dotProduct(upNorm, eye), dotProduct(frontNorm, eye), 1
             ];
          }
 
@@ -290,18 +273,42 @@
             }
          });//*/
 
-         let cameraPos = [0, 0, 3];      // Camera position
+         let cameraPos = [0, 0, 3];
+         let front = [0, 0, -1]      // Camera position
          let xAngle = 0;               // Pitch (up/down) in radians
-         let yAngle = 0;   
+         let yAngle = Math.PI;
+         let speed = 0.3;   
 
          function gameloop() {
+            cosa = Math.cos(yAngle);
+            sina = Math.sin(yAngle);
+            front = [Math.cos(xAngle) * sina, Math.sin(xAngle), Math.cos(xAngle) * cosa]
 
-         gl.clearColor(0.5, 0.5, 0.5, 0.9);
+            if (keys["w"]) {
+               cameraPos[0] += sina * speed;
+               cameraPos[2] += cosa * speed;
+            }
+            if (keys["a"]) {
+               cameraPos[0] -= cosa * speed;
+               cameraPos[2] += sina * speed;
+            }
+            if (keys["s"]) {
+               cameraPos[0] -= sina * speed;
+               cameraPos[2] -= cosa * speed;
+            }
+            if (keys["d"]) {
+               cameraPos[0] += cosa * speed;
+               cameraPos[2] -= sina * speed;
+            }
 
-         gl.enable(gl.DEPTH_TEST);
+            gl.clearColor(0.5, 0.5, 0.5, 0.9);
+
+            gl.enable(gl.DEPTH_TEST);
 
 
-         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+            
+            viewMatrix = lookAt(cameraPos, front);
 
          /*
          let viewMatrix = lookAtWithAngles(cameraPos, xAngle, yAngle);
