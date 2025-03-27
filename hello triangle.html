@@ -44,47 +44,47 @@
 
 
          var vertices = [
-         -1, -1, -1,   
-         1, -1, -1,   
-         1,  1, -1,   
-         1,  1, -1,   
-        -1,  1, -1,   
-        -1, -1, -1,   
+         -1, -1, -1,   0,1,1,
+         1, -1, -1,   0,1,1,
+         1,  1, -1,   0,1,1,
+         1,  1, -1,   0,1,1,
+        -1,  1, -1,   0,1,1,
+        -1, -1, -1,   0,1,1,
 
-        -1, -1,  1,   
-         1, -1,  1,   
-         1,  1,  1,   
-         1,  1,  1,   
-        -1,  1,  1,   
-        -1, -1,  1,   
+        -1, -1,  1,   0,1,1,
+         1, -1,  1,   0,1,1,
+         1,  1,  1,   0,1,1,
+         1,  1,  1,   0,1,1,
+        -1,  1,  1,   0,1,1,
+        -1, -1,  1,   0,1,1,
 
-        -1,  1,  1,   
-        -1,  1, -1,   
-        -1, -1, -1,   
-        -1, -1, -1,   
-        -1, -1,  1,   
-        -1,  1,  1,   
+        -1,  1,  1,   0,1,1,
+        -1,  1, -1,   0,1,1,
+        -1, -1, -1,   0,1,1,
+        -1, -1, -1,   0,1,1,
+        -1, -1,  1,   0,1,1,
+        -1,  1,  1,   0,1,1,
 
-         1,  1,  1,   
-         1,  1, -1,   
-         1, -1, -1,   
-         1, -1, -1,   
-         1, -1,  1,   
-         1,  1,  1,   
+         1,  1,  1,   1,1,1,
+         1,  1, -1,   1,1,1,
+         1, -1, -1,   1,1,1,
+         1, -1, -1,   1,1,1,
+         1, -1,  1,   1,1,1,
+         1,  1,  1,   1,1,1,
 
-        -1, -1, -1,   
-         1, -1, -1,   
-         1, -1,  1,   
-         1, -1,  1,   
-        -1, -1,  1,   
-        -1, -1, -1,   
+        -1, -1, -1,   1,1,1,
+         1, -1, -1,   1,1,1,
+         1, -1,  1,   1,1,1,
+         1, -1,  1,   1,1,1,
+        -1, -1,  1,   1,1,1,
+        -1, -1, -1,   1,1,1,
 
-        -1,  1, -1,   
-         1,  1, -1,   
-         1,  1,  1,   
-         1,  1,  1,   
-        -1,  1,  1,   
-        -1,  1, -1  
+        -1,  1, -1,   1,1,1,
+         1,  1, -1,   1,1,1,
+         1,  1,  1,   1,1,1,
+         1,  1,  1,   1,1,1,
+        -1,  1,  1,   1,1,1,
+        -1,  1, -1,  1,1,1
          ];
          
          
@@ -102,10 +102,13 @@
 
          var vertCode =
             'attribute vec3 coordinates;' +
+            'attribute vec3 aColor;' +
+            'varying vec3 vColor;' +
             'uniform mat4 projection;'+
             'uniform mat4 view;'+
             'uniform mat4 model;'+
             'void main(void) {' +
+               ' vColor = aColor;'+
                ' gl_Position = projection*view*model*vec4(coordinates, 1.0);' +
             '}';
             
@@ -118,9 +121,10 @@
          gl.compileShader(vertShader);
 
 
-         var fragCode =
+         var fragCode = 'precision mediump float;' +
+            'varying vec3 vColor;' +
             'void main(void) {' +
-               ' gl_FragColor = vec4(0.0, 0.0, 0.0, 0.1);' +
+               ' gl_FragColor = vec4(vColor, 1.0);' +
             '}';
             
 
@@ -157,14 +161,21 @@
 
          
 
-         var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+         var coordPos = gl.getAttribLocation(shaderProgram, "coordinates");
 
 
-         gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0); 
+         gl.vertexAttribPointer(coordPos, 3, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 0); 
          
 
-         gl.enableVertexAttribArray(coord);
+         gl.enableVertexAttribArray(coordPos);
 
+         var colorPos = gl.getAttribLocation(shaderProgram, "aColor");
+
+
+         gl.vertexAttribPointer(colorPos, 3, gl.FLOAT, false, 6 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT); 
+         
+
+         gl.enableVertexAttribArray(colorPos);
 
 
          var ang = Math.tan((40*0.5)*Math.PI/180);
@@ -235,7 +246,7 @@
             ];
          }
 
-         // Helper functions (same as before)
+
          function normalize(v) {
             const length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
             return [v[0] / length, v[1] / length, v[2] / length];
@@ -257,25 +268,11 @@
          var time = 0.1;
 
          gl.viewport(0,0,canvas.width,canvas.height);
-/*
-         document.addEventListener('keyup', (event) => {
-            if (event.key == 'ArrowLeft') {
-               rotateX(modelMatrix, 2*Math.PI-time*0.3);
-            }
-            if (event.key == 'ArrowDown') {
-               rotateY(modelMatrix, time*0.3);
-            }
-            if (event.key == 'ArrowRight') {
-               rotateX(modelMatrix, time*0.3);
-            }
-            if (event.key == 'ArrowUp') {
-               rotateY(modelMatrix, 2*Math.PI-time*0.3);
-            }
-         });//*/
+
 
          let cameraPos = [0, 0, 3];
-         let front = [0, 0, -1]      // Camera position
-         let xAngle = 0;               // Pitch (up/down) in radians
+         let front = [0, 0, -1]     
+         let xAngle = 0;             
          let yAngle = Math.PI;
          let speed = 0.3;   
 
@@ -310,25 +307,7 @@
             
             viewMatrix = lookAt(cameraPos, front);
 
-         /*
-         let viewMatrix = lookAtWithAngles(cameraPos, xAngle, yAngle);
-
-         // For WebGL, flatten the matrix
-         let flatViewMatrix = new Float32Array([
-            viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0], viewMatrix[3][0],
-            viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1], viewMatrix[3][1],
-            viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2], viewMatrix[3][2],
-            viewMatrix[0][3], viewMatrix[1][3], viewMatrix[2][3], viewMatrix[3][3]
-         ]);
-         //*/
-        
-
-        // time += 0.001;
-         //rotateZ(modelMatrix, time*0.5);
-        // rotateY(modelMatrix, time*0.2);
-        // rotateX(modelMatrix, time*0.3);
-
-
+      
          gl.uniformMatrix4fv(pLoc, false, projMatrix);
          gl.uniformMatrix4fv(vLoc, false, viewMatrix);
          gl.uniformMatrix4fv(mLoc, false, modelMatrix);
