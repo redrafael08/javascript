@@ -76,18 +76,19 @@ print(len(newshapes))
 
 triangles = []
 for shape in newshapes:
+    shapecolor = random.random()/4+0.5
     for i in range(len(shape)-2):
-        triangles.append([newvertices[shape[0]-1], newvertices[shape[i+1]-1], newvertices[shape[i+2]-1]])
+        triangles.append([newvertices[shape[0]-1], newvertices[shape[i+1]-1], newvertices[shape[i+2]-1], shapecolor,shapecolor,shapecolor])
   #  for vertex in shape:
 
       #  print(vertex)
        # print(newvertices[vertex-1])
 
 for triangle in triangles:
-    trianglecolor = random.random()
+
     vertprintlist = []
-    for vertex in triangle:
-        vertprintlist.append(f"{vertex[0]},{vertex[1]},{vertex[2]},{trianglecolor},{trianglecolor},{trianglecolor}")
+    for vertex in triangle[:3]:
+        vertprintlist.append(f"{vertex[0]},{vertex[1]},{vertex[2]},   {triangle[3]},{triangle[4]},{triangle[5]}")
     print(f"{vertprintlist[0]},{vertprintlist[1]},{vertprintlist[2]},")
 
 
