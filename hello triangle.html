@@ -1,18 +1,69 @@
 <!doctype html>
+
 <html>
+   <head>
+      <style>
+         .container {
+            position: relative;
+         }
+         
+         #text {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 10;
+         }
+      </style>
+   </head>
    <body>
-      <canvas width = "800" height = "600" id = "my_Canvas"></canvas>
+      <div class="container">
+         <canvas width = "800" height = "600" id="my_Canvas"></canvas>
+         <canvas width = "800" height = "600" id="text"></canvas>
+       </div>
+      <!--   <canvas width = "800" height = "600" id = "my_Canvas"></canvas> !-->
 
       <script>
        
          var canvas = document.getElementById('my_Canvas');
          gl = canvas.getContext('experimental-webgl');
 
-         document.addEventListener('click', () => {
+                  // look up the text canvas.
+         var textCanvas = document.getElementById('text');
+         
+         // make a 2D context for it
+         var ctx = textCanvas.getContext("2d");
+
+         pickaxeUpImg = new Image();
+         pickaxeUpImg.src = 'pickaxeUp.png';
+         pickaxeUpImg.onload = function() {
+            ctx.drawImage(pickaxeUpImg, 0, 0, 800, 600);
+         };
+
+         pickaxeDownImg = new Image();
+         pickaxeDownImg.src = 'pickaxeDown.png';
+       //  pickaxeDownImg.onload = function() {
+           // 
+      //   };
+
+
+
+         document.addEventListener('click', (e) => {
             canvas.requestPointerLock = canvas.requestPointerLock || 
                                      canvas.mozRequestPointerLock || 
                                      canvas.webkitRequestPointerLock;
             canvas.requestPointerLock();
+
+            if (e.button == 0) {
+            
+            ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
+            ctx.drawImage(pickaxeDownImg, 0, 0, 800, 600);
+            } 
+
+            if (e.button == 2) {
+            
+            ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
+            ctx.drawImage(pickaxeUpImg, 0, 0, 800, 600);
+            } 
          });
 
          document.addEventListener('mousemove', (e) => {
@@ -21,6 +72,9 @@
                   mouseY = e.movementY;
                   xAngle -= mouseY*0.001;
                   yAngle += mouseX*0.001;
+                  if (xAngle > Math.PI*0.5) {xAngle = 0.5*Math.PI;}
+                  if (xAngle < -Math.PI*0.5) {xAngle =  -Math.PI*0.5; }
+
                }
          });
 
