@@ -377,13 +377,33 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
          }
 
+         function scaleVector(a, b) {
+            return [a * b[0], a * b[1], a * b[2]];
+         }
 
+         function addVector(a, b) {
+            return [a[0] + b[0], a[1] + b[1], a[2], + b[2]];
+         }
+
+         function distance(a, b) {
+            let diff = addVector(a, scaleVector(-1, b));
+            return diff[0]**2 + diff[1]**2 + diff[2]**2;
+         }
+
+         function facingRock() {
+            const reach = 25;
+            for (let i = 1; i < reach; i++) {
+               pos = addVector(cameraPos, scaleVector(i, front));
+               if (distance(pos, [0,0,0]) <= 10) return true;
+            }
+            return false;
+         }
 
 
          gl.viewport(0,0,canvas.width,canvas.height);
 
 
-         let cameraPos = [0, 2, 3];
+         let cameraPos = [0, 10, 3];
          let front = [0, 0, -1]     
          let xAngle = 0;             
          let yAngle = Math.PI;
@@ -429,7 +449,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
 
 
-            modelMatrix = [1000,0,0,0, 0,1000,0,0, 0,0,1000,0, 0,0,0,1];
+            modelMatrix = [10000,0,0,0, 0,10000,0,0, 0,0,10000,0, 0,0,0,1];
             gl.uniformMatrix4fv(pLoc, false, projMatrix);
             gl.uniformMatrix4fv(vLoc, false, viewMatrix);
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);
@@ -437,7 +457,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             gl.drawArrays(gl.TRIANGLES, 0, 6);
 
             gl.bindTexture(gl.TEXTURE_2D, texture);
-            modelMatrix = [2,0,0,0, 0,2,0,0, 0,0,2,0, 0,0,0,1];
+            modelMatrix = [10,0,0,0, 0,10,0,0, 0,0,10,0, 0,0,0,1];
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);
 
             gl.drawArrays(gl.TRIANGLES, 6, vertices.length/2-6);
