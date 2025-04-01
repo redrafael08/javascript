@@ -46,37 +46,7 @@
       //   };
 
 
-
-         document.addEventListener('click', (e) => {
-            canvas.requestPointerLock = canvas.requestPointerLock || 
-                                     canvas.mozRequestPointerLock || 
-                                     canvas.webkitRequestPointerLock;
-            canvas.requestPointerLock();
-
-            if (e.button == 0) {
-            
-            ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
-            ctx.drawImage(pickaxeDownImg, 0, 0, 800, 600);
-            } 
-
-            if (e.button == 2) {
-            
-            ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
-            ctx.drawImage(pickaxeUpImg, 0, 0, 800, 600);
-            } 
-         });
-
-         document.addEventListener('mousemove', (e) => {
-               if (document.pointerLockElement === canvas) {
-                  mouseX = e.movementX;
-                  mouseY = e.movementY;
-                  xAngle -= mouseY*0.001;
-                  yAngle += mouseX*0.001;
-                  if (xAngle > Math.PI*0.5) {xAngle = 0.5*Math.PI;}
-                  if (xAngle < -Math.PI*0.5) {xAngle =  -Math.PI*0.5; }
-
-               }
-         });
+         
 
          var keys = {
             "w":false,
@@ -84,6 +54,34 @@
             "s":false,
             "d":false
          };
+
+         var swingPickaxe = false;
+
+         document.addEventListener('mousemove', (e) => {
+               if (document.pointerLockElement === canvas) {
+                  mouseX = e.movementX;
+                  mouseY = e.movementY;
+                  xAngle -= mouseY*0.001;
+                  yAngle += mouseX*0.001;
+                  if (xAngle > Math.PI*0.5) xAngle = 0.5*Math.PI;
+                  if (xAngle < -Math.PI*0.5) xAngle =  -Math.PI*0.5;
+               }
+         });
+
+         document.addEventListener('click', (e) => {
+            canvas.requestPointerLock = canvas.requestPointerLock || 
+                                     canvas.mozRequestPointerLock || 
+                                     canvas.webkitRequestPointerLock;
+            canvas.requestPointerLock();
+
+            if (e.button == 0) {  
+               if (facingRock()) {
+                  console.log("clicked stone");
+                  swingPickaxe = true;
+               }
+            } 
+         });
+
          document.addEventListener('keydown', (e) => {
             if (e.key in keys) {
                keys[e.key] = true;
@@ -100,7 +98,7 @@
          var vertices = [
             -1,0,-1, 1,1,1, 0,0, 1,0,-1, 1,1,1, 1000,0, 1,0,1, 1,1,1, 1000,1000, 1,0,1, 1,1,1, 1000,1000, -1,0,-1, 1,1,1, 0,0, -1,0,1, 1,1,1, 0,1000, // ground
 
-            
+
             0.755188,0.0,0.236577,   0.989922235513761,0.989922235513761,0.989922235513761,   0.5,1.0,      0.629863,0.408184,0.003875,   0.989922235513761,0.989922235513761,0.989922235513761,   0.933013,0.75,      0.420653,0.681836,0.050294,   0.989922235513761,0.989922235513761,0.989922235513761,   0.933013,0.25,
       0.755188,0.0,0.236577,   0.989922235513761,0.989922235513761,0.989922235513761,   0.5,1.0,      0.420653,0.681836,0.050294,   0.989922235513761,0.989922235513761,0.989922235513761,   0.933013,0.25,      0.135188,0.692275,0.387458,   0.989922235513761,0.989922235513761,0.989922235513761,   0.5,0.0,
       0.755188,0.0,0.236577,   0.989922235513761,0.989922235513761,0.989922235513761,   0.5,1.0,      0.135188,0.692275,0.387458,   0.989922235513761,0.989922235513761,0.989922235513761,   0.5,0.0,      0.206469,0.404311,0.603985,   0.989922235513761,0.989922235513761,0.989922235513761,   0.066987,0.25,
@@ -144,15 +142,15 @@ img.src = "textures/stone_texture.png";
 
 img.onload = function() {
 
-gl.activeTexture(gl.TEXTURE0);
+   gl.activeTexture(gl.TEXTURE0);
 
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-  gl.generateMipmap(gl.TEXTURE_2D);
+   gl.bindTexture(gl.TEXTURE_2D, texture);
+   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+   gl.generateMipmap(gl.TEXTURE_2D);
 
 };
 
@@ -377,6 +375,10 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
          }
 
+         function difference(a, b) {
+            return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]
+         }
+
          function scaleVector(a, b) {
             return [a * b[0], a * b[1], a * b[2]];
          }
@@ -386,14 +388,15 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
          }
 
          function distance(a, b) {
-            let diff = addVector(a, scaleVector(-1, b));
-            return diff[0]**2 + diff[1]**2 + diff[2]**2;
+            let diff = difference(a, b);
+            return Math.sqrt(diff[0]**2 + diff[1]**2 + diff[2]**2);
          }
 
          function facingRock() {
-            const reach = 25;
+            const reach = 20;
+            let pos = cameraPos;
             for (let i = 1; i < reach; i++) {
-               pos = addVector(cameraPos, scaleVector(i, front));
+               pos = addVector(pos, front);
                if (distance(pos, [0,0,0]) <= 10) return true;
             }
             return false;
@@ -403,17 +406,20 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
          gl.viewport(0,0,canvas.width,canvas.height);
 
 
-         let cameraPos = [0, 10, 3];
+         let cameraPos = [0, 10, 15];
          let front = [0, 0, -1]     
          let xAngle = 0;             
          let yAngle = Math.PI;
-         let speed = 0.3;   
+         let speed = 0.5;
+         
+         let pickaxeDelay = 0;
 
          function gameloop() {
             cosa = Math.cos(yAngle);
             sina = Math.sin(yAngle);
             front = [Math.cos(xAngle) * sina, Math.sin(xAngle), Math.cos(xAngle) * cosa]
 
+            prevPos = [...cameraPos];
             if (keys["w"]) {
                cameraPos[0] += sina * speed;
                cameraPos[2] += cosa * speed;
@@ -429,6 +435,24 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             if (keys["d"]) {
                cameraPos[0] += cosa * speed;
                cameraPos[2] -= sina * speed;
+            }
+
+            if (distance(cameraPos, [0, cameraPos[1], 0]) <= 10) {
+               cameraPos = [...prevPos];
+            }
+
+            if (swingPickaxe && pickaxeDelay == 0) {
+               pickaxeDelay = 15;
+               swingPickaxe = false;
+               ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
+               ctx.drawImage(pickaxeDownImg, 0, 0, 800, 600);
+            }
+            if (pickaxeDelay > 0) {
+               pickaxeDelay--;
+               if (pickaxeDelay == 5) {
+                  ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
+                  ctx.drawImage(pickaxeUpImg, 0, 0, 800, 600);
+               }
             }
 
             gl.clearColor(0.57, 0.79, 0.98, 1.0);
