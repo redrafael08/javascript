@@ -1,7 +1,7 @@
 import random
 
 
-file = open('C://Users//Rafael//Documents//blender objects//sphere.obj', 'r').read()
+file = open('C://Users//Rafael//Documents//blender objects//landspot.obj', 'r').read()
 
 
 #print(repr(file))
@@ -112,10 +112,10 @@ for shape in shapes:
 triangles = []
 for shape in newshapes:
    # print('e',shape)
-    shapecolor = random.random()/2+0.5
+  #  shapecolor = random.random()/2+0.5
     for i in range(len(shape)-2):
        # print(shape)
-        triangles.append([[newvertices[shape[0][0]-1], newtexturecoords[shape[0][1]-1]], [newvertices[shape[i+1][0]-1], newtexturecoords[shape[i+1][1]-1]], [newvertices[shape[i+2][0]-1], newtexturecoords[shape[i+2][1]-1]], shapecolor,shapecolor,shapecolor])
+        triangles.append([[newvertices[shape[0][0]-1], newtexturecoords[shape[0][1]-1]], [newvertices[shape[i+1][0]-1], newtexturecoords[shape[i+1][1]-1]], [newvertices[shape[i+2][0]-1], newtexturecoords[shape[i+2][1]-1]], 2,1.5,2.9])
   #  for vertex in shape:
 
       #  print(vertex)
