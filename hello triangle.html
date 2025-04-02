@@ -78,6 +78,7 @@
                if (facingRock()) {
                   console.log("clicked stone");
                   swingPickaxe = true;
+                  cash += 1
                }
             } 
          });
@@ -411,6 +412,11 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
          let xAngle = 0;             
          let yAngle = Math.PI;
          let speed = 0.5;
+
+         let cash = 0;
+
+         ctx.font = "50px Arial";
+         ctx.fillText(cash, 10,50);
          
          let pickaxeDelay = 0;
 
@@ -437,7 +443,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
                cameraPos[2] -= sina * speed;
             }
 
-            if (distance(cameraPos, [0, cameraPos[1], 0]) <= 10) {
+            if (distance(cameraPos, [0, cameraPos[1], 0]) <= 9) {
                cameraPos = [...prevPos];
             }
 
@@ -445,12 +451,14 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
                pickaxeDelay = 15;
                swingPickaxe = false;
                ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
+               ctx.fillText(cash, 10,50);
                ctx.drawImage(pickaxeDownImg, 0, 0, 800, 600);
             }
             if (pickaxeDelay > 0) {
                pickaxeDelay--;
                if (pickaxeDelay == 5) {
                   ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
+                  ctx.fillText(cash, 10,50);
                   ctx.drawImage(pickaxeUpImg, 0, 0, 800, 600);
                }
             }
