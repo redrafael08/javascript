@@ -76,12 +76,14 @@
 
             if (e.button == 0) {  
                if (facingObject([0,0,0])) {
-                //  console.log("clicked stone");
                   if (pickaxeDelay == 0) {
                      swingPickaxe = true;
-                     pickaxeDelay = 10;
+                     pickaxeDelay = currentPickaxe.speed;
+                     clickRock();
                   }
-                  cash += 1
+               }
+               if (facingObject(anvilPos)) {
+                  upgrade();
                }
             } 
          });
@@ -496,6 +498,25 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             return false;
          }
 
+         function clickRock() {
+            cash += (upgrades + 1) * currentPickaxe.quality;
+         }
+
+         function upgrade() {
+            if (cash >= upgradeCost) {
+               upgrades += 1;
+               cash -= upgradeCost;
+               upgradeCost += 10
+            }
+         }
+
+         class Pickaxe {
+            constructor(speed, quality) {
+               this.speed = speed;
+               this.quality = quality;
+            }
+         }
+
 
          gl.viewport(0,0,canvas.width,canvas.height);
 
@@ -507,6 +528,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
          let speed = 1;
 
          let cash = 0;
+         let upgrades = 0;
 
          let upgradeCost = 10;
 
@@ -515,7 +537,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
          let anvilPos = [50,0,20];
          let dropPos = [-60, 0, 40]
 
-         
+         let currentPickaxe = new Pickaxe(15, 1);
          let pickaxeDelay = 0;
 
          function gameloop() {
@@ -527,7 +549,6 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             if (keys["w"]) {
                cameraPos[0] += sina * speed;
                cameraPos[2] += cosa * speed;
-
             }
             if (keys["a"]) {
                cameraPos[0] -= cosa * speed;
@@ -563,7 +584,10 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
                if (pickaxeDelay > 0) {
                   ctx.drawImage(pickaxeDownImg, 0, 0, 800, 600);
                }
-               else {swingPickaxe = false; pickaxeDelay=10;}
+               else {
+                  swingPickaxe = false;
+                  pickaxeDelay = currentPickaxe.speed;
+               }
             }
             else {
                ctx.drawImage(pickaxeUpImg, 0, 0, 800, 600);
