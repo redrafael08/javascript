@@ -102,7 +102,7 @@
 
 
          const vertices = [
-         -1,0,-1, 1,1,1, 0,0, 1,0,-1, 1,1,1, 300,0, 1,0,1, 1,1,1, 300,300, 1,0,1, 1,1,1, 300,300, -1,0,-1, 1,1,1, 0,0, -1,0,1, 1,1,1, 0,300, // ground
+         -1,0,-1, 1,1,1, 0,0, 1,0,-1, 1,1,1, 30,0, 1,0,1, 1,1,1, 30,30, 1,0,1, 1,1,1, 30,30, -1,0,-1, 1,1,1, 0,0, -1,0,1, 1,1,1, 0,30, // ground
 
 
             // droppos
@@ -126,7 +126,19 @@
       -0.8,0.0,0.6,   1,1,1,   0.366614,0.629765,      -1.0,0.0,0.6,   1,1,1,   0.410002,0.629765,      -1.0,0.0,0.8,   1,1,1,   0.410002,0.673153,
       -0.8,0.0,0.6,   1,1,1,   0.366614,0.629765,      -1.0,0.0,0.8,   1,1,1,   0.410002,0.673153,      -0.8,0.0,0.8,   1,1,1,   0.366614,0.673153,
 
-
+         // crate
+         1.0,1.0,-1.0,   1,1,1,   0.0,0.0,      -1.0,1.0,-1.0,   1,1,1,   1.0,0.0,      -1.0,1.0,1.0,   1,1,1,   1.0,1.0,
+      1.0,1.0,-1.0,   1,1,1,   0.0,0.0,      -1.0,1.0,1.0,   1,1,1,   1.0,1.0,      1.0,1.0,1.0,   1,1,1,   0.0,1.0,
+      1.0,-1.0,1.0,   1,1,1,   0.0,0.0,      1.0,1.0,1.0,   1,1,1,   1.0,0.0,      -1.0,1.0,1.0,   1,1,1,   1.0,1.0,
+      1.0,-1.0,1.0,   1,1,1,   0.0,0.0,      -1.0,1.0,1.0,   1,1,1,   1.0,1.0,      -1.0,-1.0,1.0,   1,1,1,   0.0,1.0,
+      -1.0,-1.0,1.0,   1,1,1,   0.0,0.0,      -1.0,1.0,1.0,   1,1,1,   1.0,0.0,      -1.0,1.0,-1.0,   1,1,1,   1.0,1.0,
+      -1.0,-1.0,1.0,   1,1,1,   0.0,0.0,      -1.0,1.0,-1.0,   1,1,1,   1.0,1.0,      -1.0,-1.0,-1.0,   1,1,1,   0.0,1.0,
+      -1.0,-1.0,-1.0,   1,1,1,   0.0,0.0,      1.0,-1.0,-1.0,   1,1,1,   1.0,0.0,      1.0,-1.0,1.0,   1,1,1,   1.0,1.0,
+      -1.0,-1.0,-1.0,   1,1,1,   0.0,0.0,      1.0,-1.0,1.0,   1,1,1,   1.0,1.0,      -1.0,-1.0,1.0,   1,1,1,   0.0,1.0,
+      1.0,-1.0,-1.0,   1,1,1,   0.0,0.0,      1.0,1.0,-1.0,   1,1,1,   1.0,0.0,      1.0,1.0,1.0,   1,1,1,   1.0,1.0,
+      1.0,-1.0,-1.0,   1,1,1,   0.0,0.0,      1.0,1.0,1.0,   1,1,1,   1.0,1.0,      1.0,-1.0,1.0,   1,1,1,   0.0,1.0,
+      -1.0,-1.0,-1.0,   1,1,1,   0.0,0.0,      -1.0,1.0,-1.0,   1,1,1,   1.0,0.0,      1.0,1.0,-1.0,   1,1,1,   1.0,1.0,
+      -1.0,-1.0,-1.0,   1,1,1,   0.0,0.0,      1.0,1.0,-1.0,   1,1,1,   1.0,1.0,      1.0,-1.0,-1.0,   1,1,1,   0.0,1.0,
 
 
       // anvil
@@ -275,20 +287,25 @@ function newTexture(texture, image) {
 
 }
 
-const texture = gl.createTexture();
-newTexture(texture, 'stone_texture.png');
+const stoneTexture = gl.createTexture();
+newTexture(stoneTexture, 'stone_texture.png');
 
 
+const grassTexture = gl.createTexture();
+newTexture(grassTexture, 'grass.png');
+const moonTexture = gl.createTexture();
+newTexture(moonTexture, 'moon.png');
+const marsTexture = gl.createTexture();
+newTexture(marsTexture, 'mars.png');
 
-const texture2 = gl.createTexture();
-newTexture(texture2, 'mars.png');
+const crateTexture = gl.createTexture();
+newTexture(crateTexture, 'crate.png');
 
+const anvilTexture = gl.createTexture();
+newTexture(anvilTexture, 'anvil.png');
 
-const texture3 = gl.createTexture();
-newTexture(texture3, 'anvil.png');
-
-const texture4 = gl.createTexture();
-newTexture(texture4, 'crystal.png');
+const oreTexture = gl.createTexture();
+newTexture(oreTexture, 'crystal.png');
 
 
          const vertex_buffer = gl.createBuffer();
@@ -407,8 +424,8 @@ newTexture(texture4, 'crystal.png');
          let ang = Math.tan((40*0.5)*Math.PI/180);
          let projMatrix = [0.5/ang, 0 , 0, 0,
                            0, 0.5*(canvas.width/canvas.height)/ang, 0, 0,
-                           0, 0, -(1000+1)/(1000-1), -1,
-                           0, 0, (-2*1000*1)/(1000-1), 0 
+                           0, 0, -(500+1)/(500-1), -1,
+                           0, 0, (-2*500*1)/(500-1), 0 
                         ];
          let viewMatrix = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
          let modelMatrix = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
@@ -550,6 +567,7 @@ newTexture(texture4, 'crystal.png');
          let upgradeCost = 10;
 
          ctx.font = "50px Arial";
+         ctx.fillStyle = 'white';
 
          let anvilPos = [50,0,20];
          let dropPos = [-60, 0, 40]
@@ -580,7 +598,7 @@ newTexture(texture4, 'crystal.png');
                cameraPos[2] -= sina * speed;
             }
 
-            if (distance(cameraPos, [0, cameraPos[1], 0]) <= 9 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 9) {
+            if (distance(cameraPos, [0, cameraPos[1], 0]) > 400 || distance(cameraPos, [0, cameraPos[1], 0]) <= 9 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 9 || distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 9) {
                cameraPos = [...prevPos];
             }
 
@@ -591,11 +609,18 @@ newTexture(texture4, 'crystal.png');
 
             if (facingObject(anvilPos)) {
                ctx.fillText("Upgrade Cost: "+ upgradeCost, 10,100);
+               ctx.strokeText("Upgrade Cost: "+ upgradeCost, 10,100);
+            }
+            if (facingObject(dropPos)) {
+               ctx.fillText("Upgrade Cost: "+ upgradeCost, 10,100);
+               ctx.strokeText("Upgrade Cost: "+ upgradeCost, 10,100);
             }
 
             ctx.fillText("$ " + cash, 10,50);
+            ctx.strokeText("$ " + cash, 10,50);
 
-            ctx.fillText("x", 400,300)
+            ctx.fillText("x", 400,300);
+            ctx.strokeText("x", 400,300);
 
             if (swingPickaxe) {
                if (pickaxeDelay > 0) {
@@ -616,8 +641,9 @@ newTexture(texture4, 'crystal.png');
 
 
 
-          //  gl.clearColor(0.57, 0.79, 0.98, 1.0);
-            gl.clearColor(0, 0, 0, 1.0);
+           // gl.clearColor(0.57, 0.79, 0.98, 1.0); // earth sky
+           // gl.clearColor(0, 0, 0, 1.0); // moon sky
+            gl.clearColor(0.96, 0.80, 0.62, 1.0); // mars sky
 
             gl.enable(gl.DEPTH_TEST);
 
@@ -631,11 +657,8 @@ newTexture(texture4, 'crystal.png');
 
 
 
-            gl.bindTexture(gl.TEXTURE_2D, texture2);
-
-
-
-            modelMatrix = [10000,0,0,0, 0,10000,0,0, 0,0,10000,0, 0,0,0,1];
+            gl.bindTexture(gl.TEXTURE_2D, marsTexture);
+            modelMatrix = [1000,0,0,0, 0,1,0,0, 0,0,1000,0, 0,0,0,1];
             gl.uniformMatrix4fv(pLoc, false, projMatrix);
             gl.uniformMatrix4fv(vLoc, false, viewMatrix);
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);
@@ -657,25 +680,31 @@ newTexture(texture4, 'crystal.png');
             gl.drawArrays(gl.TRIANGLES, 6, 48);
 
 
-
-
-            gl.bindTexture(gl.TEXTURE_2D, texture3);
-            modelMatrix = [3,0,0,0, 0,3,0,0, 0,0,3,0, anvilPos[0],0,anvilPos[2],1];
+            modelMatrix = [5,0,0,0, 0,5,0,0, 0,0,5,0, dropPos[0],5,dropPos[2],1];
+            gl.bindTexture(gl.TEXTURE_2D, crateTexture);
+            gl.uniformMatrix4fv(mLoc, false, modelMatrix);
             gl.uniform3fv(cLoc, [1,1,1]);
+            gl.drawArrays(gl.TRIANGLES, 6+48, 36);
+
+
+
+
+            gl.bindTexture(gl.TEXTURE_2D, anvilTexture);
+            modelMatrix = [3,0,0,0, 0,3,0,0, 0,0,3,0, anvilPos[0],0,anvilPos[2],1];
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);
 
-            gl.drawArrays(gl.TRIANGLES, 6+48, 144);
+            gl.drawArrays(gl.TRIANGLES, 6+48+36, 144);
 
             
-            gl.bindTexture(gl.TEXTURE_2D, texture2);
+            gl.bindTexture(gl.TEXTURE_2D, marsTexture);
             modelMatrix = [10,0,0,0, 0,10,0,0, 0,0,10,0, 0,0,0,1];
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);
             
-            gl.drawArrays(gl.TRIANGLES, 6+48+144, 84);
+            gl.drawArrays(gl.TRIANGLES, 6+48+36+144, 84);
             
             gl.uniform3fv(cLoc, [1,0,0]);
-            gl.bindTexture(gl.TEXTURE_2D, texture4);
-            gl.drawArrays(gl.TRIANGLES, 6+48+144+84, 102);
+            gl.bindTexture(gl.TEXTURE_2D, oreTexture);
+            gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84, 102);
 
          }
 

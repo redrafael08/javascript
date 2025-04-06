@@ -1,7 +1,7 @@
 import random
 
 
-file = open('C://Users//Rafael//Documents//blender objects//landspot.obj', 'r').read()
+file = open('C://Users//Rafael//Documents//blender objects//cube.obj', 'r').read()
 
 
 #print(repr(file))
