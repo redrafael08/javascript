@@ -55,7 +55,7 @@
             "d":false
          };
 
-         let swingPickaxe = false;
+         let clickOnRock = false;
 
          document.addEventListener('mousemove', (e) => {
                if (document.pointerLockElement === canvas) {
@@ -76,11 +76,7 @@
 
             if (e.button == 0) {  
                if (facingObject([0,0,0])) {
-                  if (pickaxeDelay == 0) {
-                     swingPickaxe = true;
-                     pickaxeDelay = currentPickaxe.speed;
-                     clickRock();
-                  }
+                  clickOnRock = true;
                }
                if (facingObject(anvilPos)) {
                   upgrade();
@@ -580,14 +576,13 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
             ctx.fillText("x", 400,300)
 
-            if (swingPickaxe) {
-               if (pickaxeDelay > 0) {
-                  ctx.drawImage(pickaxeDownImg, 0, 0, 800, 600);
-               }
-               else {
-                  swingPickaxe = false;
-                  pickaxeDelay = currentPickaxe.speed;
-               }
+            if (clickOnRock && pickaxeDelay == 0) {
+               pickaxeDelay = currentPickaxe.speed;
+               clickRock();
+            }
+
+            if (pickaxeDelay > Math.round(currentPickaxe.speed / 3)) {
+               ctx.drawImage(pickaxeDownImg, 0, 0, 800, 600);
             }
             else {
                ctx.drawImage(pickaxeUpImg, 0, 0, 800, 600);
@@ -596,6 +591,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
             if (pickaxeDelay > 0) {
                pickaxeDelay--;
             }
+            clickOnRock = false;
 
 
 
