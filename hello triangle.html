@@ -27,7 +27,7 @@
          const canvas = document.getElementById('my_Canvas');
          gl = canvas.getContext('experimental-webgl');
 
-                  // look up the text canvas.
+         // look up the text canvas.
          const textCanvas = document.getElementById('text');
          
          // make a 2D context for it
@@ -41,12 +41,6 @@
 
          let pickaxeDownImg = new Image();
          pickaxeDownImg.src = 'pickaxeDown.png';
-       //  pickaxeDownImg.onload = function() {
-           // 
-      //   };
-
-
-         
 
          let keys = {
             "w":false,
@@ -199,9 +193,6 @@
       -0.762037,0.0,0.230385,   0.7416061113093719,0.7416061113093719,0.7416061113093719,   0.0,0.0,      -0.464426,0.0,0.612229,   0.7416061113093719,0.7416061113093719,0.7416061113093719,   1.0,0.0,      -0.545876,0.338237,0.379919,   0.7416061113093719,0.7416061113093719,0.7416061113093719,   1.0,1.0,
       -0.008878,0.0,0.769289,   0.7679721707673244,0.7679721707673244,0.7679721707673244,   0.0,0.0,      0.477912,0.0,0.615121,   0.7679721707673244,0.7679721707673244,0.7679721707673244,   1.0,0.0,      0.206469,0.404311,0.603985,   0.7679721707673244,0.7679721707673244,0.7679721707673244,   1.0,1.0,
       0.755188,0.0,0.236577,   0.92563632608978,0.92563632608978,0.92563632608978,   0.0,0.0,      0.771159,0.0,-0.246798,   0.92563632608978,0.92563632608978,0.92563632608978,   1.0,0.0,      0.629863,0.408184,0.003875,   0.92563632608978,0.92563632608978,0.92563632608978,   1.0,1.0,
-
-
-
    ];
        
 
@@ -213,7 +204,6 @@ img.crossOrigin = '';
 img.src = "textures/stone_texture.png";
 
 img.onload = function() {
-
    gl.activeTexture(gl.TEXTURE0);
 
    gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -223,7 +213,6 @@ img.onload = function() {
    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
    gl.generateMipmap(gl.TEXTURE_2D);
-
 };
 
 
@@ -234,17 +223,15 @@ img2.crossOrigin = '';
 img2.src = "textures/grass.png";
 
 img2.onload = function() {
+   gl.activeTexture(gl.TEXTURE0);
 
-gl.activeTexture(gl.TEXTURE0);
-
-  gl.bindTexture(gl.TEXTURE_2D, texture2);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img2);
-  gl.generateMipmap(gl.TEXTURE_2D);
-
+   gl.bindTexture(gl.TEXTURE_2D, texture2);
+   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img2);
+   gl.generateMipmap(gl.TEXTURE_2D);
 };
 
 
@@ -518,7 +505,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
 
          let cameraPos = [0, 10, 15];
-         let front = [0, 0, -1]     
+         let front = [0, 0, -1];  
          let xAngle = 0;             
          let yAngle = Math.PI;
          let speed = 1;
@@ -531,7 +518,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
          ctx.font = "50px Arial";
 
          let anvilPos = [50,0,20];
-         let dropPos = [-60, 0, 40]
+         let dropPos = [-60, 0, 40];
 
          let currentPickaxe = new Pickaxe(15, 1);
          let pickaxeDelay = 0;
@@ -539,7 +526,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
          function gameloop() {
             cosa = Math.cos(yAngle);
             sina = Math.sin(yAngle);
-            front = [Math.cos(xAngle) * sina, Math.sin(xAngle), Math.cos(xAngle) * cosa]
+            front = [Math.cos(xAngle) * sina, Math.sin(xAngle), Math.cos(xAngle) * cosa];
 
             prevPos = [...cameraPos];
             if (keys["w"]) {
@@ -574,7 +561,7 @@ gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
             ctx.fillText("$ " + cash, 10,50);
 
-            ctx.fillText("x", 400,300)
+            ctx.fillText("x", 400,300);
 
             if (clickOnRock && pickaxeDelay == 0) {
                pickaxeDelay = currentPickaxe.speed;
