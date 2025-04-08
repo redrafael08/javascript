@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+
+
+</style>
+
+</head>
+<body>
+
+
+
+<!-- <div id="div1" ondrop="dropHandler(event)"   ondragover="dragoverHandler(event)"></div> -->
+<br>
+
+<!-- <div id="link1" draggable="true" ondragstart="dragstartHandler(event)">W3Schools.com</div> -->
+
+<script>
+    function dragstartHandler(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+    }
+    
+    function dragoverHandler(ev) {
+      ev.preventDefault();
+    }
+    
+    function dropHandler(ev) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData("text");
+      ev.target.appendChild(document.getElementById(data));
+    }
+    
+    /*
+    let div;
+    let img;
+    for (let i = 0; i < 10; i++) {
+    div = document.createElement('div');
+    div.setAttribute("id", "div"+i);
+    div.setAttribute("ondrop", "dropHandler(event)"); 
+    div.setAttribute("ondragover", "dragoverHandler(event)"); 
+    div.setAttribute("style", "  width: 350px;height: 70px;padding: 10px;border: 1px solid #aaaaaa;"); 
+    document.body.appendChild(div);
+
+    
+
+    img = document.createElement('div');
+    img.setAttribute("id", "henk"+i);
+    img.setAttribute("draggable", "true"); 
+    img.setAttribute("ondragstart", "dragstartHandler(event)"); 
+    img.setAttribute("style", "width: 350px;height: 70px;padding: 10px;border: 1px solid rgb(255,0,0);"); 
+
+    document.getElementById("div"+i).appendChild(img);}*/
+
+    pickaxeContainer = document.createElement('div');
+    pickaxeContainer.setAttribute("id", "pickaxeContainer");
+    pickaxeContainer.setAttribute("draggable", "true"); 
+    pickaxeContainer.setAttribute("ondragstart", "dragstartHandler(event)"); 
+    pickaxeContainer.setAttribute("style", "width: 350px;height: 70px;padding: 10px;border: 1px solid rgb(0,0,0); "); 
+
+    document.body.appendChild(pickaxeContainer);
+
+    pickaxeImg = document.createElement('img');
+    pickaxeImg.setAttribute("id", "pickaxeImg");
+    pickaxeImg.setAttribute("src", "pickaxe icon.png");
+    pickaxeImg.setAttribute("style", "width: 70px;height: 70px; float: left;"); 
+
+    document.getElementById("pickaxeContainer").appendChild(pickaxeImg);
+    
+    pickaxeStats = document.createElement('div');
+    pickaxeStats.setAttribute("id", "pickaxeStats");
+    pickaxeStats.setAttribute("style", "width: 250px;height: 50px;padding: 10px; float: left;"); 
+
+    document.getElementById("pickaxeContainer").appendChild(pickaxeStats);
+   
+    pickaxeQuality = document.createElement('div');
+    pickaxeQuality.setAttribute("id", "pickaxeQuality");
+    pickaxeQuality.setAttribute("style", "width: 200px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+    document.getElementById("pickaxeStats").appendChild(pickaxeQuality);  
+    pickaxeDamage = document.createElement('div');
+    pickaxeDamage.setAttribute("id", "pickaxeDamage");
+    pickaxeDamage.setAttribute("style", "width: 200px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+    document.getElementById("pickaxeStats").appendChild(pickaxeDamage);  
+    pickaxeSpeed = document.createElement('div');
+    pickaxeSpeed.setAttribute("id", "pickaxeSpeed");
+    pickaxeSpeed.setAttribute("style", "width: 200px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+    document.getElementById("pickaxeStats").appendChild(pickaxeSpeed);    
+    pickaxeUpgradability = document.createElement('div');
+    pickaxeUpgradability.setAttribute("id", "pickaxeUpgradability");
+    pickaxeUpgradability.setAttribute("style", "width: 200px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+    document.getElementById("pickaxeStats").appendChild(pickaxeUpgradability);    
+    </script>
+
+
+</body>
+</html>

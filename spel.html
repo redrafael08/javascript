@@ -5,6 +5,14 @@
       <style>
          .container {
             position: relative;
+            
+         }
+
+         .button {
+            width: 350px;
+            height: 100px;
+            padding: 10px; 
+            display:block;
          }
          
          #text {
@@ -13,10 +21,19 @@
             top: 0px;
             z-index: 10;
          }
+         #inventory {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 20;
+            overflow: auto;
+            height: 600px;
+         }
       </style>
    </head>
    <body>
       <div class="container">
+         <div id="inventory" hidden></div>
          <canvas width = "800" height = "600" id="my_Canvas"></canvas>
          <canvas width = "800" height = "600" id="text"></canvas>
        </div>
@@ -69,10 +86,7 @@
          });
 
          document.addEventListener('click', (e) => {
-            canvas.requestPointerLock = canvas.requestPointerLock || 
-                                     canvas.mozRequestPointerLock || 
-                                     canvas.webkitRequestPointerLock;
-            canvas.requestPointerLock();
+
 
             if (e.button == 0) {  
                mouseClicked = true;
@@ -644,19 +658,66 @@
          }
          
          function randomPickaxe() {
-            return new Pickaxe(Math.round(20 - weightedRandom()*20), weightedRandom() + 0.8, weightedRandom()*2 + 0.5);
+            return new Pickaxe(Math.round(20 - weightedRandom()*20), weightedRandom() + 0.8, weightedRandom()*2 + 0.5, weightedRandom()*2 + 0.5);
          }
 
+         function addPickaxeInventory(index) {
+               pickaxeContainer = document.createElement('button');
+               pickaxeContainer.setAttribute("id", "pickaxeContainer"+index);
+               pickaxeContainer.setAttribute("class", "button");
+               // pickaxeContainer.setAttribute("draggable", "true"); 
+            //  pickaxeContainer.setAttribute("ondragstart", "dragstartHandler(event)"); 
+               pickaxeContainer.setAttribute("onclick", "equipPickaxe((this.id).replace('pickaxeContainer', ''))"); 
+             //  pickaxeContainer.setAttribute("style", "width: 350px;height: 100px;padding: 10px; display:block;"); 
+               
+               document.getElementById("inventory").appendChild(pickaxeContainer);
+
+               pickaxeImg = document.createElement('img');
+               pickaxeImg.setAttribute("id", "pickaxeImg"+index);
+               pickaxeImg.setAttribute("src", "pickaxe icon.png");
+               pickaxeImg.setAttribute("style", "width: 70px;height: 70px; float: left;"); 
+
+               document.getElementById("pickaxeContainer"+index).appendChild(pickaxeImg);
+               
+               pickaxeStats = document.createElement('div');
+               pickaxeStats.setAttribute("id", "pickaxeStats"+index);
+               pickaxeStats.setAttribute("style", "width: 200;height: 50px;padding: 10px; float: left;"); 
+
+               document.getElementById("pickaxeContainer"+index).appendChild(pickaxeStats);
+               
+               pickaxeQuality = document.createElement('div');
+               pickaxeQuality.setAttribute("id", "pickaxeQuality"+index);
+               pickaxeQuality.setAttribute("style", "width: "+pickaxes[index].quality*50+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               document.getElementById("pickaxeStats"+index).appendChild(pickaxeQuality);  
+               pickaxeDamage = document.createElement('div');
+               pickaxeDamage.setAttribute("id", "pickaxeDamage"+index);
+               pickaxeDamage.setAttribute("style", "width: "+pickaxes[index].damage*50+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               document.getElementById("pickaxeStats"+index).appendChild(pickaxeDamage);  
+               pickaxeSpeed = document.createElement('div');
+               pickaxeSpeed.setAttribute("id", "pickaxeSpeed"+index);
+               pickaxeSpeed.setAttribute("style", "width: "+pickaxes[index].speed*10+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               document.getElementById("pickaxeStats"+index).appendChild(pickaxeSpeed);    
+               pickaxeUpgradability = document.createElement('div');
+               pickaxeUpgradability.setAttribute("id", "pickaxeUpgradability"+index);
+               pickaxeUpgradability.setAttribute("style", "width: "+pickaxes[index].upgradability*50+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               document.getElementById("pickaxeStats"+index).appendChild(pickaxeUpgradability);  
+         }
          function buyPickaxe() {
             if (cash >= pickaxeCost) {
                pickaxes.push(randomPickaxe());
                cash -= pickaxeCost;
                pickaxeCost += 10;
-               equipPickaxe(pickaxes.length - 1);
+               addPickaxeInventory(pickaxes.length - 1);
+             
             }
          }
 
          function equipPickaxe(index) {
+            let buttons = document.getElementsByClassName("button");
+            for (let item of buttons) {
+               item.style.backgroundColor = '#f0f0f0';
+            }
+            document.getElementById("pickaxeContainer"+index).style.backgroundColor = 'red';
             if (index >= 0 && index < pickaxes.length) {
                currentPickaxe = pickaxes[index];
             }
@@ -678,10 +739,11 @@
          }
 
          class Pickaxe {
-            constructor(speed, quality, damage) {
+            constructor(speed, quality, damage, upgradability) {
                this.speed = speed;
                this.quality = quality;
                this.damage = damage;
+               this.upgradability = upgradability;
             }
          }
 
@@ -712,7 +774,7 @@
          let yAngle = Math.PI;
          let speed = 1;
 
-         let cash = 0;
+         let cash = 1000;
 
          let upgrades = 0;
          let upgradeCost = 10;
@@ -731,11 +793,15 @@
          const rocks = [new Rock(1, 1, [-1,0,0], 0), new Rock(1, 1.2, [0.25,0.25,0.25], 1), new Rock(1, 1.5, [1+0.5,0.54+0.5,0.5], 2), new Rock(1, 2, [0.85+0.5,0.73+0.5,0.59+0.5], 3), new Rock(1, 2.5, [1.5,1.4,0.5], 4), new Rock(1, 3, [0,0,1], 5), new Rock(1, 5, [0,1,0], 6), new Rock(1, 7, [1,0,0], 7), new Rock(Infinity, 10, [0.5+0.5,1.5,1.5], 8)];
          const dimensions = [new Dimension(1, 1, grassTexture, stoneTexture), new Dimension(1, 1, moonTexture, moonTexture), new Dimension(1, 1, marsTexture, marsTexture)];
          
-         let pickaxes = [new Pickaxe(15, 1, 1)]
+         let pickaxes = [new Pickaxe(15, 1, 1, 1)]
+
          let currentPickaxe = pickaxes[0];
          let currentRock = rocks[0];
          let currentDimension = dimensions[0];
          let pickaxeDelay = 0;
+
+         addPickaxeInventory(pickaxes.length - 1);
+         equipPickaxe(pickaxes.length - 1);
 
          function gameloop() {
             cosa = Math.cos(yAngle);
@@ -789,6 +855,7 @@
             if (facingObject(anvilPos)) {
                displayText("Upgrade Cost: ", upgradeCost, 10,100);
             }
+            
             if (facingObject(dropPos)) {
                ctx.fillText("Pickaxe Cost: "+ pickaxeCost, 10,100);
                ctx.strokeText("Pickaxe Cost: "+ pickaxeCost, 10,100);
@@ -796,6 +863,13 @@
                   buyPickaxe();
                }
             }
+            if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20) {
+               document.getElementById("inventory").hidden = false;
+               document.exitPointerLock();
+            }
+            else {document.getElementById("inventory").hidden = true; canvas.requestPointerLock();}
+
+
             if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) {
                displayText("Upgrade Cost: ", upgradeCost, 10,100);
             }
@@ -912,6 +986,9 @@
             
 
          }
+
+         
+
 
          setInterval(gameloop, 1000 / 30);
       </script>
