@@ -652,6 +652,21 @@
             return new Pickaxe(Math.round(20 - weightedRandom()*20), weightedRandom() + 0.8, weightedRandom()*2 + 0.5);
          }
 
+
+         function displayText(string, value, posx, posy) {
+            let newValue = "";
+            if (value !== "") {
+               let rValue = Math.round(value);
+               let length = rValue.toString().length-1;
+               newValue = (rValue/10**length).toString()+'x10^'+(length).toString();
+            }
+
+
+
+            ctx.fillText(string + newValue, posx,posy);
+            ctx.strokeText(string + newValue, posx,posy);
+         }
+
          class Pickaxe {
             constructor(speed, quality, damage) {
                this.speed = speed;
@@ -740,33 +755,28 @@
             ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
 
             if (facingObject(grindstonePos)) {
-               ctx.fillText("Upgrade Cost: "+ upgradeCost, 10,100);
-               ctx.strokeText("Upgrade Cost: "+ upgradeCost, 10,100);
+               displayText("Upgrade Cost: ", upgradeCost, 10,100);
+
             }
             if (facingObject(rockPos)) {
                if (!isFinite(currentRock.health)) {
-                  ctx.fillText("Health: \u221e", 10,100);
-                  ctx.strokeText("Health: \u221e", 10,100);
+                  displayText("Health: \u221e","", 10,100);
                }
                else {
-                  ctx.fillText("Health: "+ currentRock.health, 10,100);
-                  ctx.strokeText("Health: "+ currentRock.health, 10,100);
+                  displayText("Health: ", currentRock.health, 10,100);
                }
             }
             if (facingObject(dropPos)) {
-               ctx.fillText("Upgrade Cost: "+ upgradeCost, 10,100);
-               ctx.strokeText("Upgrade Cost: "+ upgradeCost, 10,100);
+               displayText("Upgrade Cost: ", upgradeCost, 10,100);
             }
             if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) {
-               ctx.fillText("Upgrade Cost: "+ upgradeCost, 10,100);
-               ctx.strokeText("Upgrade Cost: "+ upgradeCost, 10,100);
+               displayText("Upgrade Cost: ", upgradeCost, 10,100);
             }
 
-            ctx.fillText("$ " + Math.round(cash * 10) / 10, 10,50);
-            ctx.strokeText("$ " + Math.round(cash * 10) / 10, 10,50);
+            displayText("$ ",  Math.round(cash * 10) / 10, 10,50);
 
-            ctx.fillText("x", 400,300);
-            ctx.strokeText("x", 400,300);
+            displayText("x","", 400,300);
+
 
             if (clickOnRock && pickaxeDelay == 0) {
                pickaxeDelay = currentPickaxe.speed;
