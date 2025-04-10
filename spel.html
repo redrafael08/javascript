@@ -33,7 +33,7 @@
    </head>
    <body>
       <div class="container">
-         <div id="inventory" hidden></div>
+         <div id="inventory" hidden><div id="currentPickaxe"></div></div>
          <canvas width = "800" height = "600" id="my_Canvas"></canvas>
          <canvas width = "800" height = "600" id="text"></canvas>
        </div>
@@ -593,9 +593,9 @@
          }
 
          function clickRock() {
-            cash += (currentPickaxe.upgrades + 1) * currentPickaxe.quality * currentRock.quality * currentDimension.cashMultiplier;
+            cash += statConvert(currentPickaxe, 'cash');
             if (isFinite(currentRock.health)) {
-               currentRock.health -= currentPickaxe.damage;
+               currentRock.health -= statConvert(currentPickaxe,'damage');
                if (currentRock.health <= 0) {
                   currentRock = rocks[currentRock.index + 1];
                   currentRock.health *= currentDimension.healthMultiplier;
@@ -640,6 +640,7 @@
                // pickaxeContainer.setAttribute("draggable", "true"); 
             //  pickaxeContainer.setAttribute("ondragstart", "dragstartHandler(event)"); 
                pickaxeContainer.setAttribute("onclick", "equipPickaxe((this.id).replace('pickaxeContainer', ''))"); 
+               pickaxeContainer.setAttribute("onmouseover", "showStats((this.id).replace('pickaxeContainer', ''))"); 
              //  pickaxeContainer.setAttribute("style", "width: 350px;height: 100px;padding: 10px; display:block;"); 
                
                document.getElementById("inventory").appendChild(pickaxeContainer);
@@ -667,7 +668,7 @@
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeDamage);  
                pickaxeSpeed = document.createElement('div');
                pickaxeSpeed.setAttribute("id", "pickaxeSpeed"+index);
-               pickaxeSpeed.setAttribute("style", "width: "+pickaxes[index].speed*10+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               pickaxeSpeed.setAttribute("style", "width: "+pickaxes[index].speed*50+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeSpeed);    
                pickaxeUpgradability = document.createElement('div');
                pickaxeUpgradability.setAttribute("id", "pickaxeUpgradability"+index);
@@ -680,6 +681,18 @@
              //  pickaxeUpgrades.setAttribute("style", "width: "+pickaxes[index].upgrades*50+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeUpgrades);  
 
+         }
+
+         function showStats(index) {
+            document.getElementById("currentPickaxe").textContent = `Cash/click: ${statConvert(pickaxes[index], 'cash')} Quality: ${statConvert(pickaxes[index], 'quality')} Damage: ${statConvert(pickaxes[index], 'damage')} Speed: ${statConvert(pickaxes[index], 'speed')} Upgradability: ${statConvert(pickaxes[index], 'upgradability')} Upgrades: ${pickaxes[index].upgrades}`;
+         }
+         function statConvert(pickaxe, type) {
+            if (type == 'cash') {return (pickaxe.upgrades) * pickaxe.quality * currentRock.quality * currentDimension.cashMultiplier;}
+            else if (type == 'quality') {return pickaxe.quality;}
+            else if (type == 'speed') {return Math.round(31 - pickaxe.speed);}
+            else if (type == 'damage') {return pickaxe.damage;}
+            else if (type == 'upgradability') {return pickaxe.upgradability;}
+            
          }
          function buyPickaxe() {
             if (cash >= pickaxeCost) {
@@ -737,7 +750,7 @@
                this.upgradability = upgradability;
                this.upgrades = upgrades;
 
-               this.delay = Math.round(31 - speed);
+
             }
          }
 
@@ -842,7 +855,7 @@
                   displayText("Health: ", currentRock.health, 10,100);
                }
                if (mouseClicked && pickaxeDelay == 0) {
-                  pickaxeDelay = currentPickaxe.delay;
+                  pickaxeDelay = statConvert(currentPickaxe, 'speed');
                   clickRock();
                }
             }
@@ -873,7 +886,7 @@
             displayText("x","", 400,300);
 
 
-            if (pickaxeDelay > Math.round(currentPickaxe.delay / 3)) {
+            if (pickaxeDelay > Math.round(statConvert(currentPickaxe, 'speed') / 3)) {
                ctx.drawImage(pickaxeDownImg, 0, 0, 800, 600);
             }
             else {
@@ -982,6 +995,7 @@
          }
 
          
+
 
 
          setInterval(gameloop, 1000 / 30);
