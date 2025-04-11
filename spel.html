@@ -30,7 +30,7 @@
          }
          #inventory {
             position: absolute;
-            right: 0px;
+            left: calc(100% - 500px);
             top: 0px;
             z-index: 20;
             overflow: auto;
@@ -38,19 +38,19 @@
          }
 
          #fuseGui {
-            position: absolute;
-            right: 0px;
-            top: 0px;
-            z-index: 20;
+            position: fixed;
+            left: calc(100% - 650px);
+            top: 10px;
+            z-index: 30;
             overflow: auto;
             height: 100%;
          }
 
          #buyGui {
-            position: absolute;
-            right: 0px;
-            top: 0px;
-            z-index: 20;
+            position: fixed;
+            left: calc(100% - 650px);
+            top: 10px;
+            z-index: 30;
             overflow: auto;
             height: 100%;
          }
@@ -58,11 +58,28 @@
          
          #currentPickaxe {
             position: fixed;
-            right: 0px;
-            top: 0px;
+            left: calc(100% - 650px);
+            top: 10px;
             z-index: 20;
       
          }
+         #selectedPickaxe {
+            position: fixed;
+            left: calc(100% - 650px);
+            top: 500px;
+            z-index: 20;
+      
+         }
+         #pickaxeStatsGui {
+            position: fixed;
+            left: calc(100% - 500px - 200px);
+            top: 0px;
+            z-index: 20;
+            height: 100%;
+            width: 200px;
+            background-color: #f0f0f0;
+         }
+ 
  
 
       </style>
@@ -70,7 +87,7 @@
    <body>
       
       <div class="container">
-         <div id="inventory" hidden><div id="currentPickaxe"></div>
+         <div id="inventory" hidden><div id="pickaxeStatsGui"><div id="currentPickaxe"></div><div id="selectedPickaxe"></div></div>
          <div id="fuseGui" hidden><button onclick="fusePickaxes(new Pickaxe(1,1,1,1,1), new Pickaxe(1,1,1,1,1))">Fuse pickaxes</button></div>
          <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button></div>
       </div>
@@ -156,23 +173,23 @@
 
 
             // droppos
+            0.8,-0.0,-0.6,   1,1,1,   5.894019999999999,3.2363999999999997,      1.0,-0.0,-0.6,   1,1,1,   6.31419,3.2363999999999997,      1.0,-0.0,-0.8,   1,1,1,   6.31419,3.65988,
+      0.8,-0.0,-0.6,   1,1,1,   5.894019999999999,3.2363999999999997,      1.0,-0.0,-0.8,   1,1,1,   6.31419,3.65988,      0.8,-0.0,-0.8,   1,1,1,   5.894019999999999,3.65988,
+      0.6,-0.0,-0.8,   1,1,1,   6.31419,3.2363999999999997,      1.0,-0.0,-0.8,   1,1,1,   6.740969999999999,3.2363999999999997,      1.0,-0.0,-1.0,   1,1,1,   6.740969999999999,4.08335,
+      0.6,-0.0,-0.8,   1,1,1,   6.31419,3.2363999999999997,      1.0,-0.0,-1.0,   1,1,1,   6.740969999999999,4.08335,      0.6,-0.0,-1.0,   1,1,1,   6.31419,4.08335,
+      -0.8,-0.0,-0.6,   1,1,1,   5.853199999999999,6.29759,      -0.8,-0.0,-1.0,   1,1,1,   6.734970000000001,6.29759,      -1.0,-0.0,-1.0,   1,1,1,   6.734970000000001,6.73503,
+      -0.8,-0.0,-0.6,   1,1,1,   5.853199999999999,6.29759,      -1.0,-0.0,-1.0,   1,1,1,   6.734970000000001,6.73503,      -1.0,-0.0,-0.6,   1,1,1,   5.853199999999999,6.73503,
+      -0.6,-0.0,-0.8,   1,1,1,   6.29064,5.85327,      -0.6,-0.0,-1.0,   1,1,1,   6.734970000000001,5.85327,      -0.8,-0.0,-1.0,   1,1,1,   6.734970000000001,6.290710000000001,
+      -0.6,-0.0,-0.8,   1,1,1,   6.29064,5.85327,      -0.8,-0.0,-1.0,   1,1,1,   6.734970000000001,6.290710000000001,      -0.8,-0.0,-0.8,   1,1,1,   6.29064,6.290710000000001,
+      0.6,0.0,0.8,   1,1,1,   3.24064,3.68386,      0.6,0.0,1.0,   1,1,1,   3.6763000000000003,3.68386,      0.8,0.0,1.0,   1,1,1,   3.6763000000000003,4.1299,
+      0.6,0.0,0.8,   1,1,1,   3.24064,3.68386,      0.8,0.0,1.0,   1,1,1,   3.6763000000000003,4.1299,      0.8,0.0,0.8,   1,1,1,   3.24064,4.1299,
+      0.8,0.0,0.6,   1,1,1,   3.24064,3.24473,      0.8,0.0,1.0,   1,1,1,   4.1258,3.24473,      1.0,0.0,1.0,   1,1,1,   4.1258,3.68732,       
+      0.8,0.0,0.6,   1,1,1,   3.24064,3.24473,      1.0,0.0,1.0,   1,1,1,   4.1258,3.68732,      1.0,0.0,0.6,   1,1,1,   3.24064,3.68732,      
+      -0.6,0.0,0.8,   1,1,1,   3.23898,5.87049,      -1.0,0.0,0.8,   1,1,1,   3.66614,5.87049,      -1.0,0.0,1.0,   1,1,1,   3.66614,6.73153,  
+      -0.6,0.0,0.8,   1,1,1,   3.23898,5.87049,      -1.0,0.0,1.0,   1,1,1,   3.66614,6.73153,      -0.6,0.0,1.0,   1,1,1,   3.23898,6.73153,  
+      -0.8,0.0,0.6,   1,1,1,   3.66614,6.29765,      -1.0,0.0,0.6,   1,1,1,   4.10002,6.29765,      -1.0,0.0,0.8,   1,1,1,   4.10002,6.73153,  
+      -0.8,0.0,0.6,   1,1,1,   3.66614,6.29765,      -1.0,0.0,0.8,   1,1,1,   4.10002,6.73153,      -0.8,0.0,0.8,   1,1,1,   3.66614,6.73153, 
 
-            0.8,-0.0,-0.6,   1,1,1,   0.589402,0.32364,      1.0,-0.0,-0.6,   1,1,1,   0.631419,0.32364,      1.0,-0.0,-0.8,   1,1,1,   0.631419,0.365988,
-            0.8,-0.0,-0.6,   1,1,1,   0.589402,0.32364,      1.0,-0.0,-0.8,   1,1,1,   0.631419,0.365988,      0.8,-0.0,-0.8,   1,1,1,   0.589402,0.365988,
-            0.6,-0.0,-0.8,   1,1,1,   0.631419,0.32364,      1.0,-0.0,-0.8,   1,1,1,   0.674097,0.32364,      1.0,-0.0,-1.0,   1,1,1,   0.674097,0.408335,
-            0.6,-0.0,-0.8,   1,1,1,   0.631419,0.32364,      1.0,-0.0,-1.0,   1,1,1,   0.674097,0.408335,      0.6,-0.0,-1.0,   1,1,1,   0.631419,0.408335,
-            -0.8,-0.0,-0.6,   1,1,1,   0.58532,0.629759,      -0.8,-0.0,-1.0,   1,1,1,   0.673497,0.629759,      -1.0,-0.0,-1.0,   1,1,1,   0.673497,0.673503,
-            -0.8,-0.0,-0.6,   1,1,1,   0.58532,0.629759,      -1.0,-0.0,-1.0,   1,1,1,   0.673497,0.673503,      -1.0,-0.0,-0.6,   1,1,1,   0.58532,0.673503,
-            -0.6,-0.0,-0.8,   1,1,1,   0.629064,0.585327,      -0.6,-0.0,-1.0,   1,1,1,   0.673497,0.585327,      -0.8,-0.0,-1.0,   1,1,1,   0.673497,0.629071,
-            -0.6,-0.0,-0.8,   1,1,1,   0.629064,0.585327,      -0.8,-0.0,-1.0,   1,1,1,   0.673497,0.629071,      -0.8,-0.0,-0.8,   1,1,1,   0.629064,0.629071,
-            0.6,0.0,0.8,   1,1,1,   0.324064,0.368386,      0.6,0.0,1.0,   1,1,1,   0.36763,0.368386,      0.8,0.0,1.0,   1,1,1,   0.36763,0.41299,  
-            0.6,0.0,0.8,   1,1,1,   0.324064,0.368386,      0.8,0.0,1.0,   1,1,1,   0.36763,0.41299,      0.8,0.0,0.8,   1,1,1,   0.324064,0.41299,  
-            0.8,0.0,0.6,   1,1,1,   0.324064,0.324473,      0.8,0.0,1.0,   1,1,1,   0.41258,0.324473,      1.0,0.0,1.0,   1,1,1,   0.41258,0.368732, 
-            0.8,0.0,0.6,   1,1,1,   0.324064,0.324473,      1.0,0.0,1.0,   1,1,1,   0.41258,0.368732,      1.0,0.0,0.6,   1,1,1,   0.324064,0.368732,
-            -0.6,0.0,0.8,   1,1,1,   0.323898,0.587049,      -1.0,0.0,0.8,   1,1,1,   0.366614,0.587049,      -1.0,0.0,1.0,   1,1,1,   0.366614,0.673153,
-            -0.6,0.0,0.8,   1,1,1,   0.323898,0.587049,      -1.0,0.0,1.0,   1,1,1,   0.366614,0.673153,      -0.6,0.0,1.0,   1,1,1,   0.323898,0.673153,
-            -0.8,0.0,0.6,   1,1,1,   0.366614,0.629765,      -1.0,0.0,0.6,   1,1,1,   0.410002,0.629765,      -1.0,0.0,0.8,   1,1,1,   0.410002,0.673153,
-            -0.8,0.0,0.6,   1,1,1,   0.366614,0.629765,      -1.0,0.0,0.8,   1,1,1,   0.410002,0.673153,      -0.8,0.0,0.8,   1,1,1,   0.366614,0.673153,
 
                // crate
                1.0,1.0,-1.0,   1,1,1,   0.0,0.0,      -1.0,1.0,-1.0,   1,1,1,   1.0,0.0,      -1.0,1.0,1.0,   1,1,1,   1.0,1.0,
@@ -685,7 +702,7 @@
                // pickaxeContainer.setAttribute("draggable", "true"); 
             //  pickaxeContainer.setAttribute("ondragstart", "dragstartHandler(event)"); 
                pickaxeContainer.setAttribute("onclick", "equipPickaxe((this.id).replace('pickaxeContainer', ''))"); 
-               pickaxeContainer.setAttribute("onmouseover", "showStats((this.id).replace('pickaxeContainer', ''))"); 
+               pickaxeContainer.setAttribute("onmouseover", "showStats('selectedPickaxe',(this.id).replace('pickaxeContainer', ''))"); 
              //  pickaxeContainer.setAttribute("style", "width: 350px;height: 100px;padding: 10px; display:block;"); 
                
                document.getElementById("inventory").appendChild(pickaxeContainer);
@@ -728,8 +745,8 @@
 
          }
 
-         function showStats(index) {
-            document.getElementById("currentPickaxe").textContent = `Cash/click: ${statConvert(pickaxes[index], 'cash')} Quality: ${statConvert(pickaxes[index], 'quality')} Damage: ${statConvert(pickaxes[index], 'damage')} Speed: ${statConvert(pickaxes[index], 'speed')} Upgradability: ${statConvert(pickaxes[index], 'upgradability')} Upgrades: ${pickaxes[index].upgrades}`;
+         function showStats(id,index) {
+            document.getElementById(id).innerHTML  = `Cash/click: ${shortenNumber(statConvert(pickaxes[index], 'cash'))}<br>Quality: ${shortenNumber(statConvert(pickaxes[index], 'quality'))}<br>Damage: ${shortenNumber(statConvert(pickaxes[index], 'damage'))}<br>Speed: ${shortenNumber(statConvert(pickaxes[index], 'speed'))}<br>Upgradability: ${shortenNumber(statConvert(pickaxes[index], 'upgradability'))}<br>Upgrades: ${shortenNumber(pickaxes[index].upgrades)}`;
          }
          function statConvert(pickaxe, type) {
             if (type == 'cash') {return (pickaxe.upgrades) * pickaxe.quality * currentRock.quality * currentDimension.cashMultiplier;}
@@ -750,40 +767,39 @@
          }
 
          function equipPickaxe(index) {
-            console.log(index);
+
             let buttons = document.getElementsByClassName("button");
             for (let item of buttons) {
                item.style.backgroundColor = '#f0f0f0';
             }
-            document.getElementById("pickaxeContainer"+index).style.backgroundColor = 'red';
+            document.getElementById("pickaxeContainer"+index).style.backgroundColor = 'grey';
             if (index >= 0 && index < pickaxes.length) {
                currentPickaxe = pickaxes[index];
             }
+            showStats("currentPickaxe", index)
          }
 
 
-         function displayText(string, value, posx, posy) {
-            let textValue = "";
-            if (value !== "") {
-               let rValue = Math.round(value);
-               let length = rValue.toString().length-1;
-               let suffix = "";
-               let newValue = 0;
-               let decimals = 2 - (length % 3);
-               if (length >= 3) {
-                  suffix = numberSuffixes[Math.floor(length/3)-1]
-                  newValue = Math.round(value / (10**(length - (length % 3) - decimals))) / 10**decimals;
-               }
-               else {
-                  newValue = Math.round(value * 10**decimals) / 10**decimals;
-               }
-               textValue = newValue.toString() + " " + suffix;
+         function shortenNumber(value) {
+            let rValue = Math.round(value);
+            let length = rValue.toString().length-1;
+            let suffix = "";
+            let newValue = 0;
+            let decimals = 2 - (length % 3);
+            if (length >= 3) {
+               suffix = numberSuffixes[Math.floor(length/3)-1]
+               newValue = Math.round(value / (10**(length - (length % 3) - decimals))) / 10**decimals;
             }
+            else {
+               newValue = Math.round(value * 10**decimals) / 10**decimals;
+            }
+            return newValue.toString() + " " + suffix;
 
+         }
+         function displayText(string, posx, posy) {
 
-               
-            ctx.fillText(string + textValue, posx,posy);
-            ctx.strokeText(string + textValue, posx,posy);
+            ctx.fillText(string, posx,posy);
+            ctx.strokeText(string, posx,posy);
          }
 
          function fusePickaxes(pick1, pick2) {
@@ -921,7 +937,7 @@
             ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
 
             if (facingObject(grindstonePos)) {
-               displayText("Upgrade Cost: ", currentPickaxe.upgrades**2, 10,100);
+               displayText("Upgrade Cost: " + shortenNumber(currentPickaxe.upgrades**2), 10,100);
 
                if (mouseClicked) {
                   buyUpgrade();
@@ -929,10 +945,10 @@
             }
             if (facingObject(rockPos)) {
                if (!isFinite(currentRock.health)) {
-                  displayText("Health: \u221e","", 10,100);
+                  displayText("Health: \u221e", 10,100);
                }
                else {
-                  displayText("Health: ", currentRock.health, 10,100);
+                  displayText("Health: " + shortenNumber(currentRock.health), 10,100);
                }
                if (mouseClicked && pickaxeDelay == 0) {
                   pickaxeDelay = statConvert(currentPickaxe, 'speed');
@@ -958,7 +974,7 @@
 
 
             if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) {
-               displayText("Upgrade Cost: ", rocketCost, 10,100);
+               displayText("Upgrade Cost: " + shortenNumber(rocketCost), 10,100);
                if (mouseClicked) {
                   if (cash >= rocketCost) {
                      cash -= rocketCost;
@@ -969,9 +985,9 @@
                }
             }
 
-            displayText("$ ",  Math.round(cash * 10) / 10, 10,50);
+            displayText("$ " + shortenNumber(cash), 10,50);
 
-            displayText("+","", canvas.width/2,canvas.height/2);
+            displayText("+", canvas.width/2,canvas.height/2);
 
 
             if (pickaxeDelay > Math.round(statConvert(currentPickaxe, 'speed') / 3)) {
@@ -1017,12 +1033,14 @@
 
 
             //droppos
-            let revGrassColor = [2.6,2.2,3.6]
-            let revMarsColor = [1.4,2.3,4.2]
-            let revMoonColor = [2.5,2.4,2.3]
+            //let revGrassColor = [2.6,2.2,3.6]
+            //let revMarsColor = [1.4,2.3,4.2]
+            //let revMoonColor = [2.5,2.4,2.3]
 
             modelMatrix = [10,0,0,0, 0,10,0,0, 0,0,10,0, dropPos[0],0.1,dropPos[2],1];
-            gl.uniform3fv(cLoc, addVector(revGrassColor, [-0.5,-0.5,-0.5]));
+         //   gl.uniform3fv(cLoc, addVector(revGrassColor, [-0.5,-0.5,-0.5]));
+            gl.bindTexture(gl.TEXTURE_2D, stoneTexture);
+            gl.uniform3fv(cLoc, [1.5,1.5,1.5]);
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);
 
             gl.drawArrays(gl.TRIANGLES, 6, 48);
