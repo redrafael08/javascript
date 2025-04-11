@@ -720,17 +720,27 @@
 
 
          function displayText(string, value, posx, posy) {
-            let newValue = "";
+            let textValue = "";
             if (value !== "") {
                let rValue = Math.round(value);
                let length = rValue.toString().length-1;
-               newValue = (rValue/10**length).toString()+'x10^'+(length).toString();
+               let suffix = "";
+               let newValue = 0;
+               let decimals = 2 - (length % 3);
+               if (length >= 3) {
+                  suffix = numberSuffixes[Math.floor(length/3)-1]
+                  newValue = Math.round(value / (10**(length - (length % 3) - decimals))) / 10**decimals;
+               }
+               else {
+                  newValue = Math.round(value * 10**decimals) / 10**decimals;
+               }
+               textValue = newValue.toString() + " " + suffix;
             }
 
 
                
-            ctx.fillText(string + newValue, posx,posy);
-            ctx.strokeText(string + newValue, posx,posy);
+            ctx.fillText(string + textValue, posx,posy);
+            ctx.strokeText(string + textValue, posx,posy);
          }
 
          function fusePickaxes(pick1, pick2) {
@@ -787,7 +797,7 @@
 
          let cash = 1000;
 
-
+         const numberSuffixes = ["k","M","B","T","aa","ab","ac","ad","ae","af","ag","ah","ai","aj","ak"];
 
 
          let pickaxeCost = 10;
