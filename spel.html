@@ -16,7 +16,7 @@
          }
 
          .button {
-            width: 350px;
+            width: 500px;
             height: 100px;
             padding: 10px; 
             display:block;
@@ -34,7 +34,7 @@
             top: 0px;
             z-index: 20;
             overflow: auto;
-            height: 600px;
+            height: 100%;
          }
 
          #fuseGui {
@@ -43,7 +43,7 @@
             top: 0px;
             z-index: 20;
             overflow: auto;
-            height: 600px;
+            height: 100%;
          }
 
          #buyGui {
@@ -52,17 +52,29 @@
             top: 0px;
             z-index: 20;
             overflow: auto;
-            height: 600px;
+            height: 100%;
          }
+
+         
+         #currentPickaxe {
+            position: fixed;
+            right: 0px;
+            top: 0px;
+            z-index: 20;
+      
+         }
+ 
 
       </style>
    </head>
    <body>
       
       <div class="container">
-         <div id="inventory" hidden><div id="currentPickaxe"></div></div>
+         <div id="inventory" hidden><div id="currentPickaxe"></div>
          <div id="fuseGui" hidden><button onclick="fusePickaxes(new Pickaxe(1,1,1,1,1), new Pickaxe(1,1,1,1,1))">Fuse pickaxes</button></div>
          <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button></div>
+      </div>
+
          <canvas id="my_Canvas"></canvas>
          <canvas id="text"></canvas>
          click
@@ -655,11 +667,11 @@
 
          function weightedRandom() {
             let x = Math.random();
-            return x**3;
+            return x**3*99+1;
          }
          
          function randomPickaxe() {
-            return new Pickaxe(weightedRandom()*30 + 1, weightedRandom() + 0.8, weightedRandom()*2 + 0.5, weightedRandom()*2 + 0.5, 1);
+            return new Pickaxe(weightedRandom(), weightedRandom(), weightedRandom(), weightedRandom(), 1);
          }
          
          function randomRange(l, r) {
@@ -687,25 +699,25 @@
                
                pickaxeStats = document.createElement('div');
                pickaxeStats.setAttribute("id", "pickaxeStats"+index);
-               pickaxeStats.setAttribute("style", "width: 200;height: 50px;padding: 10px; float: left;"); 
+               pickaxeStats.setAttribute("style", "width: 300px;height: 80px;padding: 0px; float: left;"); 
 
                document.getElementById("pickaxeContainer"+index).appendChild(pickaxeStats);
                
                pickaxeQuality = document.createElement('div');
                pickaxeQuality.setAttribute("id", "pickaxeQuality"+index);
-               pickaxeQuality.setAttribute("style", "width: "+pickaxes[index].quality*50+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               pickaxeQuality.setAttribute("style", "width: "+pickaxes[index].quality*2+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeQuality);  
                pickaxeDamage = document.createElement('div');
                pickaxeDamage.setAttribute("id", "pickaxeDamage"+index);
-               pickaxeDamage.setAttribute("style", "width: "+pickaxes[index].damage*50+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               pickaxeDamage.setAttribute("style", "width: "+pickaxes[index].damage*2+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeDamage);  
                pickaxeSpeed = document.createElement('div');
                pickaxeSpeed.setAttribute("id", "pickaxeSpeed"+index);
-               pickaxeSpeed.setAttribute("style", "width: "+pickaxes[index].speed*50+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               pickaxeSpeed.setAttribute("style", "width: "+pickaxes[index].speed*2+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeSpeed);    
                pickaxeUpgradability = document.createElement('div');
                pickaxeUpgradability.setAttribute("id", "pickaxeUpgradability"+index);
-               pickaxeUpgradability.setAttribute("style", "width: "+pickaxes[index].upgradability*50+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               pickaxeUpgradability.setAttribute("style", "width: "+pickaxes[index].upgradability*2+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeUpgradability);  
                
                pickaxeUpgrades = document.createElement('div');
@@ -722,7 +734,7 @@
          function statConvert(pickaxe, type) {
             if (type == 'cash') {return (pickaxe.upgrades) * pickaxe.quality * currentRock.quality * currentDimension.cashMultiplier;}
             else if (type == 'quality') {return pickaxe.quality;}
-            else if (type == 'speed') {return Math.round(31 - pickaxe.speed);}
+            else if (type == 'speed') {return Math.round(100 - pickaxe.speed);}
             else if (type == 'damage') {return pickaxe.damage;}
             else if (type == 'upgradability') {return pickaxe.upgradability;}
             
@@ -738,6 +750,7 @@
          }
 
          function equipPickaxe(index) {
+            console.log(index);
             let buttons = document.getElementsByClassName("button");
             for (let item of buttons) {
                item.style.backgroundColor = '#f0f0f0';
@@ -927,21 +940,16 @@
                }
             }
 
-            /*
-            if (facingObject(dropPos)) {
-               displayText("Pickaxe Cost: "+ pickaxeCost, 10,100);
-               if (mouseClicked) {
-                  
-               }
-            
-            }
-            */
+  
             if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20) {
+               
                if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20){
                   document.getElementById("buyGui").hidden = false;
+                  document.getElementById("fuseGui").hidden = true;
                }
                if (distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20){
                   document.getElementById("fuseGui").hidden = false;
+                  document.getElementById("buyGui").hidden = true;
                }
                document.getElementById("inventory").hidden = false;
                document.exitPointerLock();
