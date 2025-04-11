@@ -3,6 +3,13 @@
 <html>
    <head>
       <style>
+
+         * {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+         }
+
          .container {
             position: relative;
             
@@ -23,44 +30,68 @@
          }
          #inventory {
             position: absolute;
-            left: 0px;
+            right: 0px;
             top: 0px;
             z-index: 20;
             overflow: auto;
             height: 600px;
          }
+
+         #fuseGui {
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            z-index: 20;
+            overflow: auto;
+            height: 600px;
+         }
+
+         #buyGui {
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            z-index: 20;
+            overflow: auto;
+            height: 600px;
+         }
+
       </style>
    </head>
    <body>
+      
       <div class="container">
          <div id="inventory" hidden><div id="currentPickaxe"></div></div>
-         <canvas width = "800" height = "600" id="my_Canvas"></canvas>
-         <canvas width = "800" height = "600" id="text"></canvas>
-       </div>
-      <!--   <canvas width = "800" height = "600" id = "my_Canvas"></canvas> !-->
+         <div id="fuseGui" hidden><button onclick="fusePickaxes(new Pickaxe(1,1,1,1,1), new Pickaxe(1,1,1,1,1))">Fuse pickaxes</button></div>
+         <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button></div>
+         <canvas id="my_Canvas"></canvas>
+         <canvas id="text"></canvas>
+         click
+      </div>
+
 
       <script>
-       
+         
          const canvas = document.getElementById('my_Canvas');
+         
+
+
+
          gl = canvas.getContext('experimental-webgl');
 
                   // look up the text canvas.
          const textCanvas = document.getElementById('text');
+
          
          // make a 2D context for it
          const ctx = textCanvas.getContext("2d");
 
          let pickaxeUpImg = new Image();
          pickaxeUpImg.src = 'pickaxeUp.png';
-         pickaxeUpImg.onload = function() {
-            ctx.drawImage(pickaxeUpImg, 0, 0, 800, 600);
-         };
+
 
          let pickaxeDownImg = new Image();
          pickaxeDownImg.src = 'pickaxeDown.png';
-       //  pickaxeDownImg.onload = function() {
-           // 
-      //   };
+
 
 
          
@@ -86,7 +117,9 @@
          });
 
          document.addEventListener('click', (e) => {
-
+            if (document.pointerLockElement !== canvas) {
+               canvas.requestPointerLock();
+            }
 
             if (e.button == 0) {  
                mouseClicked = true;
@@ -614,12 +647,9 @@
                currentPickaxe.upgrades += 1;
 
                
-             //  console.log(pickaxes.indexOf(currentPickaxe));
-            //   console.log("pickaxeUpgrades"+pickaxes.indexOf(currentPickaxe))
+
                document.getElementById("pickaxeUpgrades"+pickaxes.indexOf(currentPickaxe)).textContent = currentPickaxe.upgrades;
 
-              // console.log(currentPickaxe)
-              // console.log(pickaxes[0])
             }
          }
 
@@ -786,7 +816,7 @@
             }
          }
 
-         gl.viewport(0,0,canvas.width,canvas.height);
+
 
 
          let cameraPos = [0, 10, 15];
@@ -803,8 +833,8 @@
          let pickaxeCost = 10;
          let rocketCost = 1000;
 
-         ctx.font = "50px Arial";
-         ctx.fillStyle = 'white';
+   
+
 
          let rockPos = [0,0,0];
          let anvilPos = [50,0,0];
@@ -833,6 +863,21 @@
          equipPickaxe(pickaxes.length - 1);
 
          function gameloop() {
+            if (document.pointerLockElement === canvas) {
+
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            textCanvas.width = canvas.width;
+            textCanvas.height = canvas.height;
+            ctx.font = "50px Arial";
+            ctx.fillStyle = 'white';
+            gl.viewport(0,0,canvas.width,canvas.height);
+            projMatrix = [0.5/ang, 0 , 0, 0,
+                           0, 0.5*(canvas.width/canvas.height)/ang, 0, 0,
+                           0, 0, -(500+1)/(500-1), -1,
+                           0, 0, (-2*500*1)/(500-1), 0 
+                        ];
+
             cosa = Math.cos(yAngle);
             sina = Math.sin(yAngle);
             front = [Math.cos(xAngle) * sina, Math.sin(xAngle), Math.cos(xAngle) * cosa]
@@ -881,17 +926,23 @@
                   clickRock();
                }
             }
-            if (facingObject(anvilPos)) {
-               displayText("Upgrade Cost: ", currentPickaxe.upgrades**2, 10,100);
-            }
-            
+
+            /*
             if (facingObject(dropPos)) {
                displayText("Pickaxe Cost: "+ pickaxeCost, 10,100);
                if (mouseClicked) {
-                  buyPickaxe();
+                  
                }
+            
             }
+            */
             if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20) {
+               if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20){
+                  document.getElementById("buyGui").hidden = false;
+               }
+               if (distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20){
+                  document.getElementById("fuseGui").hidden = false;
+               }
                document.getElementById("inventory").hidden = false;
                document.exitPointerLock();
             }
@@ -912,14 +963,14 @@
 
             displayText("$ ",  Math.round(cash * 10) / 10, 10,50);
 
-            displayText("x","", 400,300);
+            displayText("+","", canvas.width/2,canvas.height/2);
 
 
             if (pickaxeDelay > Math.round(statConvert(currentPickaxe, 'speed') / 3)) {
-               ctx.drawImage(pickaxeDownImg, 0, 0, 800, 600);
+               ctx.drawImage(pickaxeDownImg, 0, canvas.height-canvas.width*0.5625, canvas.width, canvas.width*0.5625);
             }
             else {
-               ctx.drawImage(pickaxeUpImg, 0, 0, 800, 600);
+               ctx.drawImage(pickaxeUpImg, 0, canvas.height-canvas.width*0.5625, canvas.width, canvas.width*0.5625);
             }
 
             if (pickaxeDelay > 0) {
@@ -1018,7 +1069,7 @@
             gl.bindTexture(gl.TEXTURE_2D, woodTexture);
             gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84, 132);
 
-
+            }
             
 
          }
