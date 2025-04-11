@@ -117,7 +117,7 @@
          });
 
          document.addEventListener('click', (e) => {
-            if (document.pointerLockElement !== canvas) {
+            if (document.pointerLockElement !== canvas &&  !(distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
                canvas.requestPointerLock();
             }
 
@@ -863,7 +863,7 @@
          equipPickaxe(pickaxes.length - 1);
 
          function gameloop() {
-            if (document.pointerLockElement === canvas) {
+            if (document.pointerLockElement === canvas || (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
 
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
