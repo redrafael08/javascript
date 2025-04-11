@@ -785,7 +785,7 @@
          let yAngle = Math.PI;
          let speed = 1;
 
-         let cash = 1000;
+         let cash = 100000000;
 
 
 
@@ -845,7 +845,7 @@
                cameraPos[2] -= sina * speed;
             }
 
-            if (distance(cameraPos, [0, cameraPos[1], 0]) > 400 || distance(cameraPos, [0, cameraPos[1], 0]) <= 9 || distance(cameraPos, [grindstonePos[0], cameraPos[1], grindstonePos[2]]) <= 9 || distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 9 || distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 9) {
+            if (distance(cameraPos, [0, cameraPos[1], 0]) > 400 || distance(cameraPos, [0, cameraPos[1], 0]) <= 9 || distance(cameraPos, [grindstonePos[0], cameraPos[1], grindstonePos[2]]) <= 9 || distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 9 || distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 9 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 9) {
                cameraPos = [...prevPos];
             }
 
@@ -881,7 +881,7 @@
                   buyPickaxe();
                }
             }
-            if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20) {
+            if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20) {
                document.getElementById("inventory").hidden = false;
                document.exitPointerLock();
             }
@@ -889,7 +889,7 @@
 
 
             if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) {
-               displayText("Upgrade Cost: ", currentPickaxe.upgrades**2, 10,100);
+               displayText("Upgrade Cost: ", rocketCost, 10,100);
                if (mouseClicked) {
                   if (cash >= rocketCost) {
                      cash -= rocketCost;
