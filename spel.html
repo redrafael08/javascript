@@ -10,38 +10,42 @@
             overflow: hidden;
          }
 
-         .container {
-            position: relative;
-            
-         }
-
          .button {
             width: 500px;
             height: 100px;
             padding: 10px; 
             display:block;
+
+
          }
+
+
          
          #text {
             position: absolute;
             left: 0px;
             top: 0px;
-            z-index: 10;
+           
+
          }
          #inventory {
             position: absolute;
             left: calc(100% - 500px);
             top: 0px;
-            z-index: 20;
+            z-index: 1;
             overflow: auto;
             height: 100%;
+            background-color: #f0f0f0;
+            border-width: 1px;
+            border-color: grey;
+            border-style: solid;
          }
 
          #fuseGui {
             position: fixed;
             left: calc(100% - 650px);
             top: 10px;
-            z-index: 30;
+
             overflow: auto;
             height: 100%;
          }
@@ -50,9 +54,10 @@
             position: fixed;
             left: calc(100% - 650px);
             top: 10px;
-            z-index: 30;
+
             overflow: auto;
             height: 100%;
+
          }
 
          
@@ -60,24 +65,28 @@
             position: fixed;
             left: calc(100% - 650px);
             top: 10px;
-            z-index: 20;
+
       
          }
          #selectedPickaxe {
             position: fixed;
             left: calc(100% - 650px);
             top: 500px;
-            z-index: 20;
+
       
          }
          #pickaxeStatsGui {
             position: fixed;
             left: calc(100% - 500px - 200px);
             top: 0px;
-            z-index: 20;
+            z-index: -1;
             height: 100%;
             width: 200px;
             background-color: #f0f0f0;
+
+            border-width: 1px;
+            border-color: grey;
+            border-style: solid;
          }
  
  
@@ -86,11 +95,15 @@
    </head>
    <body>
       
-      <div class="container">
-         <div id="inventory" hidden><div id="pickaxeStatsGui"><div id="currentPickaxe"></div><div id="selectedPickaxe"></div></div>
-         <div id="fuseGui" hidden><button onclick="fusePickaxes(new Pickaxe(1,1,1,1,1), new Pickaxe(1,1,1,1,1))">Fuse pickaxes</button></div>
-         <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button></div>
-      </div>
+      <div id="container">
+         <div id="inventory" hidden>
+            <div id="pickaxeStatsGui">
+               <div id="currentPickaxe"></div>
+               <div id="selectedPickaxe"></div>
+            </div>
+            <div id="fuseGui" hidden><button onclick="fusePickaxes(new Pickaxe(1,1,1,1,1), new Pickaxe(1,1,1,1,1))">Fuse pickaxes</button></div>
+            <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button></div>
+         </div>
 
          <canvas id="my_Canvas"></canvas>
          <canvas id="text"></canvas>
@@ -632,7 +645,7 @@
          }
 
          function difference(a, b) {
-            return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]
+            return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
          }
 
          function scaleVector(a, b) {
@@ -685,6 +698,7 @@
          function weightedRandom() {
             let x = Math.random();
             return x**3*99+1;
+           // return 100;
          }
          
          function randomPickaxe() {
