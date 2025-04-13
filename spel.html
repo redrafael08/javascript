@@ -444,8 +444,24 @@
       1.0,-0.2,-1.3,   0.9393469436220359,0.9393469436220359,0.9393469436220359,   0.0,0.0,      0.6,1.8,-1.3,   0.9393469436220359,0.9393469436220359,0.9393469436220359,   1.0,1.0,      0.6,-0.2,-1.3,   0.9393469436220359,0.9393469436220359,0.9393469436220359,   0.0,1.0,
 
 
+      //shadow
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      0.0,0.0,-1.0,   1,1,1,   0.16758433333333334,0.32843,      -0.382683,0.0,-0.92388,   1,1,1,   0.10546866666666667,0.31607433333333335,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      -0.382683,0.0,-0.92388,   1,1,1,   0.10546866666666667,0.31607433333333335,      -0.707107,0.0,-0.707107,   1,1,1,   0.05280933333333334,0.28088833333333335,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      -0.707107,0.0,-0.707107,   1,1,1,   0.05280933333333334,0.28088833333333335,      -0.92388,0.0,-0.382683,   1,1,1,   0.017623333333333335,0.22822900000000002,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      -0.92388,0.0,-0.382683,   1,1,1,   0.017623333333333335,0.22822900000000002,      -1.0,0.0,0.0,   1,1,1,   0.005267666666666667,0.16611299999999998,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      -1.0,0.0,0.0,   1,1,1,   0.005267666666666667,0.16611299999999998,      -0.92388,0.0,0.382683,   1,1,1,   0.017623333333333335,0.10399733333333333,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      -0.92388,0.0,0.382683,   1,1,1,   0.017623333333333335,0.10399733333333333,      -0.707107,0.0,0.707107,   1,1,1,   0.05280933333333334,0.051338,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      -0.707107,0.0,0.707107,   1,1,1,   0.05280933333333334,0.051338,      -0.382683,0.0,0.92388,   1,1,1,   0.10546866666666667,0.016152,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      -0.382683,0.0,0.92388,   1,1,1,   0.10546866666666667,0.016152,      0.0,0.0,1.0,   1,1,1,   0.16758433333333334,0.0037963333333333334,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      0.0,0.0,1.0,   1,1,1,   0.16758433333333334,0.0037963333333333334,      0.382683,0.0,0.92388,   1,1,1,   0.2297003333333333,0.016152,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      0.382683,0.0,0.92388,   1,1,1,   0.2297003333333333,0.016152,      0.707107,0.0,0.707107,   1,1,1,   0.2823596666666667,0.051338,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      0.707107,0.0,0.707107,   1,1,1,   0.2823596666666667,0.051338,      0.92388,0.0,0.382683,   1,1,1,   0.31754533333333335,0.10399733333333333,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      0.92388,0.0,0.382683,   1,1,1,   0.31754533333333335,0.10399733333333333,      1.0,0.0,0.0,   1,1,1,   0.329901,0.16611299999999998,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      1.0,0.0,0.0,   1,1,1,   0.329901,0.16611299999999998,      0.92388,0.0,-0.382683,   1,1,1,   0.31754533333333335,0.22822900000000002,
+      0.382683,0.0,-0.92388,   1,1,1,   0.2297003333333333,0.31607433333333335,      0.92388,0.0,-0.382683,   1,1,1,   0.31754533333333335,0.22822900000000002,      0.707107,0.0,-0.707107,   1,1,1,   0.2823596666666667,0.28088833333333335,
 
-         ];
+
+   ];
                
 
          function newTexture(texture, image) {
@@ -850,12 +866,13 @@
          }
 
          class Dimension {
-            constructor(healthMultiplier, cashMultiplier, groundTexture, rockTexture, skyColor) {
+            constructor(healthMultiplier, cashMultiplier, groundTexture, rockTexture, skyColor, shadowColor) {
                this.healthMultiplier = healthMultiplier;
                this.cashMultiplier = cashMultiplier;
                this.groundTexture = groundTexture;
                this.rockTexture = rockTexture;
                this.skyColor = skyColor;
+               this.shadowColor = shadowColor
             }
          }
 
@@ -877,7 +894,7 @@
          let rocketCost = 1000;
 
    
-
+        
 
          let rockPos = [0,0,0];
          let anvilPos = [50,0,0];
@@ -890,7 +907,7 @@
          let marsSky = [0.96, 0.80, 0.62, 1.0];
 
          const rocks = [new Rock(1, 1, [-1,0,0], 0), new Rock(1, 1.2, [0.25,0.25,0.25], 1), new Rock(1, 1.5, [1+0.5,0.54+0.5,0.5], 2), new Rock(1, 2, [0.85+0.5,0.73+0.5,0.59+0.5], 3), new Rock(1, 2.5, [1.5,1.4,0.5], 4), new Rock(1, 3, [0,0,1], 5), new Rock(1, 5, [0,1,0], 6), new Rock(1, 7, [1,0,0], 7), new Rock(Infinity, 10, [0.5+0.5,1.5,1.5], 8)];
-         const dimensions = [new Dimension(1, 1, grassTexture, stoneTexture, earthSky), new Dimension(1, 1, moonTexture, moonTexture, moonSky), new Dimension(1, 1, marsTexture, marsTexture, marsSky)];
+         const dimensions = [new Dimension(1, 1, grassTexture, stoneTexture, earthSky, [0.7,0.7,0.7]), new Dimension(1, 1, moonTexture, moonTexture, moonSky, [0.1,0.1,0.1]), new Dimension(1, 1, marsTexture, marsTexture, marsSky, [0.4,0.4,0.4])];
          
          let pickaxes = [new Pickaxe(1, 1, 1, 1, 1)]
 
@@ -1066,6 +1083,12 @@
             gl.uniform3fv(cLoc, [1,1,1]);
             gl.drawArrays(gl.TRIANGLES, 6+48, 36);
 
+            gl.uniform3fv(cLoc, currentDimension.shadowColor);
+            gl.uniformMatrix4fv(mLoc, false, [9,0,0,0, 0,9,0,0, 0,0,9,0, dropPos[0],0.05,dropPos[2],1]);  
+            gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
+            gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
+            gl.uniform3fv(cLoc, [1,1,1]);
+
 
 
             //anvil
@@ -1074,6 +1097,14 @@
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);
 
             gl.drawArrays(gl.TRIANGLES, 6+48+36, 144);
+
+            gl.uniform3fv(cLoc, currentDimension.shadowColor);
+            gl.uniformMatrix4fv(mLoc, false, [8,0,0,0, 0,8,0,0, 0,0,8,0, anvilPos[0],0.05,anvilPos[2],1]);  
+            gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
+            gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
+            gl.uniform3fv(cLoc, [1,1,1]);
+
+
 
             //rock
             gl.bindTexture(gl.TEXTURE_2D, currentDimension.rockTexture);
@@ -1089,6 +1120,14 @@
                gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84, 102);
             }
 
+            gl.uniform3fv(cLoc, currentDimension.shadowColor);
+            gl.uniformMatrix4fv(mLoc, false, [10,0,0,0, 0,10,0,0, 0,0,10,0, 0,0.05,0,1]);  
+            gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
+            gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
+            gl.uniform3fv(cLoc, [1,1,1]);
+
+
+
             // rocket
             modelMatrix = [5,0,0,0, 0,5,0,0, 0,0,5,0, rocketPos[0],0,rocketPos[2],1];  
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);  
@@ -1099,6 +1138,13 @@
             gl.uniform3fv(cLoc, [1.5,1.5,1.5]);
             gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+36, 48);
 
+            gl.uniform3fv(cLoc, currentDimension.shadowColor);
+            gl.uniformMatrix4fv(mLoc, false, [17,0,0,0, 0,17,0,0, 0,0,17,0, rocketPos[0],0.05,rocketPos[2],1]);  
+            gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
+            gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
+            gl.uniform3fv(cLoc, [1,1,1]);
+
+
             //grindstone
             modelMatrix = [3,0,0,0, 0,3,0,0, 0,0,3,0, grindstonePos[0],0,grindstonePos[2],1];  
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);  
@@ -1108,7 +1154,12 @@
 
             gl.bindTexture(gl.TEXTURE_2D, woodTexture);
             gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84, 132);
-
+            
+            gl.uniform3fv(cLoc, currentDimension.shadowColor);
+            gl.uniformMatrix4fv(mLoc, false, [8,0,0,0, 0,8,0,0, 0,0,8,0, grindstonePos[0],0.05,grindstonePos[2],1]);  
+            gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
+            gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
+            gl.uniform3fv(cLoc, [1,1,1]);
             }
             
 

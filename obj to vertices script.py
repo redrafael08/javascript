@@ -1,7 +1,7 @@
 import random
 
 
-file = open('C://Users//Rafael//Documents//blender objects//landspot.obj', 'r').read()
+file = open('C://Users//Rafael//Documents//blender objects//shadow.obj', 'r').read()
 
 
 #print(repr(file))
@@ -125,7 +125,7 @@ for triangle in triangles:
     #print(triangle)
     vertprintlist = []
     for vertex in triangle[:3]:
-        vertprintlist.append(f"      {vertex[0][0]},{vertex[0][1]},{vertex[0][2]},   {triangle[3]},{triangle[4]},{triangle[5]},   {vertex[1][0]*10},{vertex[1][1]*10}")
+        vertprintlist.append(f"      {vertex[0][0]},{vertex[0][1]},{vertex[0][2]},   {triangle[3]},{triangle[4]},{triangle[5]},   {vertex[1][0]/3},{vertex[1][1]/3}")
     print(f"{vertprintlist[0]},{vertprintlist[1]},{vertprintlist[2]},")
 
 
