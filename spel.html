@@ -139,10 +139,10 @@
          
 
          let keys = {
-            "w":false,
-            "a":false,
-            "s":false,
-            "d":false
+            "KeyW":false, // w
+            "KeyA":false, // a
+            "KeyS":false, // s
+            "KeyD":false // d
          };
 
          let mouseClicked = false;
@@ -169,14 +169,14 @@
          });
 
          document.addEventListener('keydown', (e) => {
-            if (e.key in keys) {
-               keys[e.key] = true;
+            if (e.code in keys) {
+               keys[e.code] = true;
             }
          });
 
          document.addEventListener('keyup', (e) => {
-            if (e.key in keys) {
-               keys[e.key] = false;
+            if (e.code in keys) {
+               keys[e.code] = false;
             }
          });
 
@@ -943,19 +943,19 @@
             front = [Math.cos(xAngle) * sina, Math.sin(xAngle), Math.cos(xAngle) * cosa]
 
             prevPos = [...cameraPos];
-            if (keys["w"]) {
+            if (keys["KeyW"]) {
                cameraPos[0] += sina * speed;
                cameraPos[2] += cosa * speed;
             }
-            if (keys["a"]) {
+            if (keys["KeyA"]) {
                cameraPos[0] -= cosa * speed;
                cameraPos[2] += sina * speed;
             }
-            if (keys["s"]) {
+            if (keys["KeyS"]) {
                cameraPos[0] -= sina * speed;
                cameraPos[2] -= cosa * speed;
             }
-            if (keys["d"]) {
+            if (keys["KeyD"]) {
                cameraPos[0] += cosa * speed;
                cameraPos[2] -= sina * speed;
             }
