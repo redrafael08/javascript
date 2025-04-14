@@ -64,7 +64,7 @@
          #currentPickaxe {
             position: fixed;
             left: calc(100% - 650px);
-            top: 10px;
+            top: 100px;
 
       
          }
@@ -88,6 +88,10 @@
             border-color: grey;
             border-style: solid;
          }
+
+         .pickaxeStatBar {
+            height: 5px; margin: 10px; background-color:rgb(0,0,0);
+         }
  
  
 
@@ -101,8 +105,8 @@
                <div id="currentPickaxe"></div>
                <div id="selectedPickaxe"></div>
             </div>
-            <div id="fuseGui" hidden><button onclick="fusePickaxes(pickaxesToFuse)">Fuse pickaxes</button></div>
-            <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button></div>
+            <div id="fuseGui" hidden><button onclick="fusePickaxes(pickaxesToFuse)">Fuse pickaxes</button><div id="fuseCost">Select 2 pickaxes</div></div>
+            <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button><div id="buyCost"></div></div>
          </div>
 
          <canvas id="my_Canvas"></canvas>
@@ -689,9 +693,9 @@
          }
 
          function clickRock() {
-            cash += statConvert(currentPickaxe, 'cash');
+            cash += statConvert(pickaxes[currentPickaxe], 'cash');
             if (isFinite(currentRock.health)) {
-               currentRock.health -= statConvert(currentPickaxe,'damage');
+               currentRock.health -= statConvert(pickaxes[currentPickaxe],'damage');
                if (currentRock.health <= 0) {
                   currentRock = rocks[currentRock.index + 1];
                   currentRock.health *= currentDimension.healthMultiplier;
@@ -700,15 +704,15 @@
          }
 
          function buyUpgrade() {
-            if (cash >= currentPickaxe.upgrades**2) {
+            if (cash >= pickaxes[currentPickaxe].upgrades**2) {
                
                
-               cash -= currentPickaxe.upgrades**2;
-               currentPickaxe.upgrades += 1;
+               cash -= pickaxes[currentPickaxe].upgrades**2;
+               pickaxes[currentPickaxe].upgrades += 1;
 
                
 
-               document.getElementById("pickaxeUpgrades"+pickaxes.indexOf(currentPickaxe)).textContent = currentPickaxe.upgrades;
+               document.getElementById("pickaxeUpgrades"+currentPickaxe).textContent = pickaxes[currentPickaxe].upgrades;
 
             }
          }
@@ -751,25 +755,28 @@
                
                pickaxeQuality = document.createElement('div');
                pickaxeQuality.setAttribute("id", "pickaxeQuality"+index);
-               pickaxeQuality.setAttribute("style", "width: "+pickaxes[index].quality*2+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               pickaxeQuality.setAttribute("class", "pickaxeStatBar");
+               pickaxeQuality.style.width = pickaxes[index].quality*2+"px"; 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeQuality);  
                pickaxeDamage = document.createElement('div');
                pickaxeDamage.setAttribute("id", "pickaxeDamage"+index);
-               pickaxeDamage.setAttribute("style", "width: "+pickaxes[index].damage*2+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               pickaxeDamage.setAttribute("class", "pickaxeStatBar");
+               pickaxeDamage.style.width = pickaxes[index].damage*2+"px"; 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeDamage);  
                pickaxeSpeed = document.createElement('div');
                pickaxeSpeed.setAttribute("id", "pickaxeSpeed"+index);
-               pickaxeSpeed.setAttribute("style", "width: "+pickaxes[index].speed*2+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               pickaxeSpeed.setAttribute("class", "pickaxeStatBar");
+               pickaxeSpeed.style.width = pickaxes[index].speed*2+"px"; 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeSpeed);    
                pickaxeUpgradability = document.createElement('div');
                pickaxeUpgradability.setAttribute("id", "pickaxeUpgradability"+index);
-               pickaxeUpgradability.setAttribute("style", "width: "+pickaxes[index].upgradability*2+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
+               pickaxeUpgradability.setAttribute("class", "pickaxeStatBar");
+               pickaxeUpgradability.style.width = pickaxes[index].upgradability*2+"px"; 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeUpgradability);  
                
                pickaxeUpgrades = document.createElement('div');
                pickaxeUpgrades.textContent = pickaxes[index].upgrades;
                pickaxeUpgrades.setAttribute("id", "pickaxeUpgrades"+index);
-             //  pickaxeUpgrades.setAttribute("style", "width: "+pickaxes[index].upgrades*50+"px;height: 5px; margin: 10px; background-color:rgb(0,0,0);"); 
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeUpgrades);  
 
          }
@@ -787,10 +794,14 @@
          }
          function buyPickaxe() {
             if (cash >= pickaxeCost) {
-               pickaxes.push(randomPickaxe());
+               let id = unusedId();
+               pickaxes[id] = randomPickaxe();
+               addPickaxeInventory(id);
+               
                cash -= pickaxeCost;
                pickaxeCost += 10;
-               addPickaxeInventory(pickaxes.length - 1);
+               document.getElementById("buyCost").innerHTML = "Cost: "+pickaxeCost;
+               
              
             }
          }
@@ -800,35 +811,45 @@
                for (let item of buttons) {
                   item.style.backgroundColor = '#f0f0f0';
                }
-               let index = pickaxes.indexOf(currentPickaxe);
-               document.getElementById("pickaxeContainer"+index).style.backgroundColor = 'grey';
+               document.getElementById("pickaxeContainer"+currentPickaxe).style.backgroundColor = 'grey';
 
+         }
+
+         function unusedId() {
+            let i = 0;
+            while (i in pickaxes) {
+               i += 1;
+            }
+            return i;
          }
 
          function equipPickaxe(index) {
             if (!(distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
-               if (index >= 0 && index < pickaxes.length) {
-                  currentPickaxe = pickaxes[index];
-               }
+              
+               currentPickaxe = index;
+               
                updateSelectedPickaxe();
                showStats("currentPickaxe", index);
 
 
             }
             else {
-               if (!(pickaxesToFuse.includes(pickaxes[index]))) {
+               if (!(pickaxesToFuse.includes(index))) {
                   if (pickaxesToFuse.length < 2) {
-                     pickaxesToFuse.push(pickaxes[index]);
+                     pickaxesToFuse.push(index);
                      document.getElementById("pickaxeContainer"+index).style.backgroundColor = 'red';
                   }
                }
                else {
-                  pickaxesToFuse.splice(pickaxesToFuse.indexOf(pickaxes[index]), 1);
-                  let color = '#f0f0f0';
-                  if (pickaxes[index] == currentPickaxe) {color = 'gray';}
+                  pickaxesToFuse.splice(pickaxesToFuse.indexOf(index), 1);
+                  let color = '#f0f0f0'
+                  if (index == currentPickaxe) {color = 'grey';}
                   document.getElementById("pickaxeContainer"+index).style.backgroundColor = color;
                  
                }
+               if (pickaxesToFuse.length == 2) {document.getElementById("fuseCost").innerHTML = "Cost: "+shortenNumber(fuseCost())}
+               else {document.getElementById("fuseCost").innerHTML = 'Select 2 pickaxes';}
+
             
             }
          }
@@ -857,23 +878,51 @@
          }
 
          function fusePickaxes(selectedPickaxes) {
-            if (selectedPickaxes.length == 2) {
-               let pick1 = selectedPickaxes[0];
-               let pick2 = selectedPickaxes[1];
-               pickaxes.splice(pickaxes.indexOf(pick1), 1);
-               pickaxes.splice(pickaxes.indexOf(pick2), 1);
+            if (selectedPickaxes.length == 2 && cash >= fuseCost()) {
+               cash -= fuseCost();
+               let i1 = selectedPickaxes[0];
+               let i2 = selectedPickaxes[1];
+               let pick1 = pickaxes[i1];
+               let pick2 = pickaxes[i2];
+
 
                let speed = (pick1.speed + pick2.speed)/2 + randomRange(0, (pick1.speed + pick2.speed)*0.25);
+               if (speed > 100) {speed = 100;}
                let damage = (pick1.damage + pick2.damage)/2 + randomRange(0, (pick1.damage + pick2.damage)*0.25);
+               if (damage > 100) {damage = 100;}
                let quality = (pick1.quality + pick2.quality)/2 + randomRange(0, (pick1.quality + pick2.quality)*0.25);
+               if (quality > 100) {quality = 100;}
                let upgradability = (pick1.upgradability + pick2.upgradability)/2 + randomRange(0, (pick1.upgradability + pick2.upgradability)*0.25);
+               if (upgradability > 100) {upgradability = 100;}
+               delete pickaxes[i1];
+               delete pickaxes[i2];
+               document.getElementById("pickaxeContainer"+i1).remove();
+               document.getElementById("pickaxeContainer"+i2).remove();
                
-               return new Pickaxe(speed, damage, quality, upgradability, 1);
+               
+               let id = unusedId();
+               pickaxes[id] = new Pickaxe(speed, damage, quality, upgradability, 1);
+               addPickaxeInventory(id);
+
+               pickaxesToFuse = [];
+               document.getElementById("fuseCost").innerHTML = 'Select 2 pickaxes';
+
+               if (i1 == currentPickaxe || i2 == currentPickaxe) {
+                  currentPickaxe = id;
+               
+                  updateSelectedPickaxe();
+                  showStats("currentPickaxe", id);
+               }
+
+
+
             }
          }
 
-         function fuseCost(pick1, pick2) {
-            return pick1.speed+pick1.damage+pick1.quality+pick1.upgradability+pick2.speed+pick2.damage+pick2.quality+pick2.upgradability;
+         function fuseCost() {
+            let pick1 = pickaxes[pickaxesToFuse[0]];
+            let pick2 = pickaxes[pickaxesToFuse[1]];
+            return pick1.speed**2+pick1.damage**2+pick1.quality**2+pick1.upgradability**2+pick2.speed**2+pick2.damage**2+pick2.quality**2+pick2.upgradability**2;
          }
 
          function saveGame(index) {
@@ -954,6 +1003,7 @@
 
 
          let pickaxeCost = 10;
+         document.getElementById("buyCost").innerHTML = "Cost: "+pickaxeCost;
          let rocketCost = 1000;
 
          const rockPos = [0,0,0];
@@ -969,9 +1019,9 @@
          const rocks = [new Rock(1, 1, [-1,0,0], 0), new Rock(1, 1.2, [0.25,0.25,0.25], 1), new Rock(1, 1.5, [1+0.5,0.54+0.5,0.5], 2), new Rock(1, 2, [0.85+0.5,0.73+0.5,0.59+0.5], 3), new Rock(1, 2.5, [1.5,1.4,0.5], 4), new Rock(1, 3, [0,0,1], 5), new Rock(1, 5, [0,1,0], 6), new Rock(1, 7, [1,0,0], 7), new Rock(Infinity, 10, [0.5+0.5,1.5,1.5], 8)];
          const dimensions = [new Dimension(1, 1, grassTexture, stoneTexture, earthSky, [0.7,0.7,0.7]), new Dimension(1, 1, moonTexture, moonTexture, moonSky, [0.1,0.1,0.1]), new Dimension(1, 1, marsTexture, marsTexture, marsSky, [0.4,0.4,0.4])];
          
-         let pickaxes = [new Pickaxe(1, 1, 1, 1, 1)]
+         let pickaxes = {0: new Pickaxe(1, 1, 1, 1, 1)};
 
-         let currentPickaxe = pickaxes[0];
+         let currentPickaxe = 0;
          let currentRock = rocks[0];
          let currentDimension = dimensions[0];
          let pickaxeDelay = 0;
@@ -982,8 +1032,8 @@
          }
          let saves = JSON.parse(localStorage.getItem("saves"));
 
-         addPickaxeInventory(pickaxes.length - 1);
-         equipPickaxe(pickaxes.length - 1);
+         addPickaxeInventory(0);
+         equipPickaxe(0);
 
          function gameloop() {
             if (document.pointerLockElement === canvas || (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
@@ -1031,7 +1081,7 @@
             ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
 
             if (facingObject(grindstonePos)) {
-               displayText("Upgrade Cost: " + shortenNumber(currentPickaxe.upgrades**2), 10,100);
+               displayText("Upgrade Cost: " + shortenNumber(pickaxes[currentPickaxe].upgrades**2), 10,100);
 
                if (mouseClicked) {
                   buyUpgrade();
@@ -1045,7 +1095,7 @@
                   displayText("Health: " + shortenNumber(currentRock.health), 10,100);
                }
                if (mouseClicked && pickaxeDelay == 0) {
-                  pickaxeDelay = statConvert(currentPickaxe, 'speed');
+                  pickaxeDelay = statConvert(pickaxes[currentPickaxe], 'speed');
                   clickRock();
                }
             }
@@ -1087,7 +1137,7 @@
             displayText("+", canvas.width/2,canvas.height/2);
 
 
-            if (pickaxeDelay > Math.round(statConvert(currentPickaxe, 'speed') / 3)) {
+            if (pickaxeDelay > Math.round(statConvert(pickaxes[currentPickaxe], 'speed') / 3)) {
                ctx.drawImage(pickaxeDownImg, 0, canvas.height-canvas.width*0.5625, canvas.width, canvas.width*0.5625);
             }
             else {
