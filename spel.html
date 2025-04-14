@@ -844,6 +844,39 @@
             return new Pickaxe(speed, damage, quality, upgradability, 1);
          }
 
+         function saveGame(index) {
+            let data = [
+               cash,
+               pickaxeCost,
+               currentPickaxe,
+               currentRock,
+               dimensions.indexOf(currentDimension),
+               pickaxes
+            ];
+
+            if (index >= 0 && index < saves.length) {
+               saves[index] = data;
+            } else {
+               saves.push(data);
+            }
+            localStorage.setItem("saves", JSON.stringify(saves));
+         }
+
+         function loadSave(index) {
+            let data = saves[index];
+            
+            cash = data[0];
+            pickaxeCost = data[1];
+            currentPickaxe = data[2];
+            currentRock = data[3];
+            currentDimension = dimensions[data[4]];
+            pickaxes = data[5];
+
+            for (let i = 0; i < pickaxes.length; i++) {
+               addPickaxeInventory(i);
+            }
+         }
+
          class Pickaxe {
             constructor(speed, quality, damage, upgradability, upgrades) {
                this.speed = speed;
@@ -851,8 +884,6 @@
                this.damage = damage;
                this.upgradability = upgradability;
                this.upgrades = upgrades;
-
-
             }
          }
 
@@ -893,18 +924,15 @@
          let pickaxeCost = 10;
          let rocketCost = 1000;
 
-   
-        
+         const rockPos = [0,0,0];
+         const anvilPos = [50,0,0];
+         const grindstonePos = [-50, 0, 0];
+         const rocketPos = [0,0,50];
+         const dropPos = [0, 0, -50];
 
-         let rockPos = [0,0,0];
-         let anvilPos = [50,0,0];
-         let grindstonePos = [-50, 0, 0];
-         let rocketPos = [0,0,50];
-         let dropPos = [0, 0, -50];
-
-         let earthSky = [0.57, 0.79, 0.98, 1.0];
-         let moonSky = [0, 0, 0, 1.0];
-         let marsSky = [0.96, 0.80, 0.62, 1.0];
+         const earthSky = [0.57, 0.79, 0.98, 1.0];
+         const moonSky = [0, 0, 0, 1.0];
+         const marsSky = [0.96, 0.80, 0.62, 1.0];
 
          const rocks = [new Rock(1, 1, [-1,0,0], 0), new Rock(1, 1.2, [0.25,0.25,0.25], 1), new Rock(1, 1.5, [1+0.5,0.54+0.5,0.5], 2), new Rock(1, 2, [0.85+0.5,0.73+0.5,0.59+0.5], 3), new Rock(1, 2.5, [1.5,1.4,0.5], 4), new Rock(1, 3, [0,0,1], 5), new Rock(1, 5, [0,1,0], 6), new Rock(1, 7, [1,0,0], 7), new Rock(Infinity, 10, [0.5+0.5,1.5,1.5], 8)];
          const dimensions = [new Dimension(1, 1, grassTexture, stoneTexture, earthSky, [0.7,0.7,0.7]), new Dimension(1, 1, moonTexture, moonTexture, moonSky, [0.1,0.1,0.1]), new Dimension(1, 1, marsTexture, marsTexture, marsSky, [0.4,0.4,0.4])];
@@ -917,7 +945,10 @@
          let pickaxeDelay = 0;
 
 
-
+         if (localStorage.getItem("saves") === null) {
+            localStorage.setItem("saves", JSON.stringify([]));
+         }
+         let saves = JSON.parse(localStorage.getItem("saves"));
 
          addPickaxeInventory(pickaxes.length - 1);
          equipPickaxe(pickaxes.length - 1);
@@ -1161,8 +1192,6 @@
             gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
             gl.uniform3fv(cLoc, [1,1,1]);
             }
-            
-
          }
 
          
