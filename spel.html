@@ -110,6 +110,11 @@
             width: 100px;
          }
 
+         #saveSlot {
+            position: fixed;
+            top: calc(50% + 50px);
+            left: calc(50% - 120px);
+         }
       </style>
    </head>
    <body>
@@ -124,8 +129,12 @@
             <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button><div id="buyCost"></div></div>
          </div>
          <div id="settings" hidden>
-            <button id="loadSaveButton" onclick="loadSave(0)">Load save</button>
-            <button id="saveGameButton" onclick="saveGame(0)">Save game</button>
+            <button id="loadSaveButton" onclick="loadSave(document.getElementById('saveSlotInput').value)">Load save</button>
+            <button id="saveGameButton" onclick="saveGame(document.getElementById('saveSlotInput').value)">Save game</button>
+            <div id="saveSlot">
+               <label for="saveSlotInput">Save slot:</label>
+               <input type="number" name="saveSlotInput" id="saveSlotInput">
+            </div>
          </div>
 
          <canvas id="my_Canvas"></canvas>
