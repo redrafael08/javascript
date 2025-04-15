@@ -182,10 +182,8 @@
          });
 
          document.addEventListener('click', (e) => {
-            if (document.pointerLockElement !== canvas &&  !(distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
-               canvas.requestPointerLock();
-            }
 
+ 
             if (e.button == 0) {  
                mouseClicked = true;
             } 
@@ -195,12 +193,17 @@
             if (e.code in keys) {
                keys[e.code] = true;
             }
+
          });
 
          document.addEventListener('keyup', (e) => {
             if (e.code in keys) {
                keys[e.code] = false;
             }
+            if (e.code == 'Escape') {
+            if (document.pointerLockElement !== canvas &&  !(distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
+               canvas.requestPointerLock();
+            }}
          });
 
 
@@ -1049,6 +1052,8 @@
          let currentDimension = dimensions[0];
          let pickaxeDelay = 0;
 
+         let win = false;
+
 
          if (localStorage.getItem("saves") === null) {
             localStorage.setItem("saves", JSON.stringify([]));
@@ -1148,17 +1153,22 @@
                displayText("Upgrade Cost: " + shortenNumber(rocketCost), 10,100);
                if (mouseClicked) {
                   if (cash >= rocketCost) {
+                     if (dimensions.indexOf(currentDimension) != 2) {
                      cash -= rocketCost;
                      rocketCost **= 2;
                      currentDimension = dimensions[dimensions.indexOf(currentDimension)+1];
-                     currentRock = rocks[0];
+                     currentRock = rocks[0];}
+                     else {win = true;}
                   }
                }
             }
 
             displayText("$ " + shortenNumber(cash), 10,50);
 
-            displayText("+", canvas.width/2 - 15,canvas.height/2 + 15);
+            if (!win) { 
+            displayText("+", canvas.width/2 - 15,canvas.height/2 + 15);}
+            else {
+            displayText("You win!", canvas.width/2,canvas.height/2);}
 
 
             if (pickaxeDelay > Math.round(statConvert(pickaxes[currentPickaxe], 'speed') / 3)) {
