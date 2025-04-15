@@ -15,19 +15,14 @@
             height: 100px;
             padding: 10px; 
             display:block;
-
-
          }
-
-
          
          #text {
             position: absolute;
             left: 0px;
             top: 0px;
-           
-
          }
+
          #inventory {
             position: absolute;
             left: calc(100% - 500px);
@@ -57,24 +52,20 @@
 
             overflow: auto;
             height: 100%;
-
          }
-
          
          #currentPickaxe {
             position: fixed;
             left: calc(100% - 650px);
             top: 100px;
-
-      
          }
+
          #selectedPickaxe {
             position: fixed;
             left: calc(100% - 650px);
             top: 500px;
-
-      
          }
+
          #pickaxeStatsGui {
             position: fixed;
             left: calc(100% - 500px - 200px);
@@ -90,10 +81,34 @@
          }
 
          .pickaxeStatBar {
-            height: 5px; margin: 10px; background-color:rgb(0,0,0);
+            height: 5px;
+            margin: 10px;
+            background-color:rgb(0,0,0);
          }
  
- 
+         #settings {
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(200, 200, 200, 0.5);
+            position: fixed;
+         }
+
+         #loadSaveButton {
+            position: fixed;
+            top: calc(50% - 30px);
+            height: 60px;
+            left: calc(50% - 120px);
+            width: 100px;
+         }
+
+         #saveGameButton {
+            position: fixed;
+            top: calc(50% - 30px);
+            height: 60px;
+            left: calc(50% + 20px);
+            width: 100px;
+         }
 
       </style>
    </head>
@@ -107,6 +122,10 @@
             </div>
             <div id="fuseGui" hidden><button onclick="fusePickaxes(pickaxesToFuse)">Fuse pickaxes</button><div id="fuseCost">Select 2 pickaxes</div></div>
             <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button><div id="buyCost"></div></div>
+         </div>
+         <div id="settings" hidden>
+            <button id="loadSaveButton" onclick="loadSave(0)">Load save</button>
+            <button id="saveGameButton" onclick="saveGame(0)">Save game</button>
          </div>
 
          <canvas id="my_Canvas"></canvas>
@@ -1042,6 +1061,7 @@
          function gameloop() {
             if (document.pointerLockElement === canvas || (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
 
+            document.getElementById("settings").hidden = true;
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             textCanvas.width = canvas.width;
@@ -1138,7 +1158,7 @@
 
             displayText("$ " + shortenNumber(cash), 10,50);
 
-            displayText("+", canvas.width/2,canvas.height/2);
+            displayText("+", canvas.width/2 - 15,canvas.height/2 + 15);
 
 
             if (pickaxeDelay > Math.round(statConvert(pickaxes[currentPickaxe], 'speed') / 3)) {
@@ -1280,6 +1300,8 @@
             gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
             gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
             gl.uniform3fv(cLoc, [1,1,1]);
+            } else {
+               document.getElementById("settings").hidden = false;
             }
          }
 
