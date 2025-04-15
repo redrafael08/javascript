@@ -113,7 +113,12 @@
          #saveSlot {
             position: fixed;
             top: calc(50% + 50px);
-            left: calc(50% - 120px);
+            left: calc(50% - 100px);
+            text-align: center;
+         }
+
+         #saveSlotInput {
+            width: 80px;
          }
       </style>
    </head>
@@ -129,11 +134,12 @@
             <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button><div id="buyCost"></div></div>
          </div>
          <div id="settings" hidden>
-            <button id="loadSaveButton" onclick="loadSave(document.getElementById('saveSlotInput').value)">Load save</button>
-            <button id="saveGameButton" onclick="saveGame(document.getElementById('saveSlotInput').value)">Save game</button>
+            <button id="loadSaveButton" onclick="loadSave(document.getElementById('saveSlotInput').value - 1)">Load save</button>
+            <button id="saveGameButton" onclick="saveGame(document.getElementById('saveSlotInput').value - 1)">Save game</button>
             <div id="saveSlot">
-               <label for="saveSlotInput">Save slot:</label>
+               <label for="saveSlotInput">Save slot to use:</label>
                <input type="number" name="saveSlotInput" id="saveSlotInput">
+               <p id="occupiedSaveSlots">Occupied save slots: None</p>
             </div>
          </div>
 
@@ -972,6 +978,7 @@
                saves.push(data);
             }
             localStorage.setItem("saves", JSON.stringify(saves));
+            document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: 0-" + (saves.length - 1);
          }
 
          function loadSave(index) {
@@ -1038,7 +1045,6 @@
 
 
          let pickaxeCost = 10;
-         document.getElementById("buyCost").innerHTML = "Cost: "+pickaxeCost;
          let rocketCost = 1000;
 
          const rockPos = [0,0,0];
@@ -1068,6 +1074,18 @@
             localStorage.setItem("saves", JSON.stringify([]));
          }
          let saves = JSON.parse(localStorage.getItem("saves"));
+
+         document.getElementById("buyCost").innerHTML = "Cost: " + pickaxeCost;
+
+         if (saves.length > 1) {
+            document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: 1-" + saves.length;
+         } else if (saves.length == 1) {
+            document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: 1";
+         } else {
+            document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: None";
+         }
+         
+         
 
          addPickaxeInventory(0);
          equipPickaxe(0);
