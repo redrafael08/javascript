@@ -944,6 +944,10 @@
          }
 
          function loadSave(index) {
+            for (var key in pickaxes) {
+               document.getElementById("pickaxeContainer"+key).remove();
+            }
+
             let data = saves[index];
             
             cash = data[0];
@@ -951,10 +955,10 @@
             currentPickaxe = data[2];
             currentRock = data[3];
             currentDimension = dimensions[data[4]];
-            pickaxes = data[5];
+            pickaxes = data[5];    
 
-            for (let i = 0; i < pickaxes.length; i++) {
-               addPickaxeInventory(i);
+            for (var key in pickaxes) {
+               addPickaxeInventory(key);
             }
          }
 
