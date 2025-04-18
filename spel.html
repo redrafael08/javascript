@@ -17,7 +17,7 @@
             display:block;
          }
          body {
-            background-image: url('background.png');
+            background-image: url('assets/background.png');
             background-repeat: no-repeat;
             background-size: cover;
          }
@@ -178,25 +178,26 @@
          
          const canvas = document.getElementById('gl');
          
-
-
-
-         gl = canvas.getContext('experimental-webgl');
+         // init canvas voor webgl
+         gl = canvas.getContext('experimental-webgl'); 
 
          const textCanvas = document.getElementById('text');
 
          
-
+         // init canvas voor 2d tekenen
          const ctx = textCanvas.getContext("2d");
 
-         let pickaxeUpImg = new Image();
-         pickaxeUpImg.src = 'pickaxeUp.png';
 
+
+         // laad afbeeldingen
+         let pickaxeUpImg = new Image();
+         pickaxeUpImg.src = 'assets/pickaxeUp.png';
 
          let pickaxeDownImg = new Image();
-         pickaxeDownImg.src = 'pickaxeDown.png';
+         pickaxeDownImg.src = 'assets/pickaxeDown.png';
 
-
+         
+         // input keys waardes
          let keys = {
             "KeyW":false, // w
             "KeyA":false, // a
@@ -206,6 +207,8 @@
 
          let mouseClicked = false;
 
+
+         // muis beweging detectie
          document.addEventListener('mousemove', (e) => {
                if (document.pointerLockElement === canvas) {
                   mouseX = e.movementX;
@@ -217,18 +220,21 @@
                }
          });
 
+         // muis click detectie
          document.addEventListener('click', (e) => {
             if (e.button == 0) {  
                mouseClicked = true;
             } 
          });
 
+         // toets indruk detectie
          document.addEventListener('keydown', (e) => {
             if (e.code in keys) {
                keys[e.code] = true;
             }
          });
 
+         // toets loslaat detectie
          document.addEventListener('keyup', (e) => {
             if (e.code in keys) {
                keys[e.code] = false;
@@ -244,7 +250,7 @@
             }
          });
 
-
+         // lijst met all objecten om te renderen
          const vertices = [
             -1,0,-1, 1,1,1, 0,0, 1,0,-1, 1,1,1, 30,0, 1,0,1, 1,1,1, 30,30, 1,0,1, 1,1,1, 30,30, -1,0,-1, 1,1,1, 0,0, -1,0,1, 1,1,1, 0,30, // ground
 
@@ -527,13 +533,13 @@
 
    ];
                
-
+         // laad texture functie
          function newTexture(texture, image) {
 
             let img = new Image();
 
             img.crossOrigin = '';
-            img.src = `textures/${image}`;
+            img.src = `assets/textures/${image}`;
 
             img.onload = function() {
 
@@ -551,7 +557,9 @@
 
 
          }
+         
 
+         // laad alle textures
          const stoneTexture = gl.createTexture();
          newTexture(stoneTexture, 'stone_texture.png');
 
@@ -575,6 +583,9 @@
          const woodTexture = gl.createTexture();
          newTexture(woodTexture, 'wood.png');
 
+
+
+         // maak buffer op gpu voor lijst vertices 
          const vertex_buffer = gl.createBuffer();
 
 
@@ -586,6 +597,8 @@
 
          gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
+
+         // vertex shader code
          const vertCode =
             'attribute vec3 coordinates;' +
             'attribute vec3 aColor;' +
@@ -602,7 +615,8 @@
                ' gl_Position = projection*view*model*vec4(coordinates, 1.0);' +
             '}';
             
- 
+         
+         // compileer vertex shader
          const vertShader = gl.createShader(gl.VERTEX_SHADER);
 
          gl.shaderSource(vertShader, vertCode);
@@ -611,6 +625,7 @@
          gl.compileShader(vertShader);
 
 
+         // fragment shader code
          const fragCode = 'precision mediump float;' +
             'uniform sampler2D uSampler;' +
             'varying vec3 vColor;' +
@@ -620,6 +635,7 @@
             '}';
             
 
+         // compileer fragment shader
          const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
 
 
@@ -629,18 +645,19 @@
          gl.compileShader(fragShader);
 
 
+         // maak shader programma
          const shaderProgram = gl.createProgram();
-
 
          gl.attachShader(shaderProgram, vertShader);
 
          gl.attachShader(shaderProgram, fragShader);
 
-
          gl.linkProgram(shaderProgram);
 
          gl.useProgram(shaderProgram);
 
+
+         // locaties alle uniforms in vertex shader
          const pLoc = gl.getUniformLocation(shaderProgram, "projection");
          const vLoc = gl.getUniformLocation(shaderProgram, "view");
          const mLoc = gl.getUniformLocation(shaderProgram, "model");
@@ -653,10 +670,17 @@
          gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
 
 
+         // geef locatie aan van alle attributen in lijst vertices en in vertex shader
          const coordLoc = gl.getAttribLocation(shaderProgram, "coordinates");
 
-
-         gl.vertexAttribPointer(coordLoc, 3, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 0); 
+                           // locatie,  lengte in indices atribuut, datatype,   lengte vertex, start 
+         gl.vertexAttribPointer(coordLoc, // locatie attribuut
+         3,  // aantal items in lijst vertices
+         gl.FLOAT, // datatype
+         false,  // of data moet worden genormaliseerd (doet niks bij float)
+         8 * Float32Array.BYTES_PER_ELEMENT,  // lengte van een vertex
+         0 // locatie in vertex waar atribuut begint
+      ); 
          
 
          gl.enableVertexAttribArray(coordLoc);
@@ -678,8 +702,10 @@
 
          gl.enableVertexAttribArray(textureLoc);
 
-       
 
+
+       
+         // maak matrixen
          let maxRender = 500;
          let minRender = 1;
          let ang = Math.tan((40*0.5)*Math.PI/180);
@@ -695,7 +721,7 @@
 
 
 
-        
+         // view matrix opstel functie
          function lookAt(eye, front) {
             const up = [0, 1, 0];
             const frontNorm = normalize(front);
@@ -710,7 +736,7 @@
             ];
          }
 
-
+         // reken functies
          function normalize(v) {
             const length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
             return [v[0] / length, v[1] / length, v[2] / length];
@@ -754,6 +780,56 @@
             return false;
          }
 
+
+
+         // random functies
+         function weightedRandom() {
+            let x = Math.random();
+            return x**3 * 99 + 1;
+         }
+         
+         function randomPickaxe() {
+            return new Pickaxe(weightedRandom(), weightedRandom(), weightedRandom(), weightedRandom(), 1);
+         }
+         
+         function randomRange(l, r) {
+            return Math.random() * (r - l) + l;
+         }
+
+
+         // convert functies
+         function shortenNumber(value) {
+            let rValue = Math.round(value);
+            let length = rValue.toString().length-1;
+            let suffix = "";
+            let newValue = 0;
+            let decimals = 2 - (length % 3);
+            if (length >= 3) {
+               suffix = numberSuffixes[Math.floor(length/3)-1]
+               newValue = Math.round(value / (10**(length - (length % 3) - decimals))) / 10**decimals;
+            }
+            else {
+               newValue = Math.round(value * 10**decimals) / 10**decimals;
+            }
+            return newValue.toString() + " " + suffix;
+
+         }
+
+         function statConvert(pickaxe, type) {
+            if (type == 'cash') {return pickaxe.upgrades * pickaxe.upgradability**0.25 * pickaxe.quality * currentRock.quality * currentDimension.cashMultiplier;}
+            else if (type == 'quality') {return pickaxe.quality;}
+            else if (type == 'speed') {return Math.round((1 - (pickaxe.speed / 100)**2) * 45);}
+            else if (type == 'damage') {return pickaxe.damage * Math.sqrt(pickaxe.upgrades * pickaxe.upgradability**0.25);}
+            else if (type == 'upgradability') {return pickaxe.upgradability;}
+            
+         }
+
+
+
+
+
+         // actie functies         
+
          function clickRock() {
             cash += statConvert(pickaxes[currentPickaxe], 'cash');
             if (isFinite(currentRock.health)) {
@@ -774,18 +850,6 @@
             }
          }
 
-         function weightedRandom() {
-            let x = Math.random();
-            return x**3 * 99 + 1;
-         }
-         
-         function randomPickaxe() {
-            return new Pickaxe(weightedRandom(), weightedRandom(), weightedRandom(), weightedRandom(), 1);
-         }
-         
-         function randomRange(l, r) {
-            return Math.random() * (r - l) + l;
-         }
 
          function addPickaxeInventory(index) {
                pickaxeContainer = document.createElement('button');
@@ -798,7 +862,7 @@
 
                pickaxeImg = document.createElement('img');
                pickaxeImg.setAttribute("id", "pickaxeImg"+index);
-               pickaxeImg.setAttribute("src", "pickaxe icon.png");
+               pickaxeImg.setAttribute("src", "assets/pickaxe icon.png");
                pickaxeImg.setAttribute("style", "width: 70px;height: 70px; float: left;"); 
 
                document.getElementById("pickaxeContainer"+index).appendChild(pickaxeImg);
@@ -840,14 +904,8 @@
          function showStats(id,index) {
             document.getElementById(id).innerHTML  = `Cash/click: ${shortenNumber(statConvert(pickaxes[index], 'cash'))}<br>Quality: ${shortenNumber(statConvert(pickaxes[index], 'quality'))}<br>Damage: ${shortenNumber(statConvert(pickaxes[index], 'damage'))}<br>Speed: ${shortenNumber(1/(statConvert(pickaxes[index], 'speed')/30))}<br>Upgradability: ${shortenNumber(statConvert(pickaxes[index], 'upgradability'))}<br>Upgrades: ${shortenNumber(pickaxes[index].upgrades)}`;
          }
-         function statConvert(pickaxe, type) {
-            if (type == 'cash') {return pickaxe.upgrades * pickaxe.upgradability**0.25 * pickaxe.quality * currentRock.quality * currentDimension.cashMultiplier;}
-            else if (type == 'quality') {return pickaxe.quality;}
-            else if (type == 'speed') {return Math.round((1 - (pickaxe.speed / 100)**2) * 45);}
-            else if (type == 'damage') {return pickaxe.damage * Math.sqrt(pickaxe.upgrades * pickaxe.upgradability**0.25);}
-            else if (type == 'upgradability') {return pickaxe.upgradability;}
-            
-         }
+
+
          function buyPickaxe() {
             if (cash >= pickaxeCost) {
                let id = unusedId();
@@ -907,22 +965,7 @@
          }
 
 
-         function shortenNumber(value) {
-            let rValue = Math.round(value);
-            let length = rValue.toString().length-1;
-            let suffix = "";
-            let newValue = 0;
-            let decimals = 2 - (length % 3);
-            if (length >= 3) {
-               suffix = numberSuffixes[Math.floor(length/3)-1]
-               newValue = Math.round(value / (10**(length - (length % 3) - decimals))) / 10**decimals;
-            }
-            else {
-               newValue = Math.round(value * 10**decimals) / 10**decimals;
-            }
-            return newValue.toString() + " " + suffix;
 
-         }
          function displayText(string, posx, posy) {
 
             ctx.fillText(string, posx,posy);
@@ -977,6 +1020,9 @@
             return pick1.speed**2+pick1.damage**2+pick1.quality**2+pick1.upgradability**2+pick2.speed**2+pick2.damage**2+pick2.quality**2+pick2.upgradability**2;
          }
 
+
+         // save functies
+
          function saveGame() {
             let data = [
                cash,
@@ -987,7 +1033,7 @@
                pickaxes
             ];
 
-            if (currentSaveSlot >= 0 && currentSaveSlot < saves.length) {
+            if (validSaveSlot(currentSaveSlot)) {
                saves[currentSaveSlot] = data;
             } else {
                currentSaveSlot = saves.length;
@@ -1004,8 +1050,13 @@
             document.getElementById("saveSlotInput").setAttribute("max",saves.length + 1)            
          }
 
+         function validSaveSlot (saveSlot) {
+            return saveSlot >= 0 && saveSlot < saves.length;
+         }
+      
+
          function loadGame(saveSlot) {
-            if (saveSlot >= 0 && saveSlot < saves.length) {
+            if (validSaveSlot(saveSlot)) {
                for (var key in pickaxes) {
                   document.getElementById("pickaxeContainer"+key).remove();
                }
@@ -1032,6 +1083,8 @@
             }
          }
 
+
+         // classes
          class Pickaxe {
             constructor(speed, quality, damage, upgradability, upgrades) {
                this.speed = speed;
@@ -1063,7 +1116,7 @@
          }
 
 
-
+         // variabelen
 
          let cameraPos = [0, 10, 15];
          let front = [0, 0, -1]     
@@ -1115,6 +1168,8 @@
          addPickaxeInventory(0);
          equipPickaxe(0);
 
+
+         // gameloop
          let firstFrame = true;
          function gameloop() {
             if (document.pointerLockElement === canvas || (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
@@ -1145,6 +1200,7 @@
             sina = Math.sin(yAngle);
             front = [Math.cos(xAngle) * sina, Math.sin(xAngle), Math.cos(xAngle) * cosa]
 
+            // movement
             prevPos = [...cameraPos];
             if (keys["KeyW"]) {
                cameraPos[0] += sina * speed;
@@ -1163,11 +1219,12 @@
                cameraPos[2] -= sina * speed;
             }
 
+            // collisions
             if (distance(cameraPos, [0, cameraPos[1], 0]) > 400 || distance(cameraPos, [0, cameraPos[1], 0]) <= 9 || distance(cameraPos, [grindstonePos[0], cameraPos[1], grindstonePos[2]]) <= 9 || distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 9 || distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 9 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 9) {
                cameraPos = [...prevPos];
             }
 
-
+            // 2d canvas render en game logica
             ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
 
             if (facingObject(grindstonePos)) {
@@ -1248,6 +1305,9 @@
             mouseClicked = false;
 
 
+
+
+            // 3d render
             gl.clearColor(currentDimension.skyColor[0],currentDimension.skyColor[1],currentDimension.skyColor[2],currentDimension.skyColor[3]); 
 
 
@@ -1257,8 +1317,6 @@
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
             
             viewMatrix = lookAt(cameraPos, front);
-
-
 
 
 
@@ -1275,7 +1333,6 @@
 
 
             //droppos
-
             modelMatrix = [10,0,0,0, 0,10,0,0, 0,0,10,0, dropPos[0],0.1,dropPos[2],1];
             gl.bindTexture(gl.TEXTURE_2D, stoneTexture);
             gl.uniform3fv(cLoc, [1.5,1.5,1.5]);
