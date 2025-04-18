@@ -94,7 +94,7 @@
             position: fixed;
          }
 
-         #loadSaveButton {
+         #loadGameButton {
             position: fixed;
             top: calc(50% - 30px);
             height: 60px;
@@ -110,6 +110,22 @@
             width: 100px;
          }
 
+         #newGameButton {
+            position: fixed;
+            top: calc(50% - 30px);
+            height: 60px;
+            left: calc(50% + 20px);
+            width: 100px;
+         }
+
+         #resumeButton {
+            position: fixed;
+            bottom: 20px;
+            height: 60px;
+            left: calc(50% - 50px);
+            width: 100px;
+         }
+
          #saveSlot {
             position: fixed;
             top: calc(50% + 50px);
@@ -119,6 +135,11 @@
 
          #saveSlotInput {
             width: 80px;
+         }
+
+         #invalidSaveSlot {
+            color: red;
+            font-weight: bold;
          }
       </style>
    </head>
@@ -134,12 +155,14 @@
             <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button><div id="buyCost"></div></div>
          </div>
          <div id="settings" hidden>
-            <button id="loadSaveButton" onclick="loadSave(document.getElementById('saveSlotInput').value - 1)">Load save</button>
-            <button id="saveGameButton" onclick="saveGame(document.getElementById('saveSlotInput').value - 1)">Save game</button>
+            <button id="loadGameButton" onclick="loadGame(document.getElementById('saveSlotInput').value - 1)">Load game</button>
+            <button id="saveGameButton" onclick="saveGame()" hidden>Save game</button>
+            <button id="newGameButton" onclick="canvas.requestPointerLock();">New game</button>
+            <button id="resumeButton" onclick="canvas.requestPointerLock();" hidden>Resume</button>
             <div id="saveSlot">
-               <label for="saveSlotInput">Save slot to use:</label>
+               <label for="saveSlotInput" id="saveSlotLabel">World to load:</label>
                <input type="number" name="saveSlotInput" id="saveSlotInput" min="1" max="">
-               <p id="occupiedSaveSlots">Occupied save slots: None</p>
+               <p id="invalidSaveSlot" hidden>Please input a valid world number that <br>corresponds to an existing world</p>
             </div>
          </div>
 
@@ -147,8 +170,6 @@
          <canvas id="text"></canvas>
          click
       </div>
-
-
       <script>
          
          const canvas = document.getElementById('gl');
@@ -158,7 +179,7 @@
 
          gl = canvas.getContext('experimental-webgl');
 
-                  // look up the text canvas.
+         // look up the text canvas.
          const textCanvas = document.getElementById('text');
 
          
@@ -172,9 +193,6 @@
          let pickaxeDownImg = new Image();
          pickaxeDownImg.src = 'pickaxeDown.png';
 
-
-
-         
 
          let keys = {
             "KeyW":false, // w
@@ -197,8 +215,6 @@
          });
 
          document.addEventListener('click', (e) => {
-
- 
             if (e.button == 0) {  
                mouseClicked = true;
             } 
@@ -208,7 +224,6 @@
             if (e.code in keys) {
                keys[e.code] = true;
             }
-
          });
 
          document.addEventListener('keyup', (e) => {
@@ -216,9 +231,14 @@
                keys[e.code] = false;
             }
             if (e.code == 'Escape') {
-            if (document.pointerLockElement !== canvas &&  !(distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
-               canvas.requestPointerLock();
-            }}
+               if (document.pointerLockElement !== canvas &&  !(distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
+                  canvas.requestPointerLock();
+               }
+               for (let key in keys) {
+                  document.getElementById("invalidSaveSlot").hidden = true;
+                  keys[key] = false;
+               }
+            }
          });
 
 
@@ -880,8 +900,6 @@
                }
                if (pickaxesToFuse.length == 2) {document.getElementById("fuseCost").innerHTML = "Cost: "+shortenNumber(fuseCost())}
                else {document.getElementById("fuseCost").innerHTML = 'Select 2 pickaxes';}
-
-            
             }
          }
 
@@ -956,7 +974,7 @@
             return pick1.speed**2+pick1.damage**2+pick1.quality**2+pick1.upgradability**2+pick2.speed**2+pick2.damage**2+pick2.quality**2+pick2.upgradability**2;
          }
 
-         function saveGame(index) {
+         function saveGame() {
             let data = [
                cash,
                pickaxeCost,
@@ -966,12 +984,15 @@
                pickaxes
             ];
 
-            if (index >= 0 && index < saves.length) {
-               saves[index] = data;
+            if (currentSaveSlot >= 0 && currentSaveSlot < saves.length) {
+               saves[currentSaveSlot] = data;
             } else {
+               currentSaveSlot = saves.length;
                saves.push(data);
             }
+
             localStorage.setItem("saves", JSON.stringify(saves));
+
             if (saves.length > 1) {
                document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: 1-" + saves.length;
             } else {
@@ -980,22 +1001,31 @@
             document.getElementById("saveSlotInput").setAttribute("max",saves.length + 1)            
          }
 
-         function loadSave(index) {
-            for (var key in pickaxes) {
-               document.getElementById("pickaxeContainer"+key).remove();
+         function loadGame(saveSlot) {
+            if (saveSlot >= 0 && saveSlot < saves.length) {
+               for (var key in pickaxes) {
+                  document.getElementById("pickaxeContainer"+key).remove();
+               }
+
+               let data = saves[saveSlot];
+               currentSaveSlot = saveSlot;
+               
+               cash = data[0];
+               pickaxeCost = data[1];
+               currentPickaxe = data[2];
+               currentRock = data[3];
+               currentDimension = dimensions[data[4]];
+               pickaxes = data[5];    
+
+               for (var key in pickaxes) {
+                  addPickaxeInventory(key);
+               }
+
+               document.getElementById("invalidSaveSlot").hidden = true;
+               canvas.requestPointerLock()
             }
-
-            let data = saves[index];
-            
-            cash = data[0];
-            pickaxeCost = data[1];
-            currentPickaxe = data[2];
-            currentRock = data[3];
-            currentDimension = dimensions[data[4]];
-            pickaxes = data[5];    
-
-            for (var key in pickaxes) {
-               addPickaxeInventory(key);
+            else {
+               document.getElementById("invalidSaveSlot").hidden = false;
             }
          }
 
@@ -1068,6 +1098,7 @@
 
          let win = false;
 
+         let currentSaveSlot = -1;
 
          if (localStorage.getItem("saves") === null) {
             localStorage.setItem("saves", JSON.stringify([]));
@@ -1076,20 +1107,22 @@
 
          document.getElementById("buyCost").innerHTML = "Cost: " + pickaxeCost;
 
-         if (saves.length > 1) {
-            document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: 1-" + saves.length;
-         } else if (saves.length == 1) {
-            document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: 1";
-         } else {
-            document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: None";
-         }
          document.getElementById("saveSlotInput").setAttribute("max",saves.length + 1) 
 
          addPickaxeInventory(0);
          equipPickaxe(0);
 
+         let firstFrame = true;
          function gameloop() {
             if (document.pointerLockElement === canvas || (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
+
+            if (firstFrame) {
+               document.getElementById("newGameButton").hidden = true;
+               document.getElementById("saveGameButton").hidden = false;
+               document.getElementById("resumeButton").hidden = false;
+
+               firstFrame = false;
+            }
 
             document.getElementById("settings").hidden = true;
             canvas.width = window.innerWidth;
@@ -1170,8 +1203,10 @@
                updateSelectedPickaxe();
                pickaxesToFuse = [];
             }
-            if ((distance(prevPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 && !(distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20)) || (distance(prevPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20 && !(distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)))
-             {document.getElementById("inventory").hidden = true; canvas.requestPointerLock();}
+            if ((distance(prevPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 && !(distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20)) || (distance(prevPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20 && !(distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20))) {
+               document.getElementById("inventory").hidden = true; 
+               canvas.requestPointerLock();
+            }
 
 
             if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) {
@@ -1179,11 +1214,11 @@
                if (mouseClicked) {
                   if (cash >= rocketCost) {
                      if (dimensions.indexOf(currentDimension) != 2) {
-                     cash -= rocketCost;
-                     rocketCost **= 2;
-                     currentDimension = dimensions[dimensions.indexOf(currentDimension)+1];
-                     currentRock = rocks[0];
-                     currentRock.health *= currentDimension.healthMultiplier;
+                        cash -= rocketCost;
+                        rocketCost **= 2;
+                        currentDimension = dimensions[dimensions.indexOf(currentDimension)+1];
+                        currentRock = rocks[0];
+                        currentRock.health *= currentDimension.healthMultiplier;
                      }
                      else {win = true;}
                   }
@@ -1192,10 +1227,8 @@
 
             displayText("$ " + shortenNumber(cash), 10,50);
 
-            if (!win) { 
-            displayText("+", canvas.width/2 - 15,canvas.height/2 + 15);}
-            else {
-            displayText("You win!", canvas.width/2,canvas.height/2);}
+            if (!win) {displayText("+", canvas.width/2 - 15,canvas.height/2 + 15);}
+            else {displayText("You win!", canvas.width/2,canvas.height/2);}
 
 
             if (pickaxeDelay > Math.round(statConvert(pickaxes[currentPickaxe], 'speed') / 3)) {
@@ -1210,8 +1243,6 @@
             }
 
             mouseClicked = false;
-
-
 
 
             gl.clearColor(currentDimension.skyColor[0],currentDimension.skyColor[1],currentDimension.skyColor[2],currentDimension.skyColor[3]); 
