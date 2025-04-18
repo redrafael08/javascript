@@ -184,7 +184,7 @@
          <canvas id="text"></canvas>
       </div>
       <script>
-         
+         //TutorialsPoint. (z.d.)
          const canvas = document.getElementById('gl');
          
          // init canvas voor webgl
@@ -192,12 +192,12 @@
 
          const textCanvas = document.getElementById('text');
 
-         
+         //W3Schools. (z.d.)
          // init canvas voor 2d tekenen
          const ctx = textCanvas.getContext("2d");
 
 
-
+         //WebGL Fundamentals. (z.d.)
          // laad afbeeldingen
          let pickaxeUpImg = new Image();
          pickaxeUpImg.src = 'assets/pickaxeUp.png';
@@ -208,6 +208,8 @@
          
          // input keys waardes
          numberKeyPressed = 0;
+
+         
          let keys = {
             "KeyW":false, // w
             "KeyA":false, // a
@@ -237,6 +239,7 @@
             } 
          });
 
+         //Green, A. (2012, 30 november)
          // toets indruk detectie
          document.addEventListener('keydown', (e) => {
             if (e.code in keys) {
@@ -738,6 +741,7 @@
 
 
          // view matrix opstel functie
+         //3DGE. (z.d.)
          function lookAt(eye, front) {
             const up = [0, 1, 0];
             const frontNorm = normalize(front);
@@ -1055,7 +1059,7 @@
 
 
          // save functies
-
+         // user3637210. (2014, 19 mei)
          function saveGame() {
             let data = [
                cash,

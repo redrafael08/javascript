@@ -1,3 +1,9 @@
+------
+RMS 3D
+------
+door Rafael Bleeker en Wouter Geldof
+
+
 ---------
 UITVOEREN
 ---------
@@ -15,7 +21,40 @@ Note: Als je alleen het spel opent laden de textures niet
 SPELUITLEG
 ----------
 
-loop met WASD naar de steen. Wanneer er health verschijnt klik om geld te verdienen. Upgrade een pickaxe door naar de slijpsteen te gaan, naar de slijpsteen te kijken en vervolgens te klikken wanneer je genoeg geld hebt. Je kan een nieuwe pickaxe kopen bij de krat en 2 pickaxes fuseren bij het aambeeld. Met de raket kan je naar andere plekken die meer geld geven. Wanneer de health van een steen op is verschijnt er een nieuwe die meer geld geeft. Veel plezier.
+CONTROLS
+
+WASD
+muis voor kijken
+
+
+OBJECTEN
+
+Steen
+Geeft geld 
+Wanneer de health van een steen op is verschijnt er een nieuwe steen die meer geld geeft
+
+
+Slijpsteen
+Geslecteerde pickaxe upgraden
+door op een cijfertoets te drukken kan je het aantal upgrades per keer aanpassen
+
+
+Krat
+Nieuwe pickaxe kopen en pickaxes selecteren
+
+
+Aambeeld
+Fuseert 2 pickaxes
+
+
+Raket
+Vlieg naar andere plekken die meer geld geven
+
+
+
+Veel plezier!
+
+
 
 
 ---------
