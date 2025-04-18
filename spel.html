@@ -143,7 +143,7 @@
             </div>
          </div>
 
-         <canvas id="my_Canvas"></canvas>
+         <canvas id="gl"></canvas>
          <canvas id="text"></canvas>
          click
       </div>
@@ -151,7 +151,7 @@
 
       <script>
          
-         const canvas = document.getElementById('my_Canvas');
+         const canvas = document.getElementById('gl');
          
 
 
@@ -657,11 +657,13 @@
 
        
 
+         let maxRender = 500;
+         let minRender = 1;
          let ang = Math.tan((40*0.5)*Math.PI/180);
          let projMatrix = [0.5/ang, 0 , 0, 0,
                            0, 0.5*(canvas.width/canvas.height)/ang, 0, 0,
-                           0, 0, -(500+1)/(500-1), -1,
-                           0, 0, (-2*500*1)/(500-1), 0 
+                           0, 0, -(maxRender+minRender)/(maxRender-minRender), -1,
+                           0, 0, (-2*maxRender*minRender)/(maxRender-minRender), 0 
                         ];
          let viewMatrix = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
          let modelMatrix = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
@@ -1099,8 +1101,8 @@
             gl.viewport(0,0,canvas.width,canvas.height);
             projMatrix = [0.5/ang, 0 , 0, 0,
                            0, 0.5*(canvas.width/canvas.height)/ang, 0, 0,
-                           0, 0, -(500+1)/(500-1), -1,
-                           0, 0, (-2*500*1)/(500-1), 0 
+                           0, 0, -(maxRender+minRender)/(maxRender-minRender), -1,
+                           0, 0, (-2*maxRender*minRender)/(maxRender-minRender), 0 
                         ];
 
             cosa = Math.cos(yAngle);
