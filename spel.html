@@ -16,6 +16,11 @@
             padding: 10px; 
             display:block;
          }
+         body {
+            background-image: url('background.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+         }
          
          #text {
             position: absolute;
@@ -63,7 +68,7 @@
          #selectedPickaxe {
             position: fixed;
             left: calc(100% - 650px);
-            top: 500px;
+            top: 300px;
          }
 
          #pickaxeStatsGui {
@@ -81,7 +86,7 @@
          }
 
          .pickaxeStatBar {
-            height: 5px;
+            height: 4px;
             margin: 10px;
             background-color:rgb(0,0,0);
          }
@@ -168,7 +173,6 @@
 
          <canvas id="gl"></canvas>
          <canvas id="text"></canvas>
-         click
       </div>
       <script>
          
@@ -179,11 +183,10 @@
 
          gl = canvas.getContext('experimental-webgl');
 
-         // look up the text canvas.
          const textCanvas = document.getElementById('text');
 
          
-         // make a 2D context for it
+
          const ctx = textCanvas.getContext("2d");
 
          let pickaxeUpImg = new Image();
@@ -766,14 +769,14 @@
             if (cash >= pickaxes[currentPickaxe].upgrades**2) {  
                cash -= pickaxes[currentPickaxe].upgrades**2;
                pickaxes[currentPickaxe].upgrades += 1;               
-               document.getElementById("pickaxeUpgrades"+currentPickaxe).textContent = pickaxes[currentPickaxe].upgrades;
+               document.getElementById("pickaxeUpgrades"+currentPickaxe).textContent = shortenNumber(pickaxes[currentPickaxe].upgrades);
+               showStats("currentPickaxe", currentPickaxe);
             }
          }
 
          function weightedRandom() {
             let x = Math.random();
             return x**3 * 99 + 1;
-           // return 100;
          }
          
          function randomPickaxe() {
@@ -835,7 +838,7 @@
          }
 
          function showStats(id,index) {
-            document.getElementById(id).innerHTML  = `Cash/click: ${shortenNumber(statConvert(pickaxes[index], 'cash'))}<br>Quality: ${shortenNumber(statConvert(pickaxes[index], 'quality'))}<br>Damage: ${shortenNumber(statConvert(pickaxes[index], 'damage'))}<br>Speed: ${shortenNumber(statConvert(pickaxes[index], 'speed'))}<br>Upgradability: ${shortenNumber(statConvert(pickaxes[index], 'upgradability'))}<br>Upgrades: ${shortenNumber(pickaxes[index].upgrades)}`;
+            document.getElementById(id).innerHTML  = `Cash/click: ${shortenNumber(statConvert(pickaxes[index], 'cash'))}<br>Quality: ${shortenNumber(statConvert(pickaxes[index], 'quality'))}<br>Damage: ${shortenNumber(statConvert(pickaxes[index], 'damage'))}<br>Speed: ${shortenNumber(1/(statConvert(pickaxes[index], 'speed')/30))}<br>Upgradability: ${shortenNumber(statConvert(pickaxes[index], 'upgradability'))}<br>Upgrades: ${shortenNumber(pickaxes[index].upgrades)}`;
          }
          function statConvert(pickaxe, type) {
             if (type == 'cash') {return pickaxe.upgrades * pickaxe.upgradability**0.25 * pickaxe.quality * currentRock.quality * currentDimension.cashMultiplier;}
@@ -1272,12 +1275,8 @@
 
 
             //droppos
-            //let revGrassColor = [2.6,2.2,3.6]
-            //let revMarsColor = [1.4,2.3,4.2]
-            //let revMoonColor = [2.5,2.4,2.3]
 
             modelMatrix = [10,0,0,0, 0,10,0,0, 0,0,10,0, dropPos[0],0.1,dropPos[2],1];
-         //   gl.uniform3fv(cLoc, addVector(revGrassColor, [-0.5,-0.5,-0.5]));
             gl.bindTexture(gl.TEXTURE_2D, stoneTexture);
             gl.uniform3fv(cLoc, [1.5,1.5,1.5]);
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);
