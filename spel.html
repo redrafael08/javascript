@@ -867,13 +867,14 @@
          }
 
          function upgradeCost(currentUpgrades, upgrades) {
-            // help
+            totalUpgrades = currentUpgrades + upgrades;
+            return (totalUpgrades*(totalUpgrades+1)*(2*totalUpgrades+1) - currentUpgrades*(currentUpgrades+1)*(2*currentUpgrades+1))/6
          }
 
          function buyUpgrade() {
-            
-            if (cash >= upgradeCost(pickaxes[currentPickaxe].upgrades, 10**numberKeyPressed)) {  
-               cash -= upgradeCost(pickaxes[currentPickaxe].upgrades, 10**numberKeyPressed);
+            cost = upgradeCost(pickaxes[currentPickaxe].upgrades, 10**numberKeyPressed)
+            if (cash >= cost) {  
+               cash -= cost;
                pickaxes[currentPickaxe].upgrades += 10**numberKeyPressed;               
                document.getElementById("pickaxeUpgrades"+currentPickaxe).textContent = shortenNumber(pickaxes[currentPickaxe].upgrades);
                showStats("currentPickaxe", currentPickaxe);
@@ -932,9 +933,13 @@
          }
 
          function showStats(id,index) {
-            document.getElementById(id).innerHTML  = `Cash/click: ${shortenNumber(statConvert(pickaxes[index], 'cash'))}<br>Quality: ${shortenNumber(statConvert(pickaxes[index], 'quality'))}<br>Damage: ${shortenNumber(statConvert(pickaxes[index], 'damage'))}<br>Speed: ${shortenNumber(1/(statConvert(pickaxes[index], 'speed')/30))}<br>Upgradability: ${shortenNumber(statConvert(pickaxes[index], 'upgradability'))}<br>Upgrades: ${shortenNumber(pickaxes[index].upgrades)}`;
+            if (id == "currentPickaxe") {
+               document.getElementById(id).innerHTML  = `Equipped Pickaxe:<br>Quality: ${shortenNumber(statConvert(pickaxes[index], 'quality'))}<br>Damage: ${shortenNumber(statConvert(pickaxes[index], 'damage'))}<br>Clicks/s: ${shortenNumber(1/(statConvert(pickaxes[index], 'speed')/30))}<br>Upgradability: ${shortenNumber(statConvert(pickaxes[index], 'upgradability'))}<br>Cash/click: ${shortenNumber(statConvert(pickaxes[index], 'cash'))}<br>Upgrades: ${shortenNumber(pickaxes[index].upgrades)}`;
+            }
+            else {
+               document.getElementById(id).innerHTML  = `Quality: ${shortenNumber(statConvert(pickaxes[index], 'quality'))}<br>Damage: ${shortenNumber(statConvert(pickaxes[index], 'damage'))}<br>Clicks/s: ${shortenNumber(1/(statConvert(pickaxes[index], 'speed')/30))}<br>Upgradability: ${shortenNumber(statConvert(pickaxes[index], 'upgradability'))}<br>Cash/click: ${shortenNumber(statConvert(pickaxes[index], 'cash'))}<br>Upgrades: ${shortenNumber(pickaxes[index].upgrades)}`;
+            }
          }
-
 
          function buyPickaxe() {
             if (cash >= pickaxeCost) {
@@ -944,7 +949,7 @@
                
                cash -= pickaxeCost;
                pickaxeCost += pickaxeCost * Object.keys(pickaxes).length;
-               document.getElementById("buyCost").innerHTML = "Cost: " + pickaxeCost;
+               document.getElementById("buyCost").innerHTML = "Cost: " + shortenNumber(pickaxeCost);
             }
          }
 
@@ -972,8 +977,6 @@
                
                updateSelectedPickaxe();
                showStats("currentPickaxe", index);
-
-
             }
             else {
                if (!(pickaxesToFuse.includes(index))) {
@@ -1296,7 +1299,7 @@
 
 
             if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) {
-               displayText("Upgrade Cost: " + shortenNumber(rocketCost), 10,100);
+               displayText("Rocket Cost: " + shortenNumber(rocketCost), 10,100);
                if (mouseClicked) {
                   if (cash >= rocketCost) {
                      if (dimensions.indexOf(currentDimension) != 2) {
