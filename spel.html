@@ -1100,8 +1100,15 @@
                currentDimension = dimensions[data[4]];
                pickaxes = data[5];    
 
-               for (var key in pickaxes) {
+               for (let key in pickaxes) {
                   addPickaxeInventory(key);
+               }
+
+               document.getElementById("buyCost").innerHTML = "Cost: " + shortenNumber(pickaxeCost);
+
+               for (let key in keys) {
+                  document.getElementById("invalidSaveSlot").hidden = true;
+                  keys[key] = false;
                }
 
                document.getElementById("invalidSaveSlot").hidden = true;
