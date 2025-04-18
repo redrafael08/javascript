@@ -198,6 +198,7 @@
 
          
          // input keys waardes
+         numberKeyPressed = 0;
          let keys = {
             "KeyW":false, // w
             "KeyA":false, // a
@@ -232,6 +233,9 @@
             if (e.code in keys) {
                keys[e.code] = true;
             }
+            if (keyToNumber(e.code) !== false) {
+               numberKeyPressed = keyToNumber(e.code);
+            }
          });
 
          // toets loslaat detectie
@@ -247,6 +251,9 @@
                   document.getElementById("invalidSaveSlot").hidden = true;
                   keys[key] = false;
                }
+            }
+            if (keyToNumber(e.code) !== false) {
+               numberKeyPressed = 0;
             }
          });
 
@@ -780,6 +787,15 @@
             return false;
          }
 
+         function keyToNumber(key) {
+            for (let i = 0; i <= 9; i++) {
+               if (key == 'Digit'+i) {
+                  return(i)
+               }
+            }
+            return false;
+         }
+
 
 
          // random functies
@@ -841,10 +857,15 @@
             }
          }
 
+         function upgradeCost(currentUpgrades, upgrades) {
+            // help
+         }
+
          function buyUpgrade() {
-            if (cash >= pickaxes[currentPickaxe].upgrades**2) {  
-               cash -= pickaxes[currentPickaxe].upgrades**2;
-               pickaxes[currentPickaxe].upgrades += 1;               
+            
+            if (cash >= upgradeCost(pickaxes[currentPickaxe].upgrades, 10**numberKeyPressed)) {  
+               cash -= upgradeCost(pickaxes[currentPickaxe].upgrades, 10**numberKeyPressed);
+               pickaxes[currentPickaxe].upgrades += 10**numberKeyPressed;               
                document.getElementById("pickaxeUpgrades"+currentPickaxe).textContent = shortenNumber(pickaxes[currentPickaxe].upgrades);
                showStats("currentPickaxe", currentPickaxe);
             }
@@ -1228,7 +1249,7 @@
             ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
 
             if (facingObject(grindstonePos)) {
-               displayText("Upgrade Cost: " + shortenNumber(pickaxes[currentPickaxe].upgrades**2), 10,100);
+               displayText("Upgrade Cost: " + shortenNumber(upgradeCost(pickaxes[currentPickaxe].upgrades, 10**numberKeyPressed)), 10,100);
 
                if (mouseClicked) {
                   buyUpgrade();

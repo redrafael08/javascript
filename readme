@@ -15,7 +15,7 @@ Note: Als je alleen het spel opent laden de textures niet
 SPELUITLEG
 ----------
 
-loop met WASD naar de steen. Wanneer er health verschijnt klik om geld te verdienen. Upgrade een pickaxe door naar de slijpsteen te gaan, naar de slijpsteen te kijken en vervolgens te klikken wanneer je genoeg geld hebt. Je kan een nieuwe pickaxe kopen bij de krat en 2 pickaxes fuseren bij het aambeeld. Met de raket kan je naar andere plekken die meer geld geven. Wanneer de health van een steen op is verschijnt er een nieuwe die meer geld geeft. Veel plezier.
+loop met WASD naar de steen. Wanneer er health verschijnt klik om geld te verdienen. Upgrade een pickaxe door naar de slijpsteen te gaan, naar de slijpsteen te kijken en vervolgens te klikken wanneer je genoeg geld hebt. Klikken met toets 1 ingedrukt doet 10 upgrades, 2 doet 100 upgrades etc. Je kan een nieuwe pickaxe kopen bij de krat en 2 pickaxes fuseren bij het aambeeld. Met de raket kan je naar andere plekken die meer geld geven. Wanneer de health van een steen op is verschijnt er een nieuwe die meer geld geeft. Veel plezier. 
 
 
 ---------
@@ -74,6 +74,12 @@ Dover, N. (2020, 16 januari). Handling Multiple Key Presses at Once in Vanilla J
 
 Stack Overflow Save data to local storage
 user3637210. (2014, 19 mei). Save data to local storage. Stack Overflow. Geraadpleegd op 14 april 2025, van https://stackoverflow.com/questions/23743862/save-data-to-local-storage
+
+
+
+
+
+Bedankt aan Nathan voor het testen van het spel
 
 
 
