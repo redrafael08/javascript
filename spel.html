@@ -146,6 +146,14 @@
             color: red;
             font-weight: bold;
          }
+
+         #worldNumberText {
+            position: fixed;
+            top: 20px;
+            left: calc(50% - 160px);
+            font-size: 2em;
+            text-align: center;
+         }
       </style>
    </head>
    <body>
@@ -160,6 +168,7 @@
             <div id="buyGui" hidden><button onclick="buyPickaxe()">Buy new pickaxe</button><div id="buyCost"></div></div>
          </div>
          <div id="settings" hidden>
+            <p id="worldNumberText" hidden>World number: 0</p>
             <button id="loadGameButton" onclick="loadGame(document.getElementById('saveSlotInput').value - 1)">Load game</button>
             <button id="saveGameButton" onclick="saveGame()" hidden>Save game</button>
             <button id="newGameButton" onclick="canvas.requestPointerLock();">New game</button>
@@ -1062,19 +1071,15 @@
             }
 
             localStorage.setItem("saves", JSON.stringify(saves));
-
-            if (saves.length > 1) {
-               document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: 1-" + saves.length;
-            } else {
-               document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: 1";
-            }
-            document.getElementById("saveSlotInput").setAttribute("max",saves.length + 1)            
+            document.getElementById("saveSlotInput").setAttribute("max",saves.length + 1) 
+            
+            document.getElementById("worldNumberText").textContent = "Current world number: " + (currentSaveSlot + 1);
+            document.getElementById("worldNumberText").hidden = false;
          }
 
          function validSaveSlot (saveSlot) {
             return saveSlot >= 0 && saveSlot < saves.length;
          }
-      
 
          function loadGame(saveSlot) {
             if (validSaveSlot(saveSlot)) {
