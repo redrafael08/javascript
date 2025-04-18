@@ -136,6 +136,11 @@
          #saveSlotInput {
             width: 80px;
          }
+
+         #invalidSaveSlot {
+            color: red;
+            font-weight: bold;
+         }
       </style>
    </head>
    <body>
@@ -151,13 +156,13 @@
          </div>
          <div id="settings" hidden>
             <button id="loadGameButton" onclick="loadGame(document.getElementById('saveSlotInput').value - 1)">Load game</button>
-            <button id="saveGameButton" onclick="saveGame(document.getElementById('saveSlotInput').value - 1)" hidden>Save game</button>
+            <button id="saveGameButton" onclick="saveGame()" hidden>Save game</button>
             <button id="newGameButton" onclick="canvas.requestPointerLock();">New game</button>
             <button id="resumeButton" onclick="canvas.requestPointerLock();" hidden>Resume</button>
             <div id="saveSlot">
-               <label for="saveSlotInput">Save slot to use:</label>
+               <label for="saveSlotInput" id="saveSlotLabel">World to load:</label>
                <input type="number" name="saveSlotInput" id="saveSlotInput" min="1" max="">
-               <p id="occupiedSaveSlots">Occupied save slots: None</p>
+               <p id="invalidSaveSlot" hidden>Please input a valid world number that <br>corresponds to an existing world</p>
             </div>
          </div>
 
@@ -228,6 +233,7 @@
                   canvas.requestPointerLock();
                }
                for (let key in keys) {
+                  document.getElementById("invalidSaveSlot").hidden = true;
                   keys[key] = false;
                }
             }
@@ -890,8 +896,6 @@
                }
                if (pickaxesToFuse.length == 2) {document.getElementById("fuseCost").innerHTML = "Cost: "+shortenNumber(fuseCost())}
                else {document.getElementById("fuseCost").innerHTML = 'Select 2 pickaxes';}
-
-            
             }
          }
 
@@ -966,7 +970,7 @@
             return pick1.speed**2+pick1.damage**2+pick1.quality**2+pick1.upgradability**2+pick2.speed**2+pick2.damage**2+pick2.quality**2+pick2.upgradability**2;
          }
 
-         function saveGame(saveSlot) {
+         function saveGame() {
             let data = [
                cash,
                pickaxeCost,
@@ -976,8 +980,8 @@
                pickaxes
             ];
 
-            if (saveSlot >= 0 && saveSlot < saves.length) {
-               saves[saveSlot] = data;
+            if (currentSaveSlot >= 0 && currentSaveSlot < saves.length) {
+               saves[currentSaveSlot] = data;
             } else {
                currentSaveSlot = saves.length;
                saves.push(data);
@@ -994,21 +998,30 @@
          }
 
          function loadGame(saveSlot) {
-            for (var key in pickaxes) {
-               document.getElementById("pickaxeContainer"+key).remove();
+            if (saveSlot >= 0 && saveSlot < saves.length) {
+               for (var key in pickaxes) {
+                  document.getElementById("pickaxeContainer"+key).remove();
+               }
+
+               let data = saves[saveSlot];
+               currentSaveSlot = saveSlot;
+               
+               cash = data[0];
+               pickaxeCost = data[1];
+               currentPickaxe = data[2];
+               currentRock = data[3];
+               currentDimension = dimensions[data[4]];
+               pickaxes = data[5];    
+
+               for (var key in pickaxes) {
+                  addPickaxeInventory(key);
+               }
+
+               document.getElementById("invalidSaveSlot").hidden = true;
+               canvas.requestPointerLock()
             }
-
-            let data = saves[saveSlot];
-            
-            cash = data[0];
-            pickaxeCost = data[1];
-            currentPickaxe = data[2];
-            currentRock = data[3];
-            currentDimension = dimensions[data[4]];
-            pickaxes = data[5];    
-
-            for (var key in pickaxes) {
-               addPickaxeInventory(key);
+            else {
+               document.getElementById("invalidSaveSlot").hidden = false;
             }
          }
 
@@ -1090,13 +1103,6 @@
 
          document.getElementById("buyCost").innerHTML = "Cost: " + pickaxeCost;
 
-         if (saves.length > 1) {
-            document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: 1-" + saves.length;
-         } else if (saves.length == 1) {
-            document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: 1";
-         } else {
-            document.getElementById("occupiedSaveSlots").innerHTML = "Occupied save slots: None";
-         }
          document.getElementById("saveSlotInput").setAttribute("max",saves.length + 1) 
 
          addPickaxeInventory(0);
