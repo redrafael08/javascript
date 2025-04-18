@@ -864,7 +864,7 @@
             if (isFinite(currentRock.health)) {
                currentRock.health -= statConvert(pickaxes[currentPickaxe],'damage');
                if (currentRock.health <= 0) {
-                  currentRock = rocks[currentRock.index + 1];
+                  currentRock = new Rock(rocks[currentRock.index + 1].health, rocks[currentRock.index + 1].quality, rocks[currentRock.index + 1].color, rocks[currentRock.index + 1].index);
                   currentRock.health *= currentDimension.healthMultiplier;
                }
             }
@@ -1104,6 +1104,10 @@
                currentDimension = dimensions[data[4]];
                pickaxes = data[5];    
 
+               if (currentRock.index == 8) {
+                  currentRock.health = Infinity;
+               }
+
                for (let key in pickaxes) {
                   addPickaxeInventory(key);
                }
@@ -1139,7 +1143,7 @@
             constructor(health, quality, color, index) {
                this.health = health;
                this.quality = quality;
-               this.color = color;
+               this.color = [...color];
                this.index = index;
             }
          }
@@ -1188,7 +1192,7 @@
          let pickaxes = {0: new Pickaxe(1, 1, 1, 1, 1)};
 
          let currentPickaxe = 0;
-         let currentRock = rocks[0];
+         let currentRock = new Rock(rocks[0].health, rocks[0].quality, rocks[0].color, rocks[0].index);
          let currentDimension = dimensions[0];
          let pickaxeDelay = 0;
 
@@ -1317,7 +1321,7 @@
                         cash -= rocketCost;
                         rocketCost **= 2;
                         currentDimension = dimensions[dimensions.indexOf(currentDimension)+1];
-                        currentRock = rocks[0];
+                        currentRock = new Rock(rocks[0].health, rocks[0].quality, rocks[0].color, rocks[0].index);
                         currentRock.health *= currentDimension.healthMultiplier;
                      }
                      else {win = true;}
