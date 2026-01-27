@@ -828,8 +828,8 @@
 
          // convert functies
          function shortenNumber(value) {
-            let rValue = Math.round(value);
-            let length = rValue.toString().length-1;
+            let length = 0;
+            if (value > 0) length = Math.floor(Math.log10(value));
             let suffix = "";
             let newValue = 0;
             let decimals = 2 - (length % 3);
@@ -841,7 +841,6 @@
                newValue = Math.round(value * 10**decimals) / 10**decimals;
             }
             return newValue.toString() + " " + suffix;
-
          }
 
          function statConvert(pickaxe, type) {
@@ -852,9 +851,6 @@
             else if (type == 'upgradability') {return pickaxe.upgradability;}
             
          }
-
-
-
 
 
          // actie functies         
@@ -933,7 +929,6 @@
                pickaxeUpgrades.textContent = pickaxes[index].upgrades;
                pickaxeUpgrades.setAttribute("id", "pickaxeUpgrades"+index);
                document.getElementById("pickaxeStats"+index).appendChild(pickaxeUpgrades);  
-
          }
 
          function showStats(id,index) {
@@ -963,7 +958,6 @@
                   item.style.backgroundColor = '#f0f0f0';
                }
                document.getElementById("pickaxeContainer"+currentPickaxe).style.backgroundColor = 'grey';
-
          }
 
          function unusedId() {
@@ -1002,9 +996,7 @@
          }
 
 
-
          function displayText(string, posx, posy) {
-
             ctx.fillText(string, posx,posy);
             ctx.strokeText(string, posx,posy);
          }
@@ -1045,9 +1037,6 @@
                   updateSelectedPickaxe();
                   showStats("currentPickaxe", id);
                }
-
-
-
             }
          }
 
@@ -1472,9 +1461,6 @@
                document.getElementById("settings").hidden = false;
             }
          }
-
-         
-
 
 
          setInterval(gameloop, 1000 / 30);
