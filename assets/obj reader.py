@@ -10,7 +10,7 @@ faces = []
 
 # ---------------- LOAD OBJ ---------------- #
 
-with open("blender objects/skybox.obj", "r") as f:
+with open("blender objects/pickaxe.obj", "r") as f:
     for line in f:
         line = line.strip()
         if not line or line.startswith("#"):

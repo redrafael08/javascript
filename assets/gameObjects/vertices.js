@@ -3,7 +3,7 @@
          const vertices = [
             ...groundVertices, ...dropVertices, ...crateVertices, 
             ...anvilVertices, ...rockVertices, ...nodesVertices, ...rocketVertices, 
-            ...grindstoneVertices, ...shadowVertices, ...skyboxVertices
+            ...grindstoneVertices, ...shadowVertices, ...skyboxVertices, ...pickaxeVertices
 
    ];
                

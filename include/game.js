@@ -99,6 +99,7 @@
         
                gl.activeTexture(gl.TEXTURE0);
                
+               
                gl.bindTexture(gl.TEXTURE_2D, texture);
                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -167,7 +168,8 @@
             'uniform mat4 model;'+
             'uniform vec3 oColor;'+         
             'void main() {' +
-               ' vColor = (dot(aNormal,normalize(vec3(1,3,2)))*0.5+0.5)*oColor;'+
+ 
+               ' vColor = (dot(normalize(mat3(model) * aNormal) ,normalize(vec3(1,3,2)))*0.5+0.5)*oColor;'+
                ' vTexture = aTexture;'+
                ' gl_Position = projection*view*model*vec4(coordinates, 1.0);' +
             '}';
@@ -863,10 +865,10 @@
 
 
             if (pickaxeDelay > Math.round(statConvert(pickaxes[currentPickaxe], 'speed') / 3)) {
-               ctx.drawImage(pickaxeDownImg, 0, canvas.height-canvas.width*0.5625, canvas.width, canvas.width*0.5625);
+              // ctx.drawImage(pickaxeDownImg, 0, canvas.height-canvas.width*0.5625, canvas.width, canvas.width*0.5625);
             }
             else {
-               ctx.drawImage(pickaxeUpImg, 0, canvas.height-canvas.width*0.5625, canvas.width, canvas.width*0.5625);
+             //  ctx.drawImage(pickaxeUpImg, 0, canvas.height-canvas.width*0.5625, canvas.width, canvas.width*0.5625);
             }
 
             if (pickaxeDelay > 0) {
@@ -886,15 +888,52 @@
 
 
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            
+
+
+            gl.uniformMatrix4fv(pLoc, false, projMatrix);
+
             viewMatrix = lookAt(cameraPos, front);
+
+
+            gl.depthMask(false);
+            gl.depthFunc(gl.LEQUAL);
+
+            modelMatrix = [5,0,0,0, 0,5,0,0, 0,0,5,0, cameraPos[0],9.5,cameraPos[2],1];
+            gl.bindTexture(gl.TEXTURE_2D, skyTexture);
+            gl.uniformMatrix4fv(mLoc, false, modelMatrix);
+            gl.uniformMatrix4fv(vLoc, false, viewMatrix);
+            gl.uniform3fv(cLoc, [1,1,1]);
+            gl.drawArrays(gl.TRIANGLES, 1254-456-skyboxVertices.length, skyboxVertices.length);
+
+            gl.depthMask(true);
+gl.depthFunc(gl.LESS);
+
+
+            /*
+// SKYBOX
+gl.depthMask(false);
+gl.depthFunc(gl.LEQUAL);
+drawSkybox();
+
+// WORLD
+gl.depthMask(true);
+gl.depthFunc(gl.LESS);
+drawWorld();
+
+// PICKAXE
+gl.depthMask(false);
+drawPickaxe();*/
+
+
+            
+           
 
 
 
             //ground
             gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
             modelMatrix = [1000,0,0,0, 0,1,0,0, 0,0,1000,0, 0,0,0,1];
-            gl.uniformMatrix4fv(pLoc, false, projMatrix);
+            //gl.uniformMatrix4fv(pLoc, false, projMatrix);
             gl.uniformMatrix4fv(vLoc, false, viewMatrix);
             gl.uniformMatrix4fv(mLoc, false, modelMatrix);
             gl.uniform3fv(cLoc, [1,1,1]);
@@ -926,20 +965,9 @@
 
 
 
-           //crate
-            modelMatrix = [5000,0,0,0, 0,5000,0,0, 0,0,5000,0, cameraPos[0],100,cameraPos[2],1];
-            gl.bindTexture(gl.TEXTURE_2D, skyTexture);
-            gl.uniformMatrix4fv(mLoc, false, modelMatrix);
-            gl.uniform3fv(cLoc, [1,1,1]);
-            gl.drawArrays(gl.TRIANGLES, 6+48, 36);
 
-            gl.uniform3fv(cLoc, currentDimension.shadowColor);
-            gl.uniformMatrix4fv(mLoc, false, [9,0,0,0, 0,9,0,0, 0,0,9,0, dropPos[0],0.05,dropPos[2],1]);  
-            gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
-            gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132+42, 42);
-            gl.uniform3fv(cLoc, [1,1,1]);
 
-            
+
 
             //anvil
             gl.bindTexture(gl.TEXTURE_2D, anvilTexture);
@@ -1010,6 +1038,44 @@
             gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
             gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
             gl.uniform3fv(cLoc, [1,1,1]);
+
+
+gl.clear(gl.DEPTH_BUFFER_BIT);
+
+gl.enable(gl.DEPTH_TEST);
+gl.depthMask(true);
+gl.depthFunc(gl.LESS);
+
+
+
+           //pickaxe
+cy = Math.cos(yAngle);
+sy = Math.sin(yAngle);
+
+cx = Math.cos(xAngle);
+sx = Math.sin(xAngle);
+
+scale = 2;
+
+modelMatrix = [
+  cy*scale,           sy*sx*scale,   -sy*cx*scale,   0,
+  0,                  cx*scale,        sx*scale,     0,
+  sy*scale,          -cy*sx*scale,    cy*cx*scale,   0,
+  cameraPos[0],       cameraPos[1],   cameraPos[2],  1
+];
+
+
+            gl.bindTexture(gl.TEXTURE_2D, grassTexture);
+            gl.uniformMatrix4fv(mLoc, false, [scale,0,0,0, 0,scale,0,0, 0,0,scale,0, 5,-5,-5-15,1]);
+            
+            gl.uniformMatrix4fv(vLoc, false, [1,0,0,0,  0,1,0,0,  0,0,1,0,  0,0,0,1]);
+            gl.uniform3fv(cLoc, [1,1,1]);
+            gl.drawArrays(gl.TRIANGLES, 1254-456, 456);
+
+
+            gl.depthFunc(gl.LESS);
+gl.depthMask(true);
+
             } else {
                document.getElementById("settings").hidden = false;
             }
