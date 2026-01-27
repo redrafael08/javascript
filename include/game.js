@@ -96,8 +96,9 @@
 
             img.onload = function() {
 
+        
                gl.activeTexture(gl.TEXTURE0);
-
+               
                gl.bindTexture(gl.TEXTURE_2D, texture);
                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -115,6 +116,9 @@
          // laad alle textures
          const stoneTexture = gl.createTexture();
          newTexture(stoneTexture, 'stone_texture.png');
+
+         const skyTexture = gl.createTexture();
+         newTexture(skyTexture, 'skybox.png');
 
 
          const grassTexture = gl.createTexture();
@@ -154,7 +158,7 @@
          // vertex shader code
          const vertCode =
             'attribute vec3 coordinates;' +
-            'attribute vec3 aColor;' +
+            'attribute vec3 aNormal;' +
             'attribute vec2 aTexture;' +
             'varying vec3 vColor;' +
             'varying vec2 vTexture;' +
@@ -163,7 +167,7 @@
             'uniform mat4 model;'+
             'uniform vec3 oColor;'+         
             'void main() {' +
-               ' vColor = aColor*oColor;'+
+               ' vColor = (dot(aNormal,normalize(vec3(1,3,2)))*0.5+0.5)*oColor;'+
                ' vTexture = aTexture;'+
                ' gl_Position = projection*view*model*vec4(coordinates, 1.0);' +
             '}';
@@ -238,13 +242,13 @@
 
          gl.enableVertexAttribArray(coordLoc);
 
-         const colorLoc = gl.getAttribLocation(shaderProgram, "aColor");
+         const normalLoc = gl.getAttribLocation(shaderProgram, "aNormal");
 
 
-         gl.vertexAttribPointer(colorLoc, 3, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT); 
+         gl.vertexAttribPointer(normalLoc, 3, gl.FLOAT, false, 8 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT); 
          
 
-         gl.enableVertexAttribArray(colorLoc);
+         gl.enableVertexAttribArray(normalLoc);
 
 
          const textureLoc = gl.getAttribLocation(shaderProgram, "aTexture");
@@ -259,7 +263,7 @@
 
        
          // maak matrixen
-         let maxRender = 500;
+         let maxRender = 10000;
          let minRender = 1;
          let ang = Math.tan((40*0.5)*Math.PI/180);
          let projMatrix = [0.5/ang, 0 , 0, 0,
@@ -921,6 +925,21 @@
             gl.uniform3fv(cLoc, [1,1,1]);
 
 
+
+           //crate
+            modelMatrix = [5000,0,0,0, 0,5000,0,0, 0,0,5000,0, cameraPos[0],100,cameraPos[2],1];
+            gl.bindTexture(gl.TEXTURE_2D, skyTexture);
+            gl.uniformMatrix4fv(mLoc, false, modelMatrix);
+            gl.uniform3fv(cLoc, [1,1,1]);
+            gl.drawArrays(gl.TRIANGLES, 6+48, 36);
+
+            gl.uniform3fv(cLoc, currentDimension.shadowColor);
+            gl.uniformMatrix4fv(mLoc, false, [9,0,0,0, 0,9,0,0, 0,0,9,0, dropPos[0],0.05,dropPos[2],1]);  
+            gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
+            gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132+42, 42);
+            gl.uniform3fv(cLoc, [1,1,1]);
+
+            
 
             //anvil
             gl.bindTexture(gl.TEXTURE_2D, anvilTexture);

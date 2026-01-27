@@ -1,7 +1,7 @@
 import random
 
 
-file = open('C://Users//Rafael//Documents//blender objects//shadow.obj', 'r').read()
+file = open('skybox.obj', 'r').read()
 
 
 #print(repr(file))
@@ -125,10 +125,37 @@ for triangle in triangles:
     #print(triangle)
     vertprintlist = []
     for vertex in triangle[:3]:
-        vertprintlist.append(f"      {vertex[0][0]},{vertex[0][1]},{vertex[0][2]},   {triangle[3]},{triangle[4]},{triangle[5]},   {vertex[1][0]/3},{vertex[1][1]/3}")
+        vertprintlist.append(f"      {vertex[0][0]},{vertex[0][1]},{vertex[0][2]},   {triangle[3]},{triangle[4]},{triangle[5]},   {vertex[1][0]},{1-vertex[1][1]}")
     print(f"{vertprintlist[0]},{vertprintlist[1]},{vertprintlist[2]},")
 
 
 
 
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(6, 6))
+
+for tri in triangles:
+    uvs = []
+    for v in tri[:3]:
+        u = v[1][0] 
+        vcoord = 1 - v[1][1]   # same flip as WebGL
+        uvs.append((u, vcoord))
+
+    # close the triangle
+    uvs.append(uvs[0])
+
+    xs = [p[0] for p in uvs]
+    ys = [p[1] for p in uvs]
+
+    plt.plot(xs, ys, 'k-', linewidth=0.5)
+
+plt.title("UV Map (WebGL space)")
+plt.xlabel("U")
+plt.ylabel("V")
+plt.xlim(0, 1)
+plt.ylim(0, 1)
+plt.gca().set_aspect('equal', adjustable='box')
+plt.gca().invert_yaxis()  # optional: matches texture image view
+plt.show()
 
