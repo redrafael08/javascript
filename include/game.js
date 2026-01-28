@@ -116,8 +116,24 @@ function newTexture(texture, image) {
 
 
 // laad alle textures
+
+
+const emptyTexture = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, emptyTexture);
+gl.texImage2D(
+  gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0,
+  gl.RGBA, gl.UNSIGNED_BYTE,
+  new Uint8Array([255, 255, 255, 255])
+);
+
+
+
+
 const stoneTexture = gl.createTexture();
 newTexture(stoneTexture, 'stone_texture.png');
+
+const shadowTexture = gl.createTexture();
+newTexture(shadowTexture, 'shadow map.png');
 
 const skyTexture = gl.createTexture();
 newTexture(skyTexture, 'skybox.png');
@@ -170,7 +186,7 @@ const vertCode =
    'uniform vec3 oColor;'+         
    'void main() {' +
 
-      ' vColor = (dot(normalize(mat3(model) * aNormal) ,normalize(vec3(1,3,2)))*0.5+0.5)*oColor;'+
+      ' vColor = (dot(normalize(mat3(model) * aNormal) ,normalize(vec3(1,1,1)))*0.5+0.5)*oColor;'+
       ' vTexture = aTexture;'+
       ' gl_Position = projection*view*model*vec4(coordinates, 1.0);' +
    '}';
@@ -187,13 +203,18 @@ gl.compileShader(vertShader);
 
 // fragment shader code
 const fragCode = 'precision mediump float;' +
-   'uniform sampler2D uSampler;' +
+   'uniform sampler2D uDiffuse;' +
+   'uniform sampler2D uShadowMap;' +
    'varying vec3 vColor;' +
    'varying vec2 vTexture;' +
    'void main() {' +
-      'gl_FragColor = texture2D(uSampler, vTexture)*vec4(vColor, 1.0);' +
+      'vec4 baseColor = texture2D(uDiffuse, vTexture);' +
+      'vec4 shadow = texture2D(uShadowMap, vTexture);' +
+      'gl_FragColor = baseColor*shadow*vec4(vColor, 1.0);' +
    '}';
    
+
+
 
 // compileer fragment shader
 const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -223,8 +244,11 @@ const vLoc = gl.getUniformLocation(shaderProgram, "view");
 const mLoc = gl.getUniformLocation(shaderProgram, "model");
 const cLoc = gl.getUniformLocation(shaderProgram, "oColor");
 
-const uSamplerLoc = gl.getUniformLocation(shaderProgram, "uSampler");
-gl.uniform1i(uSamplerLoc, 0);
+const uDiffuseLoc = gl.getUniformLocation(shaderProgram, "uDiffuse");
+gl.uniform1i(uDiffuseLoc, 0);
+
+const uShadowLoc = gl.getUniformLocation(shaderProgram, "uShadowMap");
+gl.uniform1i(uShadowLoc, 1);
 
 
 gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
@@ -900,7 +924,18 @@ function gameloop() {
    gl.depthFunc(gl.LEQUAL);
 
    modelMatrix = [5,0,0,0, 0,5,0,0, 0,0,5,0, cameraPos[0],9.5,cameraPos[2],1];
-   gl.bindTexture(gl.TEXTURE_2D, skyTexture);
+
+gl.activeTexture(gl.TEXTURE0);
+
+
+gl.bindTexture(gl.TEXTURE_2D, skyTexture);
+
+gl.activeTexture(gl.TEXTURE1);
+gl.bindTexture(gl.TEXTURE_2D, emptyTexture);
+
+gl.activeTexture(gl.TEXTURE0);
+
+
    gl.uniformMatrix4fv(mLoc, false, modelMatrix);
    gl.uniformMatrix4fv(vLoc, false, viewMatrix);
    gl.uniform3fv(cLoc, [1,1,1]);
@@ -910,9 +945,17 @@ function gameloop() {
    gl.depthFunc(gl.LESS);
 
 
+
    //ground
    gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
-   modelMatrix = [1000,0,0,0, 0,1,0,0, 0,0,1000,0, 0,0,0,1];
+
+gl.activeTexture(gl.TEXTURE1);
+gl.bindTexture(gl.TEXTURE_2D, shadowTexture);
+
+gl.activeTexture(gl.TEXTURE0);
+
+
+   modelMatrix = [500,0,0,0, 0,1,0,0, 0,0,500,0, 0,0,0,1];
    //gl.uniformMatrix4fv(pLoc, false, projMatrix);
    gl.uniformMatrix4fv(vLoc, false, viewMatrix);
    gl.uniformMatrix4fv(mLoc, false, modelMatrix);
@@ -922,6 +965,13 @@ function gameloop() {
 
 
    gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
+
+
+gl.activeTexture(gl.TEXTURE1);
+gl.bindTexture(gl.TEXTURE_2D, emptyTexture);
+
+gl.activeTexture(gl.TEXTURE0);
+
 
    for (let i=0;i<5000;i++) {
 
@@ -956,11 +1006,13 @@ function gameloop() {
    gl.uniform3fv(cLoc, [1,1,1]);
    gl.drawArrays(gl.TRIANGLES, 6+48, 36);
 
+
+   /*
    gl.uniform3fv(cLoc, currentDimension.shadowColor);
    gl.uniformMatrix4fv(mLoc, false, [9,0,0,0, 0,9,0,0, 0,0,9,0, dropPos[0],0.05,dropPos[2],1]);  
    gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
    gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
-   gl.uniform3fv(cLoc, [1,1,1]);
+   gl.uniform3fv(cLoc, [1,1,1]);*/
 
 
    //anvil
@@ -991,12 +1043,12 @@ function gameloop() {
       gl.bindTexture(gl.TEXTURE_2D, oreTexture);
       gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84, 102);
    }
-
+   /*
    gl.uniform3fv(cLoc, currentDimension.shadowColor);
    gl.uniformMatrix4fv(mLoc, false, [10,0,0,0, 0,10,0,0, 0,0,10,0, 0,0.05,0,1]);  
    gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
    gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
-   gl.uniform3fv(cLoc, [1,1,1]);
+   gl.uniform3fv(cLoc, [1,1,1]);*/
 
 
 
