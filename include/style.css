@@ -143,6 +143,8 @@
 
          #confirmLoadGameText {
             position: fixed;
+            font-weight: bold;
+            color: red;
             top: calc(50% + 100px);
             left: calc(50% - 150px);
             text-align: center;
