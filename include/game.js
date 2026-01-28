@@ -1,3 +1,5 @@
+
+
 //TutorialsPoint. (z.d.)
 const canvas = document.getElementById('gl');
 
@@ -1023,23 +1025,39 @@ function gameloop() {
    cy = Math.cos(yAngle);
    sy = Math.sin(yAngle);
 
-   cx = Math.cos(xAngle);
-   sx = Math.sin(xAngle);
+   cz = Math.cos(xAngle);
+   sz = Math.sin(xAngle);
+
+      cz2 = Math.cos(Math.PI*0.5);
+   sz2 = Math.sin(Math.PI*0.5);
 
    scale = 2;
 
-   modelMatrix = [
-   cy*scale,           sy*sx*scale,   -sy*cx*scale,   0,
-   0,                  cx*scale,        sx*scale,     0,
-   sy*scale,          -cy*sx*scale,    cy*cx*scale,   0,
-   cameraPos[0],       cameraPos[1],   cameraPos[2],  1
-   ];
+
+
+modelMatrix = [
+  cy*cz,  -cy*sz,  sy,  0,
+  sz,      cz,     0,   0,
+ -sy*cz,   sy*sz,  cy,  0,
+  0,       0,      0,   1
+];
+
+
+
+
+
+      invmodelMatrix = [
+     cy*cz*scale,   sz*scale,  -sy*cz*scale,  0,
+ -cy*sz*scale,   cz*scale,   sy*sz*scale,  0,
+  sy*scale,      0,    cy*scale,     0,
+  7,  -5,  -25,  1];
+
 
 
    gl.bindTexture(gl.TEXTURE_2D, grassTexture);
-   gl.uniformMatrix4fv(mLoc, false, [scale,0,0,0, 0,scale,0,0, 0,0,scale,0, 5,-5,-5-15,1]);
+   gl.uniformMatrix4fv(mLoc, false, modelMatrix);
    
-   gl.uniformMatrix4fv(vLoc, false, [1,0,0,0,  0,1,0,0,  0,0,1,0,  0,0,0,1]);
+   gl.uniformMatrix4fv(vLoc, false, invmodelMatrix);//[scale,0,0,0, 0,scale,0,0, 0,0,scale,0, 5,-5,-5-15,1]);
    gl.uniform3fv(cLoc, [1,1,1]);
    gl.drawArrays(gl.TRIANGLES, 1254-456, 456);
 
