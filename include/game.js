@@ -622,6 +622,7 @@ function confirmLoadGame() {
 }   
 
 function loadGame(saveSlot) {
+   document.getElementById("loadGameButton").hidden = true;
    if (validSaveSlot(saveSlot)) {
       for (var key in pickaxes) {
          document.getElementById("pickaxeContainer"+key).remove();

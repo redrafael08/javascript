@@ -102,6 +102,14 @@
             width: 100px;
          }
 
+         #loadGameButton {
+            position: fixed;
+            top: calc(50% - 30px);
+            height: 60px;
+            left: calc(50% - 120px);
+            width: 100px;
+         }
+
          #saveGameButton {
             position: fixed;
             top: calc(50% - 30px);
