@@ -17,7 +17,9 @@
          </div>
          <div id="settings" hidden>
             <p id="worldNumberText" hidden>World number: 0</p>
-            <button id="loadGameButton" onclick="loadGame(document.getElementById('saveSlotInput').value - 1)">Load game</button>
+            <button id="confirmLoadGame" onclick="confirmLoadGame()">Load Game</button>
+            <div id="confirmLoadGameText" hidden>Warning: any unsaved progress will be lost</div>
+            <button id="loadGameButton" onclick="loadGame(document.getElementById('saveSlotInput').value - 1)" hidden>Continue</button>
             <button id="saveGameButton" onclick="saveGame()" hidden>Save game</button>
             <button id="newGameButton" onclick="canvas.requestPointerLock();">New game</button>
             <button id="resumeButton" onclick="canvas.requestPointerLock();" hidden>Resume</button>

@@ -94,7 +94,7 @@
             position: fixed;
          }
 
-         #loadGameButton {
+         #confirmLoadGame {
             position: fixed;
             top: calc(50% - 30px);
             height: 60px;
@@ -131,6 +131,14 @@
             top: calc(50% + 50px);
             left: calc(50% - 100px);
             text-align: center;
+         }
+
+         #confirmLoadGameText {
+            position: fixed;
+            top: calc(50% + 100px);
+            left: calc(50% - 150px);
+            text-align: center;
+            width: 300px;
          }
 
          #saveSlotInput {

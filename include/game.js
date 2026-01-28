@@ -616,6 +616,11 @@ function validSaveSlot (saveSlot) {
    return saveSlot >= 0 && saveSlot < saves.length;
 }
 
+function confirmLoadGame() {
+   document.getElementById("loadGameButton").hidden = false;
+   document.getElementById("confirmLoadGameText").hidden = false;  
+}   
+
 function loadGame(saveSlot) {
    if (validSaveSlot(saveSlot)) {
       for (var key in pickaxes) {
@@ -747,6 +752,8 @@ function gameloop() {
    if (document.pointerLockElement === canvas || (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
 
    if (firstFrame) {
+      document.getElementById("loadGameButton").hidden = true;
+      document.getElementById("confirmLoadGameText").hidden = true;
       document.getElementById("newGameButton").hidden = true;
       document.getElementById("saveGameButton").hidden = false;
       document.getElementById("resumeButton").hidden = false;
