@@ -266,7 +266,7 @@ gl.enableVertexAttribArray(textureLoc);
 
 
 // maak matrixen
-let maxRender = 10000;
+let maxRender = 500;
 let minRender = 1;
 let ang = Math.tan((40*0.5)*Math.PI/180);
 let projMatrix = [0.5/ang, 0 , 0, 0,
@@ -919,6 +919,26 @@ function gameloop() {
    gl.uniform3fv(cLoc, [1,1,1]);
 
    gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+
+   gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
+
+   for (let i=0;i<5000;i++) {
+
+      r1 = (Math.sin((i+0) * 12.9898) * 43758.5453) % 1;
+      r2 = (Math.sin((i+50) * 12.9898) * 43758.5453) % 1;
+      r3 = (Math.sin((i+100) * 12.9898) * 43758.5453) % 1;
+      r4 = (Math.sin((i+150) * 12.9898) * 43758.5453) % 1;
+      r5 = (Math.sin((i+200) * 12.9898) * 43758.5453) % 1;
+      r6 = (Math.sin((i+250) * 12.9898) * 43758.5453) % 1;
+
+      c = Math.cos(r1*5);
+      s = Math.sin(r1*5);
+      size = r6+2;
+      modelMatrix = [size*c,0,-s*size,0, 0,size,0,0, s*size,0,size*c,0, r2*r4*400,0,r3*r5*400,1];
+      gl.uniformMatrix4fv(mLoc, false, modelMatrix);
+      gl.drawArrays(gl.TRIANGLES, 1254, 6);
+   }
 
 
    //droppos
