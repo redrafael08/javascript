@@ -1025,21 +1025,48 @@ function gameloop() {
    cy = Math.cos(yAngle);
    sy = Math.sin(yAngle);
 
-   cz = Math.cos(xAngle);
-   sz = Math.sin(xAngle);
+   cx = Math.cos(-xAngle);
+   sx = Math.sin(-xAngle);
 
-      cz2 = Math.cos(Math.PI*0.5);
-   sz2 = Math.sin(Math.PI*0.5);
+
+
+   s = statConvert(pickaxes[currentPickaxe], 'speed');
+   let t = 1 - pickaxeDelay / (s); 
+
+if (t <= 1/6) {
+
+    swing = (t / (1/6)) * 1.5;
+} else if (t <= 1/2) {
+
+    swing = 1.5;
+} else if (t <= 2/3) {
+
+    swing = 1.5 - ((t - 1/2) / (2/3 - 1/2)) * 1.5;
+} else {
+
+    swing = 0;
+}
+
+   if (pickaxeDelay > Math.round(s / 3)) {
+      cx2 = Math.cos(swing-xAngle);
+      sx2 = Math.sin(swing-xAngle);
+   }
+   else {
+         cx2 = Math.cos(-xAngle);
+   sx2 = Math.sin(-xAngle);
+   }
+
+
 
    scale = 2;
 
 
 
 modelMatrix = [
-  cy*cz,  -cy*sz,  sy,  0,
-  sz,      cz,     0,   0,
- -sy*cz,   sy*sz,  cy,  0,
-  0,       0,      0,   1
+  cy,      0,     -sy,   0,  // first column
+  sy*sx2,   cx2,    cy*sx2, 0,  // second column
+  sy*cx2,  -sx2,    cy*cx2, 0,  // third column
+  0,       0,     0,     1   // translation
 ];
 
 
@@ -1047,19 +1074,27 @@ modelMatrix = [
 
 
       invmodelMatrix = [
-     cy*cz*scale,   sz*scale,  -sy*cz*scale,  0,
- -cy*sz*scale,   cz*scale,   sy*sz*scale,  0,
-  sy*scale,      0,    cy*scale,     0,
-  7,  -5,  -25,  1];
+  -cy*scale,     sy*sx*scale,   -sy*cx*scale,   0,  // col0
+  0,      cx*scale,     sx*scale,      0,  // col1
+  sy*scale,    cy*sx*scale,   -cy*cx*scale,   0,  // col2
+
+  7,  -6,  -15,     1   // translation
+];
 
 
 
-   gl.bindTexture(gl.TEXTURE_2D, grassTexture);
+
+  
    gl.uniformMatrix4fv(mLoc, false, modelMatrix);
    
    gl.uniformMatrix4fv(vLoc, false, invmodelMatrix);//[scale,0,0,0, 0,scale,0,0, 0,0,scale,0, 5,-5,-5-15,1]);
    gl.uniform3fv(cLoc, [1,1,1]);
-   gl.drawArrays(gl.TRIANGLES, 1254-456, 456);
+   gl.bindTexture(gl.TEXTURE_2D, woodTexture);
+
+   gl.drawArrays(gl.TRIANGLES, 1254-456, 300);
+
+   gl.bindTexture(gl.TEXTURE_2D, anvilTexture);
+   gl.drawArrays(gl.TRIANGLES, 1254-156, 156);
 
 
    gl.depthFunc(gl.LESS);
