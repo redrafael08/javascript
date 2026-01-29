@@ -132,6 +132,11 @@ gl.texImage2D(
 const stoneTexture = gl.createTexture();
 newTexture(stoneTexture, 'stone_texture.png');
 
+
+
+const grassBladeTexture = gl.createTexture();
+newTexture(grassBladeTexture, 'grassblade.png');
+
 const shadowTexture = gl.createTexture();
 newTexture(shadowTexture, 'shadow map.png');
 
@@ -209,6 +214,7 @@ const fragCode = 'precision mediump float;' +
    'varying vec2 vTexture;' +
    'void main() {' +
       'vec4 baseColor = texture2D(uDiffuse, vTexture);' +
+      'if (baseColor.a < 0.9) discard;'+
       'vec4 shadow = texture2D(uShadowMap, vTexture);' +
       'gl_FragColor = baseColor*shadow*vec4(vColor, 1.0);' +
    '}';
@@ -911,6 +917,10 @@ function gameloop() {
 
    gl.enable(gl.DEPTH_TEST);
 
+   gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+
 
    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -972,7 +982,10 @@ gl.bindTexture(gl.TEXTURE_2D, emptyTexture);
 
 gl.activeTexture(gl.TEXTURE0);
 
+gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
 
+
+//gl.depthMask(false);
    for (let i=0;i<5000;i++) {
 
       r1 = (Math.sin((i+0) * 12.9898) * 43758.5453) % 1;
@@ -984,11 +997,18 @@ gl.activeTexture(gl.TEXTURE0);
 
       c = Math.cos(r1*5);
       s = Math.sin(r1*5);
-      size = r6+2;
-      modelMatrix = [size*c,0,-s*size,0, 0,size,0,0, s*size,0,size*c,0, r2*r4*400,0,r3*r5*400,1];
+      size = 5;
+      sizea = 2;
+      modelMatrix = [size*c,0,-s*size,0, 
+         0,sizea,0,0, 
+         s*size,0,size*c,0, 
+         r2*r4*400,0,r3*r5*400,1];
+
       gl.uniformMatrix4fv(mLoc, false, modelMatrix);
-      gl.drawArrays(gl.TRIANGLES, 1254, 6);
+      gl.drawArrays(gl.TRIANGLES, 1254, 12);
    }
+
+  // gl.depthMask(true);
 
 
    //droppos
@@ -1022,11 +1042,12 @@ gl.activeTexture(gl.TEXTURE0);
 
    gl.drawArrays(gl.TRIANGLES, 6+48+36, 144);
 
+   /*
    gl.uniform3fv(cLoc, currentDimension.shadowColor);
    gl.uniformMatrix4fv(mLoc, false, [8,0,0,0, 0,8,0,0, 0,0,8,0, anvilPos[0],0.05,anvilPos[2],1]);  
    gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
    gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
-   gl.uniform3fv(cLoc, [1,1,1]);
+   gl.uniform3fv(cLoc, [1,1,1]);*/
 
 
 
@@ -1062,11 +1083,13 @@ gl.activeTexture(gl.TEXTURE0);
    gl.uniform3fv(cLoc, [1.5,1.5,1.5]);
    gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+36, 48);
 
+
+   /*
    gl.uniform3fv(cLoc, currentDimension.shadowColor);
    gl.uniformMatrix4fv(mLoc, false, [17,0,0,0, 0,17,0,0, 0,0,17,0, rocketPos[0],0.05,rocketPos[2],1]);  
    gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
    gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
-   gl.uniform3fv(cLoc, [1,1,1]);
+   gl.uniform3fv(cLoc, [1,1,1]);*/
 
 
    //grindstone
@@ -1079,11 +1102,12 @@ gl.activeTexture(gl.TEXTURE0);
    gl.bindTexture(gl.TEXTURE_2D, woodTexture);
    gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84, 132);
    
+   /*
    gl.uniform3fv(cLoc, currentDimension.shadowColor);
    gl.uniformMatrix4fv(mLoc, false, [8,0,0,0, 0,8,0,0, 0,0,8,0, grindstonePos[0],0.05,grindstonePos[2],1]);  
    gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
    gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84+132, 42);
-   gl.uniform3fv(cLoc, [1,1,1]);
+   gl.uniform3fv(cLoc, [1,1,1]);*/
 
 
    gl.clear(gl.DEPTH_BUFFER_BIT);
