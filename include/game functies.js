@@ -313,12 +313,12 @@ class Rock {
 }
 
 class Dimension {
-   constructor(healthMultiplier, cashMultiplier, groundTexture, rockTexture, skyColor, shadowColor) {
+   constructor(healthMultiplier, cashMultiplier, groundTexture, rockTexture, skyTexture, shadowColor) {
       this.healthMultiplier = healthMultiplier;
       this.cashMultiplier = cashMultiplier;
       this.groundTexture = groundTexture;
       this.rockTexture = rockTexture;
-      this.skyColor = skyColor;
+      this.skyTexture = skyTexture;
       this.shadowColor = shadowColor
    }
 }

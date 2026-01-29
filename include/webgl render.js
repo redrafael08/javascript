@@ -73,6 +73,12 @@ newTexture(shadowTexture, 'shadow map.png');
 const skyTexture = gl.createTexture();
 newTexture(skyTexture, 'skybox.png');
 
+const moonSkyTexture = gl.createTexture();
+newTexture(moonSkyTexture, 'skybox2.png');
+
+const marsSkyTexture = gl.createTexture();
+newTexture(marsSkyTexture, 'skybox3.png');
+
 
 const grassTexture = gl.createTexture();
 newTexture(grassTexture, 'grass.png');
@@ -231,7 +237,7 @@ function renderObjects()
 
 
    // 3d render
-   gl.clearColor(currentDimension.skyColor[0],currentDimension.skyColor[1],currentDimension.skyColor[2],currentDimension.skyColor[3]); 
+   gl.clearColor(0,0,0,1); 
 
 
    gl.enable(gl.DEPTH_TEST);
@@ -257,7 +263,7 @@ gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 gl.activeTexture(gl.TEXTURE0);
 
 
-gl.bindTexture(gl.TEXTURE_2D, skyTexture);
+gl.bindTexture(gl.TEXTURE_2D, currentDimension.skyTexture);
 
 gl.activeTexture(gl.TEXTURE1);
 gl.bindTexture(gl.TEXTURE_2D, emptyTexture);
@@ -305,7 +311,7 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
 
 
 //gl.depthMask(false);
-   for (let i=0;i<5000;i++) {
+   for (let i=0;i<0;i++) {
 
       r1 = (Math.sin((i+0) * 12.9898) * 43758.5453) % 1;
       r2 = (Math.sin((i+50) * 12.9898) * 43758.5453) % 1;

@@ -44,9 +44,9 @@ const grindstonePos = [-50, 0, 0];
 const rocketPos = [0,0,50];
 const dropPos = [0, 0, -50];
 
-const earthSky = [0.57, 0.79, 0.98, 1.0];
-const moonSky = [0, 0, 0, 1.0];
-const marsSky = [0.96, 0.80, 0.62, 1.0];
+const earthSky = skyTexture;
+const moonSky = moonSkyTexture;
+const marsSky = marsSkyTexture;
 
 const rocks = [new Rock(100, 1, [-1,0,0], 0), new Rock(200, 1.2, [0.25,0.25,0.25], 1), new Rock(500, 1.5, [1+0.5,0.54+0.5,0.5], 2), new Rock(1000, 2, [0.85+0.5,0.73+0.5,0.59+0.5], 3), new Rock(5000, 2.5, [1.5,1.4,0.5], 4), new Rock(15000, 3, [0,0,1], 5), new Rock(50000, 5, [0,1,0], 6), new Rock(500000, 7, [1,0,0], 7), new Rock(Infinity, 10, [0.5+0.5,1.5,1.5], 8)];
 const dimensions = [new Dimension(1, 1, grassTexture, stoneTexture, earthSky, [0.7,0.7,0.7]), new Dimension(10, 10, moonTexture, moonTexture, moonSky, [0.1,0.1,0.1]), new Dimension(100, 100, marsTexture, marsTexture, marsSky, [0.4,0.4,0.4])];
