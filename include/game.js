@@ -772,6 +772,8 @@ document.getElementById("saveSlotInput").setAttribute("max",saves.length + 1)
 addPickaxeInventory(0);
 equipPickaxe(0);
 
+bobtime = 0;
+
 
 // gameloop
 let firstFrame = true;
@@ -1167,6 +1169,10 @@ modelMatrix = [
 
 
 
+   vel = distance(cameraPos,prevPos)
+
+
+   bobtime += vel*0.5;
 
 
       invmodelMatrix = [
@@ -1174,7 +1180,7 @@ modelMatrix = [
   0,      cx*scale,     sx*scale,      0,  // col1
   sy*scale,    cy*sx*scale,   -cy*cx*scale,   0,  // col2
 
-  7,  -6,  -15,     1   // translation
+  7+Math.cos(bobtime/2)*0.25,  -6+Math.sin(bobtime)*0.25,  -15,     1   // translation
 ];
 
 
