@@ -1,6 +1,6 @@
 
         
-        siz = 1
+        siz = 10
         // lijst met all objecten om te renderen
          const groundVertices = [
 

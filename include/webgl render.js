@@ -34,8 +34,10 @@ function newTexture(texture, image) {
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
       gl.generateMipmap(gl.TEXTURE_2D);
 
@@ -92,6 +94,10 @@ newTexture(crateTexture, 'crate.png');
 
 const anvilTexture = gl.createTexture();
 newTexture(anvilTexture, 'anvil.png');
+
+const rocketTexture = gl.createTexture();
+newTexture(rocketTexture, 'rocket.png');
+
 
 const oreTexture = gl.createTexture();
 newTexture(oreTexture, 'crystal.png');
@@ -151,7 +157,7 @@ const fragCode = 'precision mediump float;' +
    'void main() {' +
       'vec4 baseColor = texture2D(uDiffuse, vTexture);' +
       'if (baseColor.a < 0.9) discard;'+
-      'vec4 shadow = texture2D(uShadowMap, vTexture);' +
+      'vec4 shadow = texture2D(uShadowMap, vTexture*0.1);' +
       'gl_FragColor = baseColor*shadow*vec4(vColor, 1.0);' +
    '}';
    
@@ -311,7 +317,10 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
 
 
 //gl.depthMask(false);
-   for (let i=0;i<0;i++) {
+
+   if (currentDimension == dimensions[0]) {
+
+   for (let i=0;i<5000;i++) {
 
       r1 = (Math.sin((i+0) * 12.9898) * 43758.5453) % 1;
       r2 = (Math.sin((i+50) * 12.9898) * 43758.5453) % 1;
@@ -332,6 +341,7 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
       gl.uniformMatrix4fv(mLoc, false, modelMatrix);
       gl.drawArrays(gl.TRIANGLES, 1254, 12);
    }
+}
 
   // gl.depthMask(true);
 
@@ -379,7 +389,7 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
    // rocket
    modelMatrix = [5,0,0,0, 0,5,0,0, 0,0,5,0, rocketPos[0],0,rocketPos[2],1];  
    gl.uniformMatrix4fv(mLoc, false, modelMatrix);  
-   gl.bindTexture(gl.TEXTURE_2D, anvilTexture);
+   gl.bindTexture(gl.TEXTURE_2D, rocketTexture);
    gl.uniform3fv(cLoc, [1,0,0]);
    gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102, 36);
 
