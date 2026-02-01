@@ -31,6 +31,8 @@ function statConvert(pickaxe, type) {
 // actie functies         
 
 function clickRock() {
+   let audio = new Audio("assets/audio/pickaxe.mp3");
+   audio.play();
    cash += statConvert(pickaxes[currentPickaxe], 'cash');
    if (isFinite(currentRock.health)) {
       currentRock.health -= statConvert(pickaxes[currentPickaxe],'damage');

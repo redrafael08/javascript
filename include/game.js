@@ -77,15 +77,23 @@ equipPickaxe(0);
 bobtime = 0;
 
 
+
+
+
+
 // gameloop
 let firstFrame = true;
 function gameloop() {
+
    if (document.pointerLockElement === canvas || (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
 
    if (firstFrame) {
       document.getElementById("newGameButton").hidden = true;
       document.getElementById("saveGameButton").hidden = false;
       document.getElementById("resumeButton").hidden = false;
+         let audio = new Audio("assets/audio/a music blippiece.mp3");
+         audio.loop = true;
+      audio.play();
 
       firstFrame = false;
    }
