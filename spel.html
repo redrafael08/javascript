@@ -34,7 +34,12 @@
          <canvas id="text"></canvas>
       </div>
 
-
+      <script>
+      window.addEventListener('beforeunload', (event) => {
+      event.preventDefault();
+      event.returnValue = '';
+      });
+      </script>
       <script src="assets/gameObjects/anvil.js"></script>
       <script src="assets/gameObjects/crate.js"></script>
       <script src="assets/gameObjects/drop.js"></script>
