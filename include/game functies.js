@@ -187,6 +187,8 @@ function fusePickaxes(selectedPickaxes) {
       let pick2 = pickaxes[i2];
 
 
+      fused = true;
+
       let speed = (pick1.speed + pick2.speed)/2 + randomRange(0, (pick1.speed + pick2.speed)*0.25);
       if (speed > 100) {speed = 100;}
       let damage = (pick1.damage + pick2.damage)/2 + randomRange(0, (pick1.damage + pick2.damage)*0.25);
@@ -293,6 +295,37 @@ function loadGame(saveSlot) {
    }
 }
 
+
+function tutorial() {
+   
+   text = "";
+   if (distance(cameraPos, [0, 10, 15]) == 0) text = "press wasd to walk";
+   else if (xAngle == 0 && yAngle == Math.PI) text = "move mouse to look around";
+
+   else if (cash == 0 && !facingObject(rockPos)) text = "walk towards the rock";
+   else if (facingObject(rockPos) && cash == 0) text = "click on the rock to earn cash";
+
+   else if (!facingObject(grindstonePos) && pickaxes[currentPickaxe].upgrades == 1 && cash >= upgradeCost(pickaxes[0].upgrades, 1)) text = "walk towards the grindstone";
+   else if (facingObject(grindstonePos) && pickaxes[currentPickaxe].upgrades == 1) text = "click to upgrade the pickaxe";
+   else if (facingObject(grindstonePos) && pickaxes[currentPickaxe].upgrades > 1) text = "press the number keys to buy more upgrades at once";
+
+   else if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) > 20 && Object.keys(pickaxes).length == 1 && cash >= pickaxeCost) text = "walk towards the crate";
+   else if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 && Object.keys(pickaxes).length == 1) text = "buy a new pickaxe";
+   else if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 && Object.keys(pickaxes).length  > 1) text = "click on a pickaxe to equip it";
+
+   else if (!fused && cash >= 5000 && distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) > 20) text = "walk towards the anvil";
+   else if (!fused && distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20) text = "click on 2 pickaxes to combine their stats";
+
+   else if (cash >= rocketCost && distance(cameraPos, [rockPos[0], cameraPos[1], rockPos[2]]) > 20) text = "walk towards the rocket";
+   else if (distance(cameraPos, [rockPos[0], cameraPos[1], rockPos[2]]) <= 20) text = "click to go towards a new world";
+
+
+
+
+   displayText(text, 10,canvas.height-50);
+
+
+}
 
 // classes
 class Pickaxe {
