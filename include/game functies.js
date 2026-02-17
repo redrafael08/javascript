@@ -187,13 +187,13 @@ function fusePickaxes(selectedPickaxes) {
       let pick2 = pickaxes[i2];
 
 
-      let speed = (pick1.speed + pick2.speed)/2 + randomRange(0, (pick1.speed + pick2.speed)*0.25);
+      let speed = max(pick1.speed, pick2.speed) + randomRange(0, (pick1.speed + pick2.speed)*0.25);
       if (speed > 100) {speed = 100;}
-      let damage = (pick1.damage + pick2.damage)/2 + randomRange(0, (pick1.damage + pick2.damage)*0.25);
+      let damage = max(pick1.damage, pick2.damage) + randomRange(0, (pick1.damage + pick2.damage)*0.25);
       if (damage > 100) {damage = 100;}
-      let quality = (pick1.quality + pick2.quality)/2 + randomRange(0, (pick1.quality + pick2.quality)*0.25);
+      let quality = max(pick1.quality, pick2.quality) + randomRange(0, (pick1.quality + pick2.quality)*0.25);
       if (quality > 100) {quality = 100;}
-      let upgradability = (pick1.upgradability + pick2.upgradability)/2 + randomRange(0, (pick1.upgradability + pick2.upgradability)*0.25);
+      let upgradability = max(pick1.upgradability, pick2.upgradability) + randomRange(0, (pick1.upgradability + pick2.upgradability)*0.25);
       if (upgradability > 100) {upgradability = 100;}
       delete pickaxes[i1];
       delete pickaxes[i2];
