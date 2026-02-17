@@ -35,6 +35,9 @@ let cash = 0;
 const numberSuffixes = ["k","M","B","T","aa","ab","ac","ad","ae","af","ag","ah","ai","aj","ak"];
 
 
+let fused = false;
+
+
 let pickaxeCost = 10;
 let rocketCost = 1000000;
 
@@ -75,6 +78,7 @@ addPickaxeInventory(0);
 equipPickaxe(0);
 
 bobtime = 0;
+
 
 
 
@@ -139,6 +143,9 @@ function gameloop() {
    if (distance(cameraPos, [0, cameraPos[1], 0]) > 400 || distance(cameraPos, [0, cameraPos[1], 0]) <= 9 || distance(cameraPos, [grindstonePos[0], cameraPos[1], grindstonePos[2]]) <= 9 || distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 9 || distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 9 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 9) {
       cameraPos = [...prevPos];
    }
+
+
+   
 
 
    
@@ -209,6 +216,9 @@ function gameloop() {
    if (!win) {displayText("+", canvas.width/2 - 15,canvas.height/2 + 15);}
    else {displayText("You win!", canvas.width/2,canvas.height/2);}
 
+
+
+   tutorial();
 
    if (pickaxeDelay > Math.round(statConvert(pickaxes[currentPickaxe], 'speed') / 3)) {
       // ctx.drawImage(pickaxeDownImg, 0, canvas.height-canvas.width*0.5625, canvas.width, canvas.width*0.5625);
