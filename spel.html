@@ -17,16 +17,22 @@
          </div>
          <div id="settings" hidden>
             <p id="worldNumberText" hidden>World number: 0</p>
-            <button id="loadGameButton" onclick="loadGame(document.getElementById('saveSlotInput').value - 1)">Load game</button>
+            
+            <button id="loadGameButton" onclick="showLoadGame()">Load game</button>
+            <button id="confirmLoadGameButton" onclick="loadGame(document.getElementById('saveSlotInput').value - 1)" hidden>Confirm?</button>
             <button id="saveGameButton" onclick="saveGame()" hidden>Save game</button>
             <button id="newGameButton" onclick="canvas.requestPointerLock();">New game</button>
             <button id="resumeButton" onclick="canvas.requestPointerLock();" hidden>Resume</button>
             <div id="saveSlot">
-               <label for="saveSlotInput" id="saveSlotLabel">World to load:</label>
+               <label for="saveSlotInput" id="saveSlotLabel">World to load: </label>
                <input type="number" name="saveSlotInput" id="saveSlotInput" min="1" max="">
                <p id="invalidSaveSlot" hidden>Please input a valid world number that <br>corresponds to an existing world</p>
+               <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScoD2INWc_XKvezWHgHPY933wT8d2NpYmTdiLKK3nML5miL7g/viewform?usp=header">vul de enquete in</a></p>
             </div>
+
          </div>
+
+
 
          <canvas id="gl"></canvas>
          <canvas id="text"></canvas>
@@ -54,5 +60,11 @@
       <script src="include/game functies.js"></script>
       <script src="include/game.js"></script>
       
+      <script>
+         window.addEventListener('beforeunload', (event) => {
+         event.preventDefault();
+         event.returnValue = '';
+  });
+      </script>
     </body>
 </html>
