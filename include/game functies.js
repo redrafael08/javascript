@@ -316,8 +316,8 @@ function tutorial() {
    else if (!fused && cash >= 5000 && distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) > 20) text = "walk towards the anvil";
    else if (!fused && distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20) text = "click on 2 pickaxes to combine their stats";
 
-   else if (cash >= rocketCost && distance(cameraPos, [rockPos[0], cameraPos[1], rockPos[2]]) > 20) text = "walk towards the rocket";
-   else if (distance(cameraPos, [rockPos[0], cameraPos[1], rockPos[2]]) <= 20) text = "click to go towards a new world";
+   else if (cash >= rocketCost && distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) > 20) text = "walk towards the rocket";
+   else if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) text = "click to go towards a new world";
 
 
 
