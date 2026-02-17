@@ -300,13 +300,13 @@ function tutorial() {
    
    text = "";
    if (distance(cameraPos, [0, 10, 15]) == 0) text = "press wasd to walk";
-   else if (xAngle == 0 && yAngle == Math.PI) text = "move mouse to look around";
+   else if (xAngle == 0 && yAngle == Math.PI) text = "move mouse or press arrows to look around";
 
    else if (cash == 0 && !facingObject(rockPos)) text = "walk towards the rock";
-   else if (facingObject(rockPos) && cash == 0) text = "click on the rock to earn cash";
+   else if (facingObject(rockPos) && cash == 0) text = "click or press space on the rock to earn cash";
 
    else if (!facingObject(grindstonePos) && pickaxes[currentPickaxe].upgrades == 1 && cash >= upgradeCost(pickaxes[0].upgrades, 1)) text = "walk towards the grindstone";
-   else if (facingObject(grindstonePos) && pickaxes[currentPickaxe].upgrades == 1) text = "click to upgrade the pickaxe";
+   else if (facingObject(grindstonePos) && pickaxes[currentPickaxe].upgrades == 1) text = "click or press space to upgrade the pickaxe";
    else if (facingObject(grindstonePos) && pickaxes[currentPickaxe].upgrades > 1) text = "press the number keys to buy more upgrades at once";
 
    else if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) > 20 && Object.keys(pickaxes).length == 1 && cash >= pickaxeCost) text = "walk towards the crate";
@@ -317,7 +317,7 @@ function tutorial() {
    else if (!fused && distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20) text = "click on 2 pickaxes to combine their stats";
 
    else if (cash >= rocketCost && distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) > 20) text = "walk towards the rocket";
-   else if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) text = "click to go towards a new world";
+   else if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) text = "click or press space to go towards a new world";
 
 
 
