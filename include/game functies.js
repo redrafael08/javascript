@@ -187,13 +187,15 @@ function fusePickaxes(selectedPickaxes) {
       let pick2 = pickaxes[i2];
 
 
-      let speed = (pick1.speed + pick2.speed)/2 + randomRange(0, (pick1.speed + pick2.speed)*0.25);
+      fused = true;
+
+      let speed = max(pick1.speed, pick2.speed) + randomRange(0, (pick1.speed + pick2.speed)*0.25);
       if (speed > 100) {speed = 100;}
-      let damage = (pick1.damage + pick2.damage)/2 + randomRange(0, (pick1.damage + pick2.damage)*0.25);
+      let damage = max(pick1.damage, pick2.damage) + randomRange(0, (pick1.damage + pick2.damage)*0.25);
       if (damage > 100) {damage = 100;}
-      let quality = (pick1.quality + pick2.quality)/2 + randomRange(0, (pick1.quality + pick2.quality)*0.25);
+      let quality = max(pick1.quality, pick2.quality) + randomRange(0, (pick1.quality + pick2.quality)*0.25);
       if (quality > 100) {quality = 100;}
-      let upgradability = (pick1.upgradability + pick2.upgradability)/2 + randomRange(0, (pick1.upgradability + pick2.upgradability)*0.25);
+      let upgradability = max(pick1.upgradability, pick2.upgradability) + randomRange(0, (pick1.upgradability + pick2.upgradability)*0.25);
       if (upgradability > 100) {upgradability = 100;}
       delete pickaxes[i1];
       delete pickaxes[i2];
@@ -298,6 +300,37 @@ function loadGame(saveSlot) {
    document.getElementById("confirmLoadGameButton").hidden = true;
 }
 
+
+function tutorial() {
+   
+   text = "";
+   if (distance(cameraPos, [0, 10, 15]) == 0) text = "press wasd to walk";
+   else if (xAngle == 0 && yAngle == Math.PI) text = "move mouse to look around";
+
+   else if (cash == 0 && !facingObject(rockPos)) text = "walk towards the rock";
+   else if (facingObject(rockPos) && cash == 0) text = "click on the rock to earn cash";
+
+   else if (!facingObject(grindstonePos) && pickaxes[currentPickaxe].upgrades == 1 && cash >= upgradeCost(pickaxes[0].upgrades, 1)) text = "walk towards the grindstone";
+   else if (facingObject(grindstonePos) && pickaxes[currentPickaxe].upgrades == 1) text = "click to upgrade the pickaxe";
+   else if (facingObject(grindstonePos) && pickaxes[currentPickaxe].upgrades > 1) text = "press the number keys to buy more upgrades at once";
+
+   else if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) > 20 && Object.keys(pickaxes).length == 1 && cash >= pickaxeCost) text = "walk towards the crate";
+   else if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 && Object.keys(pickaxes).length == 1) text = "buy a new pickaxe";
+   else if (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 && Object.keys(pickaxes).length  > 1) text = "click on a pickaxe to equip it";
+
+   else if (!fused && cash >= 5000 && distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) > 20) text = "walk towards the anvil";
+   else if (!fused && distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20) text = "click on 2 pickaxes to combine their stats";
+
+   else if (cash >= rocketCost && distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) > 20) text = "walk towards the rocket";
+   else if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) text = "click to go towards a new world";
+
+
+
+
+   displayText(text, 10,canvas.height-50);
+
+
+}
 
 // classes
 class Pickaxe {
