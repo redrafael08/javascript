@@ -139,6 +139,30 @@ function gameloop() {
       cameraPos[2] -= sina * speed;
    }
 
+
+   if (keys["ArrowUp"]) {
+      xAngle += 0.05;
+      if (xAngle > Math.PI*0.5) xAngle = Math.PI*0.5;
+      if (xAngle < -Math.PI*0.5) xAngle = -Math.PI*0.5;
+   }
+   if (keys["ArrowDown"]) {
+      xAngle -= 0.05;
+      if (xAngle > Math.PI*0.5) xAngle = Math.PI*0.5;
+      if (xAngle < -Math.PI*0.5) xAngle = -Math.PI*0.5;
+   }
+   if (keys["ArrowLeft"]) {
+      yAngle -= 0.05;
+   }
+   if (keys["ArrowRight"]) {
+      yAngle += 0.05;
+   }
+
+   if (keys["Space"]) {
+      mouseClicked = true;
+   }
+
+
+
    // collisions
    if (distance(cameraPos, [0, cameraPos[1], 0]) > 400 || distance(cameraPos, [0, cameraPos[1], 0]) <= 9 || distance(cameraPos, [grindstonePos[0], cameraPos[1], grindstonePos[2]]) <= 9 || distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 9 || distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 9 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 9) {
       cameraPos = [...prevPos];

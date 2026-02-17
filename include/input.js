@@ -13,7 +13,14 @@ let keys = {
    "KeyW":false, // w
    "KeyA":false, // a
    "KeyS":false, // s
-   "KeyD":false // d
+   "KeyD":false, // d
+
+   "ArrowUp":false, // w
+   "ArrowLeft":false, // a
+   "ArrowDown":false, // s
+   "ArrowRight":false, // d
+
+   "Space": false 
 };
 
 let mouseClicked = false;
