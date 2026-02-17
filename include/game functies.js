@@ -256,6 +256,10 @@ function validSaveSlot (saveSlot) {
    return saveSlot >= 0 && saveSlot < saves.length;
 }
 
+function showLoadGame() {
+   document.getElementById("confirmLoadGameButton").hidden = false;
+}
+
 function loadGame(saveSlot) {
    if (validSaveSlot(saveSlot)) {
       for (var key in pickaxes) {
@@ -293,6 +297,7 @@ function loadGame(saveSlot) {
    else {
       document.getElementById("invalidSaveSlot").hidden = false;
    }
+   document.getElementById("confirmLoadGameButton").hidden = true;
 }
 
 
