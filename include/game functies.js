@@ -302,9 +302,8 @@ function loadGame(saveSlot) {
 
 
 function tutorial() {
-   
    text = "";
-   if (distance(cameraPos, [0, 10, 15]) == 0) text = "press wasd to walk";
+   if (cameraPos == [0, 10, 15]) text = "press wasd to walk";
    else if (xAngle == 0 && yAngle == Math.PI) text = "move mouse or press arrows to look around";
 
    else if (cash == 0 && !facingObject(rockPos)) text = "walk towards the rock";
@@ -325,11 +324,7 @@ function tutorial() {
    else if (distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 20) text = "click or press space to go towards a new world";
 
 
-
-
-   displayText(text, 10,canvas.height-50);
-
-
+   displayText(text, 10,canvas.height-10);
 }
 
 // classes
@@ -362,4 +357,3 @@ class Dimension {
       this.shadowColor = shadowColor
    }
 }
-
