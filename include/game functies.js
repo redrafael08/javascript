@@ -111,9 +111,16 @@ function addPickaxeInventory(index) {
 function showStats(id,index) {
    if (id == "currentPickaxe") {
       document.getElementById(id).innerHTML  = `Equipped Pickaxe:<br>Quality: ${shortenNumber(statConvert(pickaxes[index], 'quality'))}<br>Damage: ${shortenNumber(statConvert(pickaxes[index], 'damage'))}<br>Clicks/s: ${shortenNumber(1/(statConvert(pickaxes[index], 'speed')/30))}<br>Upgradability: ${shortenNumber(statConvert(pickaxes[index], 'upgradability'))}<br>Cash/click: ${shortenNumber(statConvert(pickaxes[index], 'cash'))}<br>Upgrades: ${shortenNumber(pickaxes[index].upgrades)}`;
-   }
+
+ 
+   }  
    else {
-      document.getElementById(id).innerHTML  = `Selected Pickaxe:<br>Quality: ${shortenNumber(statConvert(pickaxes[index], 'quality'))}<br>Damage: ${shortenNumber(statConvert(pickaxes[index], 'damage'))}<br>Clicks/s: ${shortenNumber(1/(statConvert(pickaxes[index], 'speed')/30))}<br>Upgradability: ${shortenNumber(statConvert(pickaxes[index], 'upgradability'))}<br>Cash/click: ${shortenNumber(statConvert(pickaxes[index], 'cash'))}<br>Upgrades: ${shortenNumber(pickaxes[index].upgrades)}`;
+      const element = document.getElementById(id);
+      element.innerHTML  = `Quality: ${shortenNumber(statConvert(pickaxes[index], 'quality'))}<br>Damage: ${shortenNumber(statConvert(pickaxes[index], 'damage'))}<br>Clicks/s: ${shortenNumber(1/(statConvert(pickaxes[index], 'speed')/30))}<br>Upgradability: ${shortenNumber(statConvert(pickaxes[index], 'upgradability'))}<br>Cash/click: ${shortenNumber(statConvert(pickaxes[index], 'cash'))}<br>Upgrades: ${shortenNumber(pickaxes[index].upgrades)}`;
+       
+  
+      document.getElementById("pickaxeContainer"+index).appendChild(element);
+
    }
 }
 

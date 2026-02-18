@@ -9,6 +9,8 @@
             height: 100px;
             padding: 10px; 
             display:block;
+            position: relative;
+            overflow: visible;
          }
          body {
             background-image: url('../assets/background.png');
@@ -60,9 +62,14 @@
          }
 
          #selectedPickaxe {
-            position: fixed;
-            left: calc(100% - 650px);
-            top: 300px;
+            position: absolute;
+         
+            top: 50px;
+            left: 200px;
+            background-color: #f0f0f0;
+            width:200px;
+            z-index: 10;
+
          }
 
          #pickaxeStatsGui {
