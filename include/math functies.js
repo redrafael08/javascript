@@ -1,5 +1,3 @@
-
-
 // view matrix opstel functie
 //3DGE. (z.d.)
 function lookAt(eye, front) {
@@ -69,8 +67,6 @@ function keyToNumber(key) {
    return false;
 }
 
-
-
 // random functies
 function weightedRandom() {
    let x = Math.random();
@@ -84,7 +80,3 @@ function randomPickaxe() {
 function randomRange(l, r) {
    return Math.random() * (r - l) + l;
 }
-
-
-
-

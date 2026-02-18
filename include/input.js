@@ -1,13 +1,6 @@
-
-
-
-
-//WebGL Fundamentals. (z.d.)
-
-
+// WebGL Fundamentals. (z.d.)
 // input keys waardes
 numberKeyPressed = 0;
-
 
 let keys = {
    "KeyW":false, // w
@@ -75,16 +68,11 @@ document.addEventListener('keyup', (e) => {
    }
 });
 
+window.addEventListener('beforeunload', function (e) {
+// Cancel the event
+e.preventDefault();
+// Chrome requires returnValue to be set
+// e.returnValue = '';
+});
 
-
-
-   window.addEventListener('beforeunload', function (e) {
-   // Cancel the event
-   e.preventDefault();
-   // Chrome requires returnValue to be set
-  // e.returnValue = '';
-   });
-
-   window.onbeforeunload=function(){return "Navigating away will lose the changes you've made to your code."};
-
-
+window.onbeforeunload=function(){return "Navigating away will lose the changes you've made to your code."};
