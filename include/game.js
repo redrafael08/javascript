@@ -1,28 +1,17 @@
-
-
-
-
-
 // maak matrixen
 let maxRender = 500;
 let minRender = 1;
 let ang = Math.tan((40*0.5)*Math.PI/180);
-let projMatrix = [0.5/ang, 0 , 0, 0,
-                  0, 0.5*(canvas.width/canvas.height)/ang, 0, 0,
-                  0, 0, -(maxRender+minRender)/(maxRender-minRender), -1,
-                  0, 0, (-2*maxRender*minRender)/(maxRender-minRender), 0 
-               ];
+let projMatrix = [
+   0.5/ang, 0 , 0, 0,
+   0, 0.5*(canvas.width/canvas.height)/ang, 0, 0,
+   0, 0, -(maxRender+minRender)/(maxRender-minRender), -1,
+   0, 0, (-2*maxRender*minRender)/(maxRender-minRender), 0 
+];
 let viewMatrix = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
 let modelMatrix = [1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
 
 let pickaxesToFuse = [];
-
-
-
-
-
-
-// variabelen
 
 let cameraPos = [0, 10, 15];
 let front = [0, 0, -1]     
@@ -79,24 +68,17 @@ equipPickaxe(0);
 
 bobtime = 0;
 
-
-
-
-
-
-
 // gameloop
 let firstFrame = true;
 function gameloop() {
-
    if (document.pointerLockElement === canvas || (distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 20 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 20)) {
 
    if (firstFrame) {
       document.getElementById("newGameButton").hidden = true;
       document.getElementById("saveGameButton").hidden = false;
       document.getElementById("resumeButton").hidden = false;
-         let audio = new Audio("assets/audio/a music blippiece.mp3");
-         audio.loop = true;
+      let audio = new Audio("assets/audio/a music blippiece.mp3");
+      audio.loop = true;
       audio.play();
 
       firstFrame = false;
@@ -110,17 +92,18 @@ function gameloop() {
    ctx.font = "50px Arial";
    ctx.fillStyle = 'white';
    gl.viewport(0,0,canvas.width,canvas.height);
-   projMatrix = [0.5/ang, 0 , 0, 0,
-                  0, 0.5*(canvas.width/canvas.height)/ang, 0, 0,
-                  0, 0, -(maxRender+minRender)/(maxRender-minRender), -1,
-                  0, 0, (-2*maxRender*minRender)/(maxRender-minRender), 0 
-               ];
+   projMatrix = [
+      0.5/ang, 0 , 0, 0,
+      0, 0.5*(canvas.width/canvas.height)/ang, 0, 0,
+      0, 0, -(maxRender+minRender)/(maxRender-minRender), -1,
+      0, 0, (-2*maxRender*minRender)/(maxRender-minRender), 0 
+   ];
 
    cosa = Math.cos(yAngle);
    sina = Math.sin(yAngle);
    front = [Math.cos(xAngle) * sina, Math.sin(xAngle), Math.cos(xAngle) * cosa]
 
-   // movement
+   // keyboard inputs
    prevPos = [...cameraPos];
    if (keys["KeyW"]) {
       cameraPos[0] += sina * speed;
@@ -138,7 +121,6 @@ function gameloop() {
       cameraPos[0] += cosa * speed;
       cameraPos[2] -= sina * speed;
    }
-
 
    if (keys["ArrowUp"]) {
       xAngle += 0.05;
@@ -161,18 +143,11 @@ function gameloop() {
       mouseClicked = true;
    }
 
-
-
    // collisions
    if (distance(cameraPos, [0, cameraPos[1], 0]) > 400 || distance(cameraPos, [0, cameraPos[1], 0]) <= 9 || distance(cameraPos, [grindstonePos[0], cameraPos[1], grindstonePos[2]]) <= 9 || distance(cameraPos, [dropPos[0], cameraPos[1], dropPos[2]]) <= 9 || distance(cameraPos, [rocketPos[0], cameraPos[1], rocketPos[2]]) <= 9 || distance(cameraPos, [anvilPos[0], cameraPos[1], anvilPos[2]]) <= 9) {
       cameraPos = [...prevPos];
    }
 
-
-   
-
-
-   
 
    // 2d canvas render en game logica
    ctx.clearRect(0, 0, textCanvas.width, textCanvas.height);
@@ -239,8 +214,6 @@ function gameloop() {
 
    if (!win) {displayText("+", canvas.width/2 - 15,canvas.height/2 + 15);}
    else {displayText("You win!", canvas.width/2,canvas.height/2);}
-
-
 
    tutorial();
 

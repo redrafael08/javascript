@@ -249,7 +249,7 @@ function renderObjects()
    gl.enable(gl.DEPTH_TEST);
 
    gl.enable(gl.BLEND);
-gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 
 
@@ -266,15 +266,15 @@ gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
    modelMatrix = [5,0,0,0, 0,5,0,0, 0,0,5,0, cameraPos[0],9.5,cameraPos[2],1];
 
-gl.activeTexture(gl.TEXTURE0);
+   gl.activeTexture(gl.TEXTURE0);
 
 
-gl.bindTexture(gl.TEXTURE_2D, currentDimension.skyTexture);
+   gl.bindTexture(gl.TEXTURE_2D, currentDimension.skyTexture);
 
-gl.activeTexture(gl.TEXTURE1);
-gl.bindTexture(gl.TEXTURE_2D, emptyTexture);
+   gl.activeTexture(gl.TEXTURE1);
+   gl.bindTexture(gl.TEXTURE_2D, emptyTexture);
 
-gl.activeTexture(gl.TEXTURE0);
+   gl.activeTexture(gl.TEXTURE0);
 
 
    gl.uniformMatrix4fv(mLoc, false, modelMatrix);
@@ -286,14 +286,13 @@ gl.activeTexture(gl.TEXTURE0);
    gl.depthFunc(gl.LESS);
 
 
-
    //ground
    gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
 
-gl.activeTexture(gl.TEXTURE1);
-gl.bindTexture(gl.TEXTURE_2D, shadowTexture);
+   gl.activeTexture(gl.TEXTURE1);
+   gl.bindTexture(gl.TEXTURE_2D, shadowTexture);
 
-gl.activeTexture(gl.TEXTURE0);
+   gl.activeTexture(gl.TEXTURE0);
 
 
    modelMatrix = [500,0,0,0, 0,1,0,0, 0,0,500,0, 0,0,0,1];
@@ -308,42 +307,38 @@ gl.activeTexture(gl.TEXTURE0);
    gl.bindTexture(gl.TEXTURE_2D, currentDimension.groundTexture);
 
 
-gl.activeTexture(gl.TEXTURE1);
-gl.bindTexture(gl.TEXTURE_2D, emptyTexture);
+   gl.activeTexture(gl.TEXTURE1);
+   gl.bindTexture(gl.TEXTURE_2D, emptyTexture);
 
-gl.activeTexture(gl.TEXTURE0);
+   gl.activeTexture(gl.TEXTURE0);
 
-gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
-
-
-//gl.depthMask(false);
+   gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
 
    if (currentDimension == dimensions[0]) {
+      for (let i=0;i<5000;i++) {
 
-   for (let i=0;i<5000;i++) {
+         r1 = (Math.sin((i+0) * 12.9898) * 43758.5453) % 1;
+         r2 = (Math.sin((i+50) * 12.9898) * 43758.5453) % 1;
+         r3 = (Math.sin((i+100) * 12.9898) * 43758.5453) % 1;
+         r4 = (Math.sin((i+150) * 12.9898) * 43758.5453) % 1;
+         r5 = (Math.sin((i+200) * 12.9898) * 43758.5453) % 1;
+         r6 = (Math.sin((i+250) * 12.9898) * 43758.5453) % 1;
 
-      r1 = (Math.sin((i+0) * 12.9898) * 43758.5453) % 1;
-      r2 = (Math.sin((i+50) * 12.9898) * 43758.5453) % 1;
-      r3 = (Math.sin((i+100) * 12.9898) * 43758.5453) % 1;
-      r4 = (Math.sin((i+150) * 12.9898) * 43758.5453) % 1;
-      r5 = (Math.sin((i+200) * 12.9898) * 43758.5453) % 1;
-      r6 = (Math.sin((i+250) * 12.9898) * 43758.5453) % 1;
+         const c = Math.cos(r1*5);
+         const s = Math.sin(r1*5);
+         size = 5;
+         sizea = 2;
+         modelMatrix = [
+            size*c,0,-s*size,0, 
+            0,sizea,0,0, 
+            s*size,0,size*c,0, 
+            r2*r4*400,0,r3*r5*400,1
+         ];
 
-      const c = Math.cos(r1*5);
-      const s = Math.sin(r1*5);
-      size = 5;
-      sizea = 2;
-      modelMatrix = [size*c,0,-s*size,0, 
-         0,sizea,0,0, 
-         s*size,0,size*c,0, 
-         r2*r4*400,0,r3*r5*400,1];
-
-      gl.uniformMatrix4fv(mLoc, false, modelMatrix);
-      gl.drawArrays(gl.TRIANGLES, 1254, 12);
+         gl.uniformMatrix4fv(mLoc, false, modelMatrix);
+         gl.drawArrays(gl.TRIANGLES, 1254, 12);
+      }
    }
-}
-
-  // gl.depthMask(true);
 
 
    //droppos
@@ -369,8 +364,6 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
 
    gl.drawArrays(gl.TRIANGLES, 6+48+36, 144);
 
-
-
    //rock
    gl.bindTexture(gl.TEXTURE_2D, currentDimension.rockTexture);
    modelMatrix = [10,0,0,0, 0,10,0,0, 0,0,10,0, 0,0,0,1];
@@ -385,7 +378,6 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
       gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84, 102);
    }
 
-
    // rocket
    modelMatrix = [5,0,0,0, 0,5,0,0, 0,0,5,0, rocketPos[0],0,rocketPos[2],1];  
    gl.uniformMatrix4fv(mLoc, false, modelMatrix);  
@@ -395,9 +387,6 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
 
    gl.uniform3fv(cLoc, [1.5,1.5,1.5]);
    gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+36, 48);
-
-
-
 
    //grindstone
    modelMatrix = [3,0,0,0, 0,3,0,0, 0,0,3,0, grindstonePos[0],0,grindstonePos[2],1];  
@@ -409,7 +398,6 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
    gl.bindTexture(gl.TEXTURE_2D, woodTexture);
    gl.drawArrays(gl.TRIANGLES, 6+48+36+144+84+102+48+36+84, 132);
    
-
 
    gl.clear(gl.DEPTH_BUFFER_BIT);
 
@@ -424,7 +412,6 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
 
    const cx = Math.cos(-xAngle);
    const sx = Math.sin(-xAngle);
-
 
 
    const s = statConvert(pickaxes[currentPickaxe], 'speed');
@@ -455,18 +442,14 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
    }
 
 
-
    scale = 2;
 
    modelMatrix = [
-   cy,      0,     -sy,   0, 
-   sy*sx2,   cx2,    cy*sx2, 0, 
-   sy*cx2,  -sx2,    cy*cx2, 0,  
-   0,       0,     0,     1   
+      cy,      0,     -sy,   0, 
+      sy*sx2,   cx2,    cy*sx2, 0, 
+      sy*cx2,  -sx2,    cy*cx2, 0,  
+      0,       0,     0,     1   
    ];
-
-
-
 
    let vel = distance(cameraPos,prevPos)
 
@@ -479,9 +462,6 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
    sy*scale,    cy*sx*scale,   -cy*cx*scale,   0,  
    7+Math.cos(bobtime/2)*0.25,  -6+Math.sin(bobtime)*0.25,  -15,     1  
    ];
-
-
-
 
   
    gl.uniformMatrix4fv(mLoc, false, modelMatrix);
@@ -499,4 +479,3 @@ gl.bindTexture(gl.TEXTURE_2D, grassBladeTexture);
    gl.depthFunc(gl.LESS);
    gl.depthMask(true);
 }
-
