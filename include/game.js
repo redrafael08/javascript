@@ -217,12 +217,6 @@ function gameloop() {
 
    tutorial();
 
-   if (pickaxeDelay > Math.round(statConvert(pickaxes[currentPickaxe], 'speed') / 3)) {
-      // ctx.drawImage(pickaxeDownImg, 0, canvas.height-canvas.width*0.5625, canvas.width, canvas.width*0.5625);
-   }
-   else {
-      //  ctx.drawImage(pickaxeUpImg, 0, canvas.height-canvas.width*0.5625, canvas.width, canvas.width*0.5625);
-   }
 
    if (pickaxeDelay > 0) {
       pickaxeDelay--;
