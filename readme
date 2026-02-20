@@ -1,14 +1,14 @@
 ------
-RMS 3D
+Rock Mining Simulator 3D
 ------
-door Rafael Bleeker en Wouter Geldof
+door Rafael Bleeker, Wouter Geldof en Rob Kraaier
 
 
 ---------
 UITVOEREN
 ---------
 
-Open run.bat
+Open run.bat en klik op spel.html
 of 
 open het spel via een local server
 of
@@ -53,25 +53,6 @@ Vlieg naar andere plekken die meer geld geven
 
 
 Veel plezier!
-
-
-
-
----------
-REFLECTIE
----------
-
-Rafael: Tijdens dit PO heb ik geleerd hoe javascript werkt. In tegenstelling tot het python PO had ik voor dit PO geen ervaring met de programmeertaal. Ik heb dus geleerd hoe concepten die ik al wist door python te gebruiken in javascript met een andere syntax. Voor dit PO heb ik ook kennisgemaakt met opengl/webgl. Ik heb geleerd hoe de graphics pipeline ongeveer in elkaar zit, dus welke stappen je moet uitvoeren om van allemaal punten een 3D object te maken. Ik heb geleerd wat een vertex shader is en hoe hij werkt. Ik heb ook geleerd over rekenen met matrixen. Ik heb ook geleerd wat de fragment shader doet en hoe je gegevens er naartoe kan sturen. Daarbij heb ik geleerd hoe textures op een driehoek worden gezet met texture coords en wat een mipmap is en waarvoor je hem gebruikt. Voor het renderen moet je natuurlijk eerst een object hebben dus ik heb ook geleerd hoe je een object maakt in blender en deze kan omzetten naar iets dat bruikbaar is voor het programma. Hierbij heb ik geleerd hoe een object file in elkaar zit. Ik heb ook geleerd hoe je een html website via een server op het internet kan zetten.
-
-
-
-Wouter: Tijdens dit PO heb ik voor het eerst gewerkt met javascript. Ik vond javascript wel interessant omdat het in een html-bestand zit en daarom ook heel makkelijk te koppelen is aan iets wat je kan zien. Er zitten veel handige ingebouwde functies in, en ik vond het ook leuk dat het op bijna alle apparaten uit te voeren is zonder iets extra te installeren. Ik vond javascript verder niet heel ingewikkeld, op een paar rare naamgevingen na. Ik heb bij dit PO ook kennisgemaakt met webGL, wat ervoor zorgt dat je het ingewikkeldste en meest tijdrovende deel van het renderen niet meer zelf hoeft te doen, maar ook niet helemaal niks. Verder vond ik dit een leuk PO, omdat ik een spel heb kunnen maken wat ik al heel vaak in veel verschillende programmeertalen heb gemaakt, maar dan in 3D. Het samenwerken ging goed, en ik ben tevreden met het resultaat.
-
-
-
-
-
-
 
 
 -------
